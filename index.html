@@ -724,7 +724,7 @@
             }
         }
 
-        // --- LÓGICA DEL JUEGO BANANA SHOOTER (CORREGIDA) ---
+        // --- LÓGICA DEL JUEGO BANANA SHOOTER (MODIFICADA: Movimiento Lateral) ---
         
         function startGame() {
             if (isGameRunning) return;
@@ -740,7 +740,7 @@
             projectiles = [];
             isGameRunning = true;
             lastSpawnTime = Date.now();
-            enemySpeed = 1;
+            enemySpeed = 2; // Velocidad base ligeramente aumentada para el movimiento horizontal
 
             // Se cambia el evento a 'click' para que lance el proyectil desde la parte inferior central
             canvas.addEventListener('click', handleShoot);
@@ -774,33 +774,39 @@
 
         // Clase para representar a los enemigos
         class Enemy {
-            constructor(x, y, label) {
-                this.x = x;
+            constructor(side, y, label) {
+                // Aparecerá a la izquierda (0) o a la derecha (GAME_WIDTH)
+                this.x = side === 'left' ? 0 : GAME_WIDTH; 
                 this.y = y;
                 this.radius = 20;
-                this.color = '#ff4444'; // Rojo Navideño
+                this.color = '#ff4444'; 
                 this.label = label;
-                this.speed = enemySpeed * 0.5; // Velocidad de descenso
+                
+                // La velocidad se ajusta para moverse hacia el centro
+                this.speed = side === 'left' ? enemySpeed : -enemySpeed;
             }
 
             draw() {
+                // Dibujo del círculo de fondo
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
                 ctx.fill();
                 ctx.closePath();
                 
+                // Dibujo de la etiqueta (la fruta)
                 ctx.fillStyle = '#fff';
-                ctx.font = '16px Arial';
+                ctx.font = '24px Arial'; // Aumentamos tamaño para las frutas
                 ctx.textAlign = 'center';
-                ctx.fillText(this.label, this.x, this.y + 5);
+                ctx.textBaseline = 'middle'; // Alineación vertical para centrar mejor
+                ctx.fillText(this.label, this.x, this.y);
             }
 
             update() {
-                // Ahora el enemigo desciende lentamente
-                this.y += this.speed;
-                // Se mantiene el movimiento horizontal sutil
-                this.x += Math.sin(Date.now() / 1000) * 0.5;
+                // Mueve horizontalmente
+                this.x += this.speed; 
+                // Añadimos un pequeño movimiento vertical para más dificultad
+                this.y += Math.sin(this.x / 50) * 0.5;
             }
         }
 
@@ -810,7 +816,7 @@
                 this.x = x;
                 this.y = y;
                 this.radius = 8;
-                this.velocity = 10; 
+                this.velocity = 15; // Más rápido para el tiro fijo
             }
 
             draw() {
@@ -826,13 +832,16 @@
         }
         
         function spawnEnemy() {
-            // Los enemigos ahora aparecen por la parte superior
-            const x = Math.random() * (GAME_WIDTH - 40) + 20; 
-            const y = -20;
-            const enemyLabels = ['🍎', '🥑', '🥝', '🫐', '🥦']; 
+            // Elige un lado de forma aleatoria: 'left' o 'right'
+            const side = Math.random() < 0.5 ? 'left' : 'right';
+            // Aparece a una altura aleatoria en el canvas
+            const y = Math.random() * (GAME_HEIGHT - 40) + 20;
+            
+            // Nuevas etiquetas de frutas no-bananeras
+            const enemyLabels = ['🍎', '🍐', '🍊']; 
             const label = enemyLabels[Math.floor(Math.random() * enemyLabels.length)];
             
-            enemies.push(new Enemy(x, y, label));
+            enemies.push(new Enemy(side, y, label));
         }
 
         function handleShoot(e) {
@@ -846,9 +855,9 @@
             document.getElementById('game-score').innerText = score;
             document.getElementById('game-points-earn').innerText = pointsEarned;
 
-            if (score > 0 && score % 100 === 0) {
-                enemySpeed += 0.5;
-                enemySpawnInterval = Math.max(500, enemySpawnInterval - 50);
+            if (score > 0 && score % 50 === 0) { // Aumentar dificultad más a menudo
+                enemySpeed = Math.min(10, enemySpeed + 0.2); // Límite de velocidad para que no sea injugable
+                enemySpawnInterval = Math.max(400, enemySpawnInterval - 20);
             }
         }
 
@@ -869,8 +878,8 @@
                 enemy.update();
                 enemy.draw();
 
-                // Detección de enemigo que llega al final (alerta al jugador)
-                if (enemy.y > GAME_HEIGHT) {
+                // Detección de enemigo que llega al lado opuesto (sale del juego)
+                if (enemy.x < -enemy.radius || enemy.x > GAME_WIDTH + enemy.radius) {
                     enemies.splice(i, 1);
                     score -= 5; 
                     if (score < 0) score = 0;
@@ -901,17 +910,16 @@
                         pointsEarned += 1;
                         enemies.splice(j, 1); // Eliminar enemigo
                         projectiles.splice(i, 1); // Eliminar proyectil
+                        updatePlatapointsDisplay(); // Se actualiza el display de puntos al impactar
                         updateGameStats();
                         break; // El proyectil solo puede golpear un enemigo
                     }
                 }
             }
             
-            updateGameStats();
             gameLoop = requestAnimationFrame(updateGame);
         }
 
     </script>
 </body>
 </html>
-
