@@ -86,18 +86,6 @@
         }
         .app-section.active { display: block; }
 
-        /* --- SECCIÓN INTRODUCCIÓN & AUTENTICACIÓN --- */
-        #intro { text-align: center; padding: 80px 20px; }
-        #intro h2 { font-size: 3rem; color: #ff4444; }
-        #intro p { font-size: 1.2rem; max-width: 800px; margin: 20px auto 40px; }
-        #start-btn { background-color: #ff4444; color: #fff; border: none; padding: 15px 30px; border-radius: 5px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        #auth { max-width: 400px; margin: 100px auto; padding: 30px; background: #1e1e1e; border-radius: 10px; box-shadow: 0 0 20px rgba(255, 68, 68, 0.1); }
-        #auth h2 { text-align: center; color: #ff4444; margin-bottom: 25px; }
-        .auth-form input[type="text"], .auth-form input[type="password"] { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #333; background: #2a2a2a; color: white; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
-        .auth-form button { width: 100%; padding: 15px; background-color: #ff4444; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .auth-form button:hover { background-color: #ff6666; }
-        #toggle-form { display: block; margin-top: 15px; text-align: center; color: #aaa; cursor: pointer; font-size: 0.9rem; }
-
         /* --- SECCIÓN TIENDA Y PRODUCTOS --- */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
         .product-card { 
@@ -105,44 +93,73 @@
             text-align: center; transition: transform 0.3s, box-shadow 0.3s;
         }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 68, 68, 0.2); border-color: #ff4444; }
-        .product-icon { font-size: 5rem; margin-bottom: 15px; display: block; }
+        
+        /* ESTILO BASE DEL ICONO DEL PLÁTANO */
+        .product-icon { 
+            font-size: 5rem; margin-bottom: 15px; display: block; 
+            transition: filter 0.3s, text-shadow 0.3s; /* Asegura transiciones suaves */
+            line-height: 1;
+        }
+
         .product-title { font-size: 1.5rem; margin-bottom: 10px; }
         .product-price { color: #ffe135; font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; display: block; }
         .product-points { color: #ff9900; font-size: 0.9rem; margin-bottom: 10px; }
         .buy-btn { background-color: #ffe135; color: #000; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
         .buy-btn:hover { background-color: #fff; }
         
-        /* --- SECCIÓN DEL JUEGO --- */
-        #game-section {
-            text-align: center;
-            padding: 20px;
-            min-height: 70vh;
+        /* --- ESTILOS PERSONALIZADOS DEL PLÁTANO --- */
+
+        /* 2. PODER (Rojo/Naranja Fuerte) */
+        .power-banana { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff8c00; }
+        /* 3. NAVIDEÑO (Verde/Rojo) */
+        .festive-banana { filter: hue-rotate(180deg) brightness(1.2); text-shadow: 0 0 5px #ff4444; } 
+        /* 4. TECNOLÓGICO (Azul) */
+        .tech-banana { filter: hue-rotate(180deg) saturate(2); text-shadow: 0 0 10px #00ffff; }
+        /* 5. SECTA (Oscuro/Morado) */
+        .secta-banana { filter: hue-rotate(-50deg) brightness(0.7); text-shadow: 0 0 5px #6a1b9a; }
+        /* 6. MUTANTE (Verde brillante) */
+        .mutant-banana { filter: hue-rotate(90deg) saturate(2); text-shadow: 0 0 15px #00ff00; }
+        /* 7. LUJO (Oro/Diamante) */
+        .luxury-banana { color: gold; filter: saturate(3); text-shadow: 0 0 10px gold, 0 0 20px white; }
+        /* 8. CÓSMICO (Oscuro/Estrellas) */
+        .cosmic-banana { filter: hue-rotate(240deg) brightness(0.9); text-shadow: 0 0 5px #ccc; }
+        /* 9. HABILIDAD (Brillo) */
+        .skill-banana { filter: brightness(1.5) contrast(1.5); text-shadow: 0 0 10px orange; }
+        /* 10. ÉPICO (Fuego/Intenso) */
+        .epic-banana { filter: contrast(2) saturate(2); text-shadow: 0 0 10px #ff4500, 0 0 20px red; }
+        /* Plátanos especiales con emojis */
+        .stone-banana { color: #808080; } /* Gris para piedra */
+        .invisible-banana { opacity: 0.5; filter: blur(1px); } /* Semitransparente para invisible */
+        .cube-banana { font-size: 4rem !important; } /* Tamaño más pequeño para simular cubo */
+        /* Corona para el V-100 */
+        .v100-crown::after {
+            content: "👑";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.5rem;
+            animation: pulse 1s infinite alternate;
         }
-        #game-section h2 {
-            color: #ff4444;
-            margin-bottom: 20px;
-        }
-        #game-canvas {
-            border: 3px solid #ff4444;
-            background-color: #000;
-            cursor: crosshair;
-            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
-        }
-        #game-stats {
-            margin-top: 10px;
-            font-size: 1.2rem;
-            color: #ffe135;
-        }
-        .game-controls {
-            color: #ccc;
-            font-size: 0.9rem;
-            margin-top: 20px;
-        }
+
+        /* --- RESTO DE SECCIONES (Se mantienen sin cambios) --- */
+
+        /* --- SECCIÓN INTRODUCCIÓN & AUTENTICACIÓN --- */
+        #intro { text-align: center; padding: 80px 20px; }
+        #intro h2 { font-size: 3rem; color: #ff4444; }
+        #intro p { font-size: 1.2rem; max-width: 800px; margin: 20px auto 40px; }
+        #start-btn { background-color: #ff4444; color: #fff; border: none; padding: 15px 30px; border-radius: 5px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        #auth { max-width: 400px; margin: 100px auto; padding: 30px; background: #1e1e1e; border-radius: 10px; box-shadow: 0 0 20px rgba(255, 68, 68, 0.1); }
+        #auth h2 { text-align: center; color: #ff4444; margin-bottom: 25px; }
+        /* AÑADIDOS ATRIBUTOS autocomplete PARA EL GUARDADO DE CONTRASEÑAS */
+        .auth-form input[type="text"], .auth-form input[type="password"] { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #333; background: #2a2a2a; color: white; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
+        .auth-form button { width: 100%; padding: 15px; background-color: #ff4444; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+        .auth-form button:hover { background-color: #ff6666; }
+        #toggle-form { display: block; margin-top: 15px; text-align: center; color: #aaa; cursor: pointer; font-size: 0.9rem; }
 
         /* --- SECCIÓN OCULTA (SECTA) --- */
         #secta-page {
             text-align: center; padding: 80px 20px; min-height: 80vh;
-            background: radial-gradient(circle, #4d0000 0%, #121212 70%); /* Degradado Rojo Oscuro */
+            background: radial-gradient(circle, #4d0000 0%, #121212 70%); 
         }
         #secta-page h2 {
             font-size: 4rem; color: #ff4444; text-shadow: 0 0 10px #ff4444; animation: pulse 2s infinite;
@@ -209,7 +226,6 @@
         <button onclick="showSection('home')">🏠 Tienda (100)</button>
         <button onclick="showSection('details')">🍌 Info Plátanos (100)</button>
         <button onclick="showSection('cart')">🛒 Cesta (<span id="cart-count">0</span>)</button>
-        <button onclick="showSection('game')">🎄 Banana Shooter</button>
         <button onclick="logout()" style="margin-top: auto; background-color: #4a4a4a; color: #f0f0f0;">🚪 Cerrar Sesión</button>
     </nav>
 
@@ -232,23 +248,23 @@
     <section id="auth" class="app-section">
         <div id="login-form" class="auth-form">
             <h2>Iniciar Sesión</h2>
-            <input type="text" id="login-username" placeholder="Usuario">
-            <input type="password" id="login-password" placeholder="Contraseña">
+            <input type="text" id="login-username" placeholder="Usuario" autocomplete="username">
+            <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password">
             <button onclick="login()">Entrar</button>
             <span id="toggle-form" onclick="toggleAuthMode()">¿No tienes cuenta? Regístrate aquí.</span>
         </div>
         
         <div id="register-form" class="auth-form" style="display: none;">
             <h2>Registro</h2>
-            <input type="text" id="register-username" placeholder="Nuevo Usuario">
-            <input type="password" id="register-password" placeholder="Nueva Contraseña">
+            <input type="text" id="register-username" placeholder="Nuevo Usuario" autocomplete="new-username">
+            <input type="password" id="register-password" placeholder="Nueva Contraseña" autocomplete="new-password">
             <button onclick="register()">Registrar</button>
             <span id="toggle-form" onclick="toggleAuthMode()">¿Ya tienes cuenta? Inicia sesión.</span>
         </div>
     </section>
 
     <section id="home" class="app-section">
-        <h2 style="text-align: center; margin-bottom: 30px; color: #ffe135;">Catálogo Completo (100 Plátanos)</h2>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #ffe135;">Catálogo Completo (100 Plátanos Únicos)</h2>
         <div class="products-grid" id="product-list">
             </div>
     </section>
@@ -268,18 +284,6 @@
             <div class="total-price">Total: <span id="cart-total">0.00</span> € (Incluye IVA)</div>
             <div class="total-points">Total en Puntos: <span id="cart-points-total">0</span> Platapoints</div>
             <button class="buy-btn" style="width: 100%; margin-top: 20px; font-size: 1.2rem;" onclick="openCheckoutModal()">Proceder al Pago</button>
-        </div>
-    </section>
-
-    <section id="game-section" class="app-section">
-        <h2>🎄 ¡Modo Banana Shooter Activado! 🎯</h2>
-        <div id="game-stats">
-            Puntuación: <span id="game-score">0</span> | Pts. extra: <span id="game-points-earn">0</span>
-        </div>
-        <canvas id="game-canvas" width="800" height="400"></canvas>
-        <div class="game-controls">
-            Clica en la pantalla para lanzar plátanos y destruir los alimentos equivocados. <br>
-            ¡Pulsa **ESC** para salir del juego!
         </div>
     </section>
     
@@ -351,18 +355,8 @@
         const sidebar = document.getElementById('sidebar');
         const menuBtn = document.getElementById('menu-toggle-btn');
         
-        // --- VARIABLES DEL JUEGO ---
-        const GAME_WIDTH = 800;
-        const GAME_HEIGHT = 400;
-        let canvas, ctx, gameLoop, isGameRunning = false;
-        let score = 0;
-        let pointsEarned = 0;
-        let enemies = [];
-        let projectiles = [];
-        let enemySpawnInterval = 1000; // 1 segundo
-        let lastSpawnTime = 0;
-        let enemySpeed = 1;
-
+        // SE ELIMINARON TODAS LAS VARIABLES DEL JUEGO
+        
         // Función de utilidad para obtener datos de usuarios
         function getUsers() {
             try {
@@ -394,7 +388,9 @@
 
         function grantDailyPoints() {
             const user = localStorage.getItem('sessionUser');
-            if (!user) return;
+            // CREDENCIALES DE ADMINISTRADOR FIJAS
+            const ADMIN_USER = 'admin';
+            if (!user || user === ADMIN_USER) return;
 
             const lastLoginKey = `LastLogin_${user}`;
             const lastLoginDate = localStorage.getItem(lastLoginKey);
@@ -409,7 +405,7 @@
             }
         }
 
-        // --- LÓGICA DE AUTENTICACIÓN Y NAVEGACIÓN (Mantenida) ---
+        // --- LÓGICA DE AUTENTICACIÓN Y NAVEGACIÓN (Actualizada para Admin) ---
         
         function toggleAuthMode() {
             const isLogin = document.getElementById('login-form').style.display !== 'none';
@@ -420,6 +416,12 @@
         function register() {
             const username = document.getElementById('register-username').value.trim();
             const password = document.getElementById('register-password').value;
+            
+            // Bloquear registro si el nombre de usuario es 'admin'
+            if (username === 'admin') {
+                alert("Ese nombre de usuario está reservado.");
+                return;
+            }
 
             if (username.length < 3 || password.length < 4) {
                 alert("El usuario debe tener al menos 3 caracteres y la contraseña 4.");
@@ -443,8 +445,22 @@
         function login() {
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value;
-            const users = getUsers();
+            
+            // 1. **CHECK DE ADMINISTRADOR**
+            const ADMIN_USER = 'admin';
+            const ADMIN_PASS = 'aitor';
+            
+            if (username === ADMIN_USER && password === ADMIN_PASS) {
+                localStorage.setItem('sessionUser', ADMIN_USER);
+                alert(`¡Bienvenido, ADMINISTRADOR ${ADMIN_USER.toUpperCase()}!`);
+                updateUIForSession(ADMIN_USER);
+                updatePlatapointsDisplay();
+                showSection('home'); 
+                return; 
+            }
 
+            // 2. CHECK DE USUARIO REGULAR
+            const users = getUsers();
             const user = users.find(u => u.username === username && u.password === password);
 
             if (user) {
@@ -484,14 +500,22 @@
             updatePlatapointsDisplay();
             document.getElementById('intro').classList.add('active'); 
         }
-
+        
         function updateUIForSession(username) {
             const statusText = document.getElementById('session-status');
             const titleH1 = document.querySelector('#title-container h1');
+            
+            const isAdmin = username === 'admin';
+            
+            if (isAdmin) {
+                document.body.classList.add('is-admin');
+            } else {
+                document.body.classList.remove('is-admin');
+            }
 
             if (username) {
                 statusText.innerText = `Sesión activa: ${username} (Clic para cerrar)`;
-                titleH1.style.color = '#fff';
+                titleH1.style.color = isAdmin ? '#6a1b9a' : '#fff'; 
                 titleH1.style.fontSize = '2.5rem'; 
                 menuBtn.style.display = 'flex';
                 sidebar.querySelector('.sidebar-points').style.display = 'block';
@@ -510,18 +534,12 @@
 
         function showSection(sectionId) {
             const user = localStorage.getItem('sessionUser');
-            const requiresAuth = ['home', 'details', 'cart', 'game', 'secta'].includes(sectionId); 
+            // 'game' ha sido eliminado de la lista de secciones
+            const requiresAuth = ['home', 'details', 'cart', 'secta'].includes(sectionId); 
 
             if (requiresAuth && !user) {
                 alert("Debes iniciar sesión para acceder a esta sección.");
                 sectionId = 'auth';
-            }
-
-            // Si cambiamos de sección, detener el juego
-            if (sectionId !== 'game' && isGameRunning) {
-                stopGame();
-            } else if (sectionId === 'game' && !isGameRunning) {
-                startGame();
             }
 
             document.querySelectorAll('.app-section').forEach(sec => {
@@ -532,20 +550,167 @@
             sidebar.classList.remove('open');
         }
         
-        // --- LÓGICA DE PRODUCTOS (GENERACIÓN DE 100 TARJETAS) (Mantenida) ---
-        
+        // --- 100 DESCRIPCIONES ÚNICAS (Mantenidas) ---
         const BANANA_LORE = [
-            "El clásico. Dulce, con pintitas y lleno de potasio. Ideal para recuperar energía después de programar.",
-            "Duro como una piedra. Se usa para cocinar patacones o para lanzar a enemigos, ya que hace daño contundente.",
-            "Cultivado con música clásica y masajes diarios. Su sabor es tan refinado que te hace hablar con acento elegante.",
-            "Un plátano etéreo. No alimenta el cuerpo, pero alimenta el alma. 0 calorías porque técnicamente no existe.",
-            "Recolectado en el Glaciar Ártico. Consume uno y podrás escuchar los secretos de los pingüinos. Causa congelación ligera.",
-            "Expuesto a radiación controlada. Brilla en la oscuridad y te da un 5% de probabilidad de súper fuerza durante 10 segundos.",
-            "Solo visible si te concentras mucho. Si lo lanzas, nadie sabrá de dónde vino el impacto.",
-            "Un bocado enciende una llama en tu estómago. Ideal para los días fríos o para quemar calorías rápidamente.",
-            "Crece hacia atrás. Al comerlo, te hace dudar de todas tus decisiones pasadas. Peligroso para la filosofía.",
-            "Cosechado únicamente bajo la luna nueva. Te da visión nocturna, pero te vuelve sensible al sol."
+            // 1-10: Originales (Clásico, Piedra, Refinado, Etéreo, Ártico, Radioactivo, Invisible, Llama, Revertido, Luna)
+            "El clásico. Dulce, con pintitas y lleno de potasio. Ideal para recuperar energía después de programar.", // V-001 (Clásico)
+            "Duro como una piedra. Se usa para cocinar patacones o para lanzar a enemigos, ya que hace daño contundente.", // V-002 (Piedra)
+            "Cultivado con música clásica y masajes diarios. Su sabor es tan refinado que te hace hablar con acento elegante.", // V-003
+            "Un plátano etéreo. No alimenta el cuerpo, pero alimenta el alma. 0 calorías porque técnicamente no existe.", // V-004
+            "Recolectado en el Glaciar Ártico. Consume uno y podrás escuchar los secretos de los pingüinos. Causa congelación ligera.", // V-005
+            "Expuesto a radiación controlada. Brilla en la oscuridad y te da un 5% de probabilidad de súper fuerza durante 10 segundos.", // V-006 (Radioactivo)
+            "Solo visible si te concentras mucho. Si lo lanzas, nadie sabrá de dónde vino el impacto.", // V-007 (Invisible)
+            "Un bocado enciende una llama en tu estómago. Ideal para los días fríos o para quemar calorías rápidamente.", // V-008 (Llama)
+            "Crece hacia atrás. Al comerlo, te hace dudar de todas tus decisiones pasadas. Peligroso para la filosofía.", // V-009
+            "Cosechado únicamente bajo la luna nueva. Te da visión nocturna, pero te vuelve sensible al sol.", // V-010
+            // 11-20: Frutas de Poder (Zen, Relámpago, Holográfico, Confusión, Fija, Despertador, Mágica, Cactus, Silencioso, Cuántico)
+            "El Plátano Zen. Consumirlo te da 5 minutos de paz absoluta, incluso si tu código tiene 100 errores.", // V-011
+            "El Banano Relámpago. Crece tan rápido que al comerlo sientes una descarga de energía que dura 3 segundos.", // V-012 (Relámpago)
+            "Plátano Holográfico. Su sabor cambia según tu estado de ánimo (delicioso si estás feliz, a calcetín si estás triste).", // V-013
+            "El Plátano de la Confusión. Causa que tus vecinos se pregunten si acaban de ver un camello con patines.", // V-014
+            "Banana Fija. Literalmente, no se mueve de la mesa, no importa cuánto lo empujes. Ideal para decoración minimalista.", // V-015
+            "Plátano Despertador. Su olor es tan intenso que puede reemplazar 3 tazas de café sin efectos secundarios.", // V-016
+            "Variedad Mágica: Si lo comes mientras saltas, duplicas temporalmente tu capacidad de salto.", // V-017
+            "El Plátano-Cactus. Sabor dulce con textura espinosa. Advertencia: retira las púas antes de ingerir.", // V-018
+            "El Banano Silencioso. Es la fruta más ruidosa del mundo, pero solo lo oyen los que son dignos (o los que han tomado un café doble).", // V-019
+            "Plátano Cuántico. Al observarlo, no está maduro ni verde, sino ambos. Al morderlo, colapsa en un sabor aleatorio.", // V-020
+            // 21-30: Plátanos Festivos y de Invierno (Jengibre, Muñeco de Nieve, Cascabel, Papá Noel, Reyes Magos, Nochebuena, Chimenea, Anti-Villancicos, Posada, Congelado)
+            "La Banana de Jengibre. Sabor a galleta navideña y un ligero crujido. ¡Ideal para un festín invernal!", // V-021 (Jengibre)
+            "Plátano Muñeco de Nieve. Crece frío y nunca se calienta. Perfecto para enfriar bebidas rápidamente.", // V-022 (Muñeco)
+            "El Banano Cascabel. Suelta un pequeño tintineo al moverlo. Un 10% de su precio va a la decoración de trineos.", // V-023 (Cascabel)
+            "Variedad Papá Noel. Tiene motas rojas y blancas. Alimenta tu espíritu navideño y tu digestión.", // V-024 (Papá Noel)
+            "Plátano de los Reyes Magos. Recolectado en el Oriente. Otorga sabiduría temporal para elegir el mejor regalo.", // V-025 (Reyes Magos)
+            "El Banano de Nochebuena. Brilla con un aura azul bajo luz tenue, ayudándote a encontrarlo en la oscuridad.", // V-026 (Nochebuena)
+            "Plátano de la Falsa Chimenea. Sabe a humo y a hogar, pero no genera calor. Solo una ilusión reconfortante.", // V-027
+            "El Banano Anti-Villancicos. Alivia la necesidad incontrolable de escuchar la misma canción navideña por 100ª vez.", // V-028
+            "Plátano de la Posada. Otorga al usuario el poder de encontrar sitio en la cola más larga del supermercado.", // V-029
+            "El Banano Congelado: Una variedad que se congela instantáneamente al ser pelada, perfecta para helados exprés.", // V-030 (Congelado)
+            // 31-40: Plátanos Tecnológicos (USB, Pixelada, AR, Cifrado, 5G, Drone, Carga, Troleador, Backup, Lentejuela)
+            "Plátano USB. Se conecta a cualquier puerto, pero solo transfiere archivos de recetas de batidos.", // V-031 (USB)
+            "Banana Pixelada. Su forma es ligeramente cuadrada. Su sabor es un clásico, pero su textura es retro.", // V-032 (Pixelada)
+            "Plátano de Realidad Aumentada. Necesitas unas gafas especiales para verlo, pero vale la pena por el sabor.", // V-033
+            "El Banano Cifrado. Solo se puede pelar si resuelves un acertijo complejo antes de que se oxide.", // V-034
+            "Plátano 5G. Otorga una conexión ultrarrápida a tu cerebro, pero solo para pensar en más plátanos.", // V-035 (5G)
+            "La Banana Drone. Vuela en círculos sobre tu cabeza hasta que lo comes. Alto riesgo de impacto en el ojo.", // V-036
+            "Plátano de Carga. Suministra energía a cualquier dispositivo con un simple roce. Dura 5 minutos.", // V-037 (Carga)
+            "El Banano Troleador. Cuando lo pelas, grita un chiste malo. Si te ríes, ganas Platapoints.", // V-038
+            "Plátano de Backup. Si pierdes tus datos, comer esto te hace recordar una contraseña olvidada.", // V-039
+            "El Banano Lentejuela. Tiene una capa protectora brillante. Pelarlo es una fiesta ruidosa.", // V-040
+            // 41-50: Plátanos del Lore de la Secta (Khidir, Gopal, Ahmed Salah I, Antisuperstición, Silenciosa, Semillero, Curva, Concilio, Gaviota, Concentrado)
+            "Plátano de Khidir. Otorga la fuerza de combate del General. Sabor ligeramente salado a campo de batalla.", // V-041 (Khidir)
+            "Banana Gopal. Infundido con esencia de IVA. Su sabor te recuerda que los impuestos son necesarios.", // V-042 (Gopal)
+            "El Banano de Ahmed Salah I. El primer plátano de la dinastía. Sabor a historia y misterio milenario.", // V-043 (Salah)
+            "Plátano Antisuperstición. Neutraliza el efecto de cualquier objeto que te dé mala suerte (excepto calcetines perdidos).", // V-044
+            "La Banana Silenciosa. Utilizada en operaciones de espionaje de la Secta. No hace ruido al caer.", // V-045
+            "El Banano del Semillero. Tiene el amargo sabor del fracaso de la semilla de aguacate. Solo para valientes.", // V-046
+            "Plátano de la Curva. Al comerlo, sientes la irresistible necesidad de sonreír por las siguientes 6 horas.", // V-047
+            "El Banano del Concilio. Se utiliza en reuniones secretas para asegurar que todos están de acuerdo con el líder.", // V-048
+            "Plátano de la Gaviota. Emite un breve, pero agudo chillido. Útil para distraer a los enemigos (o a los clientes aburridos).", // V-049
+            "La Banana Concentrado. Versión pequeña, pero 10 veces más concentrada en potasio. Un mini-puñetazo de energía.", // V-050
+            // 51-60: Plátanos Mutantes (Tres Puntas, Geométrica, Gigante, Revertido, Lodo, Cristal, Sabor Invertido, Fósil, Esponjoso, Susurra)
+            "Plátano de Tres Puntas. Una mutación con tres extremos. Ideal para compartir, o no.", // V-051 (3 Puntas)
+            "La Banana Geométrica. Perfectamente cúbica. Requiere herramientas especiales para pelarla.", // V-052 (Cubo)
+            "Plátano Gigante. Ocupa toda la pantalla. Comerlo requiere un día entero de dedicación.", // V-053
+            "El Banano Revertido. Al comerlo, te hace caminar hacia atrás por un minuto. Peligro de colisión.", // V-054
+            "Plátano de Lodo. Crece en pantanos. Sabe a chocolate oscuro, pero tiene un regusto a ciénaga.", // V-055 (Lodo)
+            "La Banana de Cristal. Transparente y frágil. Ten cuidado al morder para no dañar tus dientes.", // V-056 (Cristal)
+            "Plátano de Sabor Invertido. Sabe dulce en la cáscara y amargo en la pulpa. Una sorpresa terrible.", // V-057
+            "El Banano Fósil. Petrificado, pero comestible (si tienes una buena sierra). Nutrientes prehistóricos.", // V-058
+            "Plátano Esponjoso. Tiene la textura de una nube. Se desintegra si lo miras fijamente por mucho tiempo.", // V-059
+            "La Banana que Susurra. Te cuenta secretos absurdos sobre tu propia vida al masticarla.", // V-060
+            // 61-70: Plátanos de Lujo (Oro, Diamante, Seda, Perla, Sello Real, Caviar, Colección, Aterciopelada, Trufa, Millonario)
+            "Plátano Bañado en Oro. Comestible, pero el baño de oro es puro espectáculo. Sabor a prestigio.", // V-061 (Oro)
+            "El Banano de Diamante. Raro y caro. Genera envidia instantánea en cualquier frutero.", // V-062 (Diamante)
+            "Plátano de Seda. Textura tan suave que parece líquido. Solo se sirve en copas de cristal.", // V-063
+            "La Banana Perla. Envuelto en una capa nacarada. Se recomienda usar guantes de terciopelo al pelarla.", // V-064
+            "Plátano con Sello Real. Certificado por un rey ficticio. Sabor a exclusividad y pompa.", // V-065
+            "El Banano de Caviar. Cada bocado contiene pequeñas esferas de sabor salado que explotan en la boca. Extraño pero adictivo.", // V-066
+            "Plátano de Colección. Empaquetado en una caja irrompible. Es demasiado valioso para comer, solo para mirar.", // V-067
+            "La Banana Aterciopelada. Cubierta con una capa de terciopelo comestible. Se siente como una alfombra de sabor.", // V-068
+            "Plátano con Aroma a Trufa. El sabor es normal, pero el olor te hace sentir que estás en un restaurante caro.", // V-069
+            "El Banano del Millonario. Tan dulce y jugoso que te hace sentir que acabas de ganar la lotería (pero no la has ganado).", // V-070
+            // 71-80: Plátanos Cósmicos (Marte, Galáctico, Nebulosa, Agujero Negro, Vía Láctea, Cometa, Asteroide, Interdimensional, Gravedad Cero, Solsticio)
+            "Plátano de Marte. Cultivado en suelo rojo. Sabor metálico y misterioso.", // V-071 (Marte)
+            "El Banano Galáctico. Tiene pequeñas partículas brillantes que simulan estrellas. Sabor a vacío espacial.", // V-072 (Galáctico)
+            "Plátano Nebulosa. Sus colores son un espectáculo visual al pelarlo. No apto para fotos en blanco y negro.", // V-073
+            "La Banana Agujero Negro. Al comerla, sientes que el tiempo se detiene brevemente. (Advertencia: causa un ligero dolor de cabeza).", // V-074
+            "Plátano de la Vía Láctea. Se dice que contiene los secretos del universo en cada mordisco (o solo potasio).", // V-075
+            "El Banano Cometa. Deja un rastro de sabor a caramelo quemado mientras lo comes.", // V-076
+            "Plátano Asteroide. Duro como una roca espacial. Se come en trozos pequeños para no dañar el esmalte.", // V-077 (Asteroide)
+            "La Banana Interdimensional. Si la pones en una tostadora, te transporta a una dimensión paralela (con más plátanos).", // V-078
+            "Plátano de Gravedad Cero. Flota. Debes atarlo a un peso antes de pelarlo.", // V-079
+            "El Banano de Solsticio. Recolectado exactamente a la mitad de la noche más larga del año. Sabor a esperanza.", // V-080
+            // 81-90: Plátanos de Habilidad (Ingenio, Idioma, Mímico, Olvido, Telequinesis, Precisión, Invisibilidad, Canto, Creatividad, Tiempo)
+            "Plátano del Ingenio. Te da la solución a un problema matemático simple al instante.", // V-081 (Ingenio)
+            "El Banano del Idioma. Te permite hablar un idioma extranjero fluidamente por 5 minutos (generalmente el élfico).", // V-082
+            "Plátano Mímico. Adopta el sabor de la última cosa que comiste. Es un plátano de identidad dudosa.", // V-083
+            "La Banana del Olvido. Te hace olvidar por qué entraste en una habitación (efecto duradero).", // V-084
+            "Plátano de la Telequinesis. Si concentras tu mente, puedes hacer levitar la cáscara. Pura magia inútil.", // V-085
+            "El Banano de la Precisión. Mejora tu puntería. Perfecto para el Banana Shooter.", // V-086
+            "Plátano de la Invisibilidad. Te hace 90% invisible durante 3 segundos. No te da tiempo a nada útil.", // V-087
+            "La Banana del Canto. Te obliga a tararear una melodía pegadiza el resto del día.", // V-088
+            "Plátano de la Creatividad. Te da una idea brillante (pero probablemente inútil) para una startup.", // V-089
+            "El Banano del Tiempo. Te hace sentir que el bocado dura una eternidad, sin cambiar el tiempo real.", // V-090
+            // 91-100: Plátanos Épicos (Excalibur, Fénix, Sabiduría de Aitor, Dragón, Duende, Suerte, Oráculo, Maestra, Cien Sabores, Definitivo)
+            "Plátano Excalibur. Solo los dignos pueden pelarlo. Los demás lo intentan y fallan miserablemente.", // V-091 (Excalibur)
+            "El Banano Fénix. Si se quema, renace de sus cenizas más maduro y potente.", // V-092 (Fénix)
+            "Plátano de la Sabiduría de Aitor. Confiere una fracción del conocimiento del Administrador. Sabor a código limpio.", // V-093 (Aitor)
+            "La Banana Dragón. Infundida con un ligero picante y un aliento de vapor al pelarla.", // V-094 (Dragón)
+            "Plátano del Duende. Si lo encuentras, te otorga un deseo (que siempre es más plátano).", // V-095 (Duende)
+            "El Banano de la Suerte. Te da 1% más de probabilidad de encontrar Platapoints escondidos.", // V-096
+            "Plátano del Oráculo. Si lo lanzas, predice el clima del día siguiente con un 50% de precisión.", // V-097
+            "La Banana Maestra. El plátano original, del que todos los demás copian su forma. Sabor a fuente de la vida.", // V-098
+            "Plátano de los Cien Sabores. Cada mordida sabe a algo diferente. Una montaña rusa sensorial.", // V-099
+            "El Banano Definitivo V-100. El más raro. Su sabor es indescriptible y te da un subidón de Platapoints aleatorio." // V-100 (Definitivo)
         ];
+        
+        /**
+         * Asigna un emoji y una clase CSS a cada plátano según su índice.
+         * @param {number} i - Índice del plátano (1 a 100).
+         * @returns {{emoji: string, className: string}}
+         */
+        function getBananaStyle(i) {
+            let emoji = '🍌';
+            let className = '';
+
+            if (i >= 1 && i <= 10) { // 1. Originales
+                className = (i === 2) ? 'stone-banana' : (i === 6) ? 'power-banana' : (i === 7) ? 'invisible-banana' : '';
+                emoji = (i === 2) ? '🪨' : (i === 5) ? '🧊' : (i === 6) ? '☢️' : (i === 8) ? '🔥' : '🍌';
+            } else if (i >= 11 && i <= 20) { // 2. Poder
+                className = 'power-banana';
+                emoji = (i === 12) ? '⚡' : (i === 13) ? '💫' : (i === 18) ? '🌵' : '💥';
+            } else if (i >= 21 && i <= 30) { // 3. Festivo
+                className = 'festive-banana';
+                emoji = (i === 23) ? '🔔' : (i === 24) ? '🎅' : (i === 25) ? '👑' : (i === 30) ? '🥶' : '🎁';
+            } else if (i >= 31 && i <= 40) { // 4. Tecnológico
+                className = 'tech-banana';
+                emoji = (i === 31) ? '💾' : (i === 32) ? '🧱' : (i === 35) ? '📶' : (i === 37) ? '🔋' : (i === 40) ? '✨' : '💻';
+            } else if (i >= 41 && i <= 50) { // 5. Secta
+                className = 'secta-banana';
+                emoji = (i === 41) ? '⚔️' : (i === 42) ? '💰' : (i === 43) ? '📜' : (i === 46) ? '🤢' : (i === 49) ? '🐦' : '👁️';
+            } else if (i >= 51 && i <= 60) { // 6. Mutante
+                className = 'mutant-banana';
+                emoji = (i === 52) ? '📦' : (i === 56) ? '💎' : (i === 59) ? '☁️' : '🦠';
+            } else if (i >= 61 && i <= 70) { // 7. Lujo
+                className = 'luxury-banana';
+                emoji = (i === 61) ? '🥇' : (i === 62) ? '💎' : (i === 64) ? '⚪' : (i === 69) ? '🍄' : '⚜️';
+            } else if (i >= 71 && i <= 80) { // 8. Cósmico
+                className = 'cosmic-banana';
+                emoji = (i === 71) ? '🔴' : (i === 72) ? '⭐' : (i === 74) ? '⚫' : (i === 79) ? '🛰️' : '🌌';
+            } else if (i >= 81 && i <= 90) { // 9. Habilidad
+                className = 'skill-banana';
+                emoji = (i === 81) ? '🧠' : (i === 82) ? '🗣️' : (i === 85) ? '✋' : (i === 86) ? '🎯' : (i === 89) ? '💡' : '✨';
+            } else if (i >= 91 && i <= 100) { // 10. Épico
+                className = 'epic-banana';
+                emoji = (i === 91) ? '🗡️' : (i === 92) ? '🔥' : (i === 93) ? '🎓' : (i === 94) ? '🐲' : (i === 95) ? '🍀' : (i === 98) ? '🔱' : '💥';
+                if (i === 100) {
+                    emoji = '🌟';
+                    className += ' v100-crown'; // Clase especial para el 100
+                }
+            }
+
+            return { emoji, className };
+        }
         
         function generateBananaDetails() {
             const detailsList = document.getElementById('details-list');
@@ -553,7 +718,7 @@
             
             for (let i = 1; i <= 100; i++) {
                 const name = `Plátano ${String(i).padStart(3, '0')}: Variedad Secreta V-${i}`;
-                const description = BANANA_LORE[(i - 1) % BANANA_LORE.length] + ` (Nivel de rareza ${Math.floor(i / 10)}).`;
+                const description = BANANA_LORE[i - 1]; 
                 
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('banana-info-item');
@@ -574,13 +739,16 @@
                 const price = (1.00 + (i * 0.09)).toFixed(2); 
                 const pointsCost = Math.round(price * 10); 
                 
+                // OBTENER ESTILO PERSONALIZADO
+                const bananaStyle = getBananaStyle(i);
+                
                 const card = document.createElement('div');
                 card.classList.add('product-card');
                 
-                const hue = (i * 10) % 360;
-                
                 card.innerHTML = `
-                    <span class="product-icon" style="filter: hue-rotate(${hue}deg) saturate(1.5);">🍌</span>
+                    <span class="product-icon ${bananaStyle.className}">
+                        ${bananaStyle.emoji}
+                    </span>
                     <h3 class="product-title">${name}</h3>
                     <span class="product-price">${price} €</span>
                     <span class="product-points">Coste: ${pointsCost} Platapoints</span>
@@ -591,7 +759,7 @@
             }
         }
 
-        // --- FUNCIONES DEL CARRITO Y CHECKOUT (Mantenidas) ---
+        // --- RESTO DE FUNCIONES (Mantenidas) ---
 
         function addToCart(name, price, pointsCost) {
             if (!localStorage.getItem('sessionUser')) {
@@ -710,7 +878,6 @@
              showSection('home');
         }
 
-        // --- DECORACIÓN NAVIDEÑA (NUEVO) ---
         function createSnowflakes() {
             const container = document.getElementById('snow-container');
             for (let i = 0; i < 50; i++) {
@@ -723,203 +890,7 @@
                 container.appendChild(flake);
             }
         }
-
-        // --- LÓGICA DEL JUEGO BANANA SHOOTER (MODIFICADA: Movimiento Lateral) ---
-        
-        function startGame() {
-            if (isGameRunning) return;
-            
-            canvas = document.getElementById('game-canvas');
-            ctx = canvas.getContext('2d');
-            canvas.width = GAME_WIDTH;
-            canvas.height = GAME_HEIGHT;
-            
-            score = 0;
-            pointsEarned = 0;
-            enemies = [];
-            projectiles = [];
-            isGameRunning = true;
-            lastSpawnTime = Date.now();
-            enemySpeed = 2; // Velocidad base ligeramente aumentada para el movimiento horizontal
-
-            // Se cambia el evento a 'click' para que lance el proyectil desde la parte inferior central
-            canvas.addEventListener('click', handleShoot);
-            document.addEventListener('keydown', handleGameKeys);
-            
-            gameLoop = requestAnimationFrame(updateGame);
-        }
-
-        function stopGame() {
-            if (!isGameRunning) return;
-            
-            isGameRunning = false;
-            cancelAnimationFrame(gameLoop);
-            canvas.removeEventListener('click', handleShoot);
-            document.removeEventListener('keydown', handleGameKeys);
-
-            alert(`¡Juego Terminado! Puntuación final: ${score}. Has ganado ${pointsEarned} Platapoints.`);
-            
-            // Otorgar los puntos ganados al usuario
-            const currentPoints = getPlatapoints();
-            setPlatapoints(currentPoints + pointsEarned);
-        }
-
-        function handleGameKeys(e) {
-            if (e.key === "Escape") {
-                stopGame();
-                // Volver a la sección de la tienda
-                showSection('home'); 
-            }
-        }
-
-        // Clase para representar a los enemigos
-        class Enemy {
-            constructor(side, y, label) {
-                // Aparecerá a la izquierda (0) o a la derecha (GAME_WIDTH)
-                this.x = side === 'left' ? 0 : GAME_WIDTH; 
-                this.y = y;
-                this.radius = 20;
-                this.color = '#ff4444'; 
-                this.label = label;
-                
-                // La velocidad se ajusta para moverse hacia el centro
-                this.speed = side === 'left' ? enemySpeed : -enemySpeed;
-            }
-
-            draw() {
-                // Dibujo del círculo de fondo
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.closePath();
-                
-                // Dibujo de la etiqueta (la fruta)
-                ctx.fillStyle = '#fff';
-                ctx.font = '24px Arial'; // Aumentamos tamaño para las frutas
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle'; // Alineación vertical para centrar mejor
-                ctx.fillText(this.label, this.x, this.y);
-            }
-
-            update() {
-                // Mueve horizontalmente
-                this.x += this.speed; 
-                // Añadimos un pequeño movimiento vertical para más dificultad
-                this.y += Math.sin(this.x / 50) * 0.5;
-            }
-        }
-
-        // Clase para los proyectiles (plátanos)
-        class Projectile {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = 8;
-                this.velocity = 15; // Más rápido para el tiro fijo
-            }
-
-            draw() {
-                // Centramos la imagen del plátano en la posición del proyectil
-                ctx.font = '20px Arial';
-                ctx.fillText('🍌', this.x - 10, this.y + 5);
-            }
-
-            update() {
-                // El proyectil sube
-                this.y -= this.velocity;
-            }
-        }
-        
-        function spawnEnemy() {
-            // Elige un lado de forma aleatoria: 'left' o 'right'
-            const side = Math.random() < 0.5 ? 'left' : 'right';
-            // Aparece a una altura aleatoria en el canvas
-            const y = Math.random() * (GAME_HEIGHT - 40) + 20;
-            
-            // Nuevas etiquetas de frutas no-bananeras
-            const enemyLabels = ['🍎', '🍐', '🍊']; 
-            const label = enemyLabels[Math.floor(Math.random() * enemyLabels.length)];
-            
-            enemies.push(new Enemy(side, y, label));
-        }
-
-        function handleShoot(e) {
-            // El proyectil se lanza desde la parte inferior central
-            const centerX = GAME_WIDTH / 2;
-            const bottomY = GAME_HEIGHT;
-            projectiles.push(new Projectile(centerX, bottomY));
-        }
-
-        function updateGameStats() {
-            document.getElementById('game-score').innerText = score;
-            document.getElementById('game-points-earn').innerText = pointsEarned;
-
-            if (score > 0 && score % 50 === 0) { // Aumentar dificultad más a menudo
-                enemySpeed = Math.min(10, enemySpeed + 0.2); // Límite de velocidad para que no sea injugable
-                enemySpawnInterval = Math.max(400, enemySpawnInterval - 20);
-            }
-        }
-
-        function updateGame(timestamp) {
-            if (!isGameRunning) return;
-
-            ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-            // Spawning de enemigos
-            if (timestamp - lastSpawnTime > enemySpawnInterval) {
-                spawnEnemy();
-                lastSpawnTime = timestamp;
-            }
-
-            // Actualizar y dibujar enemigos
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                const enemy = enemies[i];
-                enemy.update();
-                enemy.draw();
-
-                // Detección de enemigo que llega al lado opuesto (sale del juego)
-                if (enemy.x < -enemy.radius || enemy.x > GAME_WIDTH + enemy.radius) {
-                    enemies.splice(i, 1);
-                    score -= 5; 
-                    if (score < 0) score = 0;
-                    updateGameStats();
-                }
-            }
-
-            // Actualizar, dibujar y gestionar colisiones de proyectiles
-            for (let i = projectiles.length - 1; i >= 0; i--) {
-                const proj = projectiles[i];
-                proj.update();
-                proj.draw();
-
-                // Eliminación de proyectiles fuera de la pantalla
-                if (proj.y < 0) {
-                    projectiles.splice(i, 1);
-                    continue;
-                }
-                
-                // Detección de colisión (Plátano vs. Enemigo)
-                for (let j = enemies.length - 1; j >= 0; j--) {
-                    const enemy = enemies[j];
-                    const distance = Math.hypot(proj.x - enemy.x, proj.y - enemy.y);
-
-                    if (distance < proj.radius + enemy.radius) {
-                        // Impacto!
-                        score += 10;
-                        pointsEarned += 1;
-                        enemies.splice(j, 1); // Eliminar enemigo
-                        projectiles.splice(i, 1); // Eliminar proyectil
-                        updatePlatapointsDisplay(); // Se actualiza el display de puntos al impactar
-                        updateGameStats();
-                        break; // El proyectil solo puede golpear un enemigo
-                    }
-                }
-            }
-            
-            gameLoop = requestAnimationFrame(updateGame);
-        }
-
+        // SE ELIMINÓ TODA LA LÓGICA DEL JUEGO
     </script>
 </body>
 </html>
