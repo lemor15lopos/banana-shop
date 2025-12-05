@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego Shooter de Bananas vs Zombis (Local)</title>
-    <!-- Tailwind CSS se carga desde CDN, compatible con archivos locales -->
+    <title>Banana Shooter - Defiende la Base</title>
+    <!-- Tailwind CSS se carga desde CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Estilos personalizados para el juego, incluyendo la fuente Inter */
@@ -239,13 +239,13 @@
     </div>
 </div>
 
-<!-- Bloque de Script ESTÁNDAR para compatibilidad con archivos locales -->
+<!-- Bloque de Script del Juego -->
 <script>
-    // --- Lógica del Juego ---
+    // --- Game Logic ---
     const canvas = document.getElementById('gameCanvas');
-    // Aseguramos que el canvas y el contexto se obtienen correctamente
+    // Ensure canvas and context are obtained correctly
     if (!canvas) {
-        console.error("No se encontró el elemento canvas.");
+        console.error("Canvas element not found.");
     }
     const ctx = canvas.getContext('2d');
     const scoreDisplay = document.getElementById('scoreDisplay');
@@ -263,28 +263,28 @@
     const rejectPowerupButton = document.getElementById('rejectPowerup');
 
     
-    // Dimensiones del Canvas
+    // Canvas Dimensions
     const GAME_WIDTH = 600;
     const GAME_HEIGHT = 400;
 
-    // Asignar dimensiones al canvas
+    // Assign dimensions to canvas
     canvas.width = GAME_WIDTH;
     canvas.height = GAME_HEIGHT;
 
-    // Constantes de Power-Ups
+    // Power-Up Constants
     const BASE_SPEED = 5;
     const KILLS_TO_POWERUP = 20;
 
-    // Variables de estado del juego
+    // Game state variables
     let player = {
         x: 50,
         y: GAME_HEIGHT / 2,
         width: 30,
         height: 30,
-        speed: BASE_SPEED, // Velocidad base
+        speed: BASE_SPEED, // Base speed
         health: 125, 
         maxHealth: 125, 
-        hasShield: false // Estado del Power-Up Escudo
+        hasShield: false // Shield Power-Up state
     };
 
     let bananas = [];
@@ -293,14 +293,14 @@
     let score = 0;
     let isGameOver = false;
     let gameRunning = false;
-    let isPaused = false; // Para pausar el juego durante la elección de Power-Up
+    let isPaused = false; // To pause the game during Power-Up choice
     
-    // Variables del Power-Up
+    // Power-Up variables
     let killsSincePowerup = 0;
     let activePowerup = null; // null, 'TRIPLE', 'PIERCE', 'SPEED', 'SHIELD', 'BIG_BANANA'
-    let powerupOption = null; // Power-Up ofrecido para la elección
+    let powerupOption = null; // Power-Up offered for choice
 
-    // Tasa de aparición de zombis: 60 cuadros entre cada aparición (1 por segundo)
+    // Zombie spawn rate: 60 frames between each spawn (1 per second)
     let zombieSpawnRate = 60; 
     let frameCount = 0;
 
@@ -310,7 +310,7 @@
         shoot: false 
     };
 
-    // Mapeo de Power-Up a nombres legibles
+    // Power-Up Name Mapping
     const POWERUP_NAMES = {
         'TRIPLE': 'Triple Disparo 🍌🍌🍌',
         'PIERCE': 'Perforación 💥',
@@ -320,21 +320,21 @@
     };
 
 
-    // --- Clases del Juego (Modelos) ---
+    // --- Game Classes (Models) ---
 
-    // Clase para las Bananas (Proyectiles)
+    // Class for Bananas (Projectiles)
     class Banana {
         constructor(x, y, type = 'NORMAL') {
             this.x = x;
             this.y = y;
             this.velocity = 8;
-            this.color = '#f1c40f'; // Amarillo banana
+            this.color = '#f1c40f'; // Banana yellow
             this.isPiercing = (type === 'PIERCE');
             this.isBig = (type === 'BIG_BANANA');
 
             if (this.isBig) {
                 this.radius = 8;
-                this.velocity = 6; // Más lento por ser más grande
+                this.velocity = 6; // Slower because it's bigger
             } else {
                 this.radius = 5;
                 this.velocity = 8;
@@ -347,14 +347,14 @@
             ctx.fillStyle = this.color;
             ctx.fill();
             
-            // Indicadores visuales
+            // Visual indicators
             if (this.isPiercing) {
-                 ctx.strokeStyle = '#c0392b'; // Borde rojo
+                 ctx.strokeStyle = '#c0392b'; // Red border
                  ctx.lineWidth = 1;
                  ctx.stroke();
             }
             if (this.isBig) {
-                 ctx.strokeStyle = '#fff'; // Borde blanco para resaltar tamaño
+                 ctx.strokeStyle = '#fff'; // White border to highlight size
                  ctx.lineWidth = 1;
                  ctx.stroke();
             }
@@ -365,55 +365,55 @@
         }
     }
 
-    // CLASE PARA LOS ZOMBIS (ENEMIGOS)
+    // Class for Zombies (Enemies)
     class Zombie {
         constructor(type = 'NORMAL') {
             this.x = GAME_WIDTH;
-            this.y = Math.random() * (GAME_HEIGHT - 40) + 20; // Posición Y aleatoria
+            this.y = Math.random() * (GAME_HEIGHT - 40) + 20; // Random Y position
             this.type = type;
             this.width = 20;
             this.height = 20;
-            this.points = 10; // Puntuación base
-            this.maxHealth = 1; // Vida base
+            this.points = 10; // Base score
+            this.maxHealth = 1; // Base health
             
-            // Ajustes por tipo
+            // Adjustments by type
             if (this.type === 'FAST') {
-                this.speed = Math.random() * 1.5 + 1.2; // Más rápido
-                this.color = '#e74c3c'; // Rojo para Rápido
+                this.speed = Math.random() * 1.5 + 1.2; // Faster
+                this.color = '#e74c3c'; // Red for Fast
                 this.points = 15;
             } else if (this.type === 'TANK') {
-                this.speed = Math.random() * 0.4 + 0.2; // Más lento
-                this.width = 30; // Más grande
+                this.speed = Math.random() * 0.4 + 0.2; // Slower
+                this.width = 30; // Bigger
                 this.height = 30;
-                this.color = '#34495e'; // Gris oscuro para Tanque
-                this.maxHealth = 3; // Más resistente
+                this.color = '#34495e'; // Dark gray for Tank
+                this.maxHealth = 3; // More resistant
                 this.points = 30;
-            } else if (this.type === 'BRUTE') { // NUEVO Zombi Morado (Bruto)
-                this.speed = Math.random() * 1 + 0.8; // Velocidad media (más rápido que Tank, más lento que Fast)
-                this.width = 25; // Tamaño intermedio
+            } else if (this.type === 'BRUTE') { // NEW Brute Zombie (Purple)
+                this.speed = Math.random() * 1 + 0.8; // Medium speed
+                this.width = 25; // Intermediate size
                 this.height = 25;
-                this.color = '#8e44ad'; // Morado
-                this.maxHealth = 6; // 6 de vida
-                this.points = 50; // Puntos altos por la vida
+                this.color = '#8e44ad'; // Purple
+                this.maxHealth = 6; // 6 health
+                this.points = 50; // High points for health
             } else { // NORMAL
-                this.speed = Math.random() * 0.8 + 0.5; // Velocidad normal
-                this.color = '#27ae60'; // Verde
+                this.speed = Math.random() * 0.8 + 0.5; // Normal speed
+                this.color = '#27ae60'; // Green
             }
             
             this.currentHealth = this.maxHealth;
         }
 
         draw() {
-            // Dibujar el cuerpo del zombi
+            // Draw zombie body
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
             
-            // Ojos
+            // Eyes
             ctx.fillStyle = (this.type === 'TANK' || this.type === 'BRUTE') ? '#f39c12' : '#c0392b';
             ctx.fillRect(this.x + 4, this.y + 4, 4, 4);
             ctx.fillRect(this.x + this.width - 8, this.y + 4, 4, 4);
             
-            // Si es un Tank o Bruto, mostrar vida restante
+            // If Tank or Brute, show remaining health
             if (this.type === 'TANK' || this.type === 'BRUTE') {
                 ctx.fillStyle = 'white';
                 ctx.font = 'bold 10px Inter';
@@ -427,7 +427,7 @@
         }
     }
 
-    // Clase para las Partículas de Explosión
+    // Class for Explosion Particles
     class Particle {
         constructor(x, y, color) {
             this.x = x;
@@ -457,50 +457,44 @@
             this.velocity.y *= this.friction;
             this.x += this.velocity.x;
             this.y += this.velocity.y;
-            this.alpha -= 0.02; // Desvanecer
+            this.alpha -= 0.02; // Fade out
         }
     }
 
 
-    // --- Funciones del Juego ---
+    // --- Game Functions ---
     
-    // Función para dibujar la base que el jugador defiende (pura decoración)
+    // Function to draw the base the player defends
     function drawBase() {
         const BASE_WIDTH = 50;
-        const BASE_COLOR = '#3498db'; // Azul para la casa
-        const ROOF_COLOR = '#e74c3c'; // Rojo para el techo
-        const WINDOW_COLOR = '#f1c40f'; // Amarillo para las ventanas
+        const BASE_COLOR = '#3498db'; // Blue for the house
+        const ROOF_COLOR = '#e74c3c'; // Red for the roof
+        const WINDOW_COLOR = '#f1c40f'; // Yellow for the windows
 
-        // 1. Dibujar el cuerpo de la casa
+        // 1. Draw the house body
         ctx.fillStyle = BASE_COLOR;
         ctx.fillRect(0, 0, BASE_WIDTH, GAME_HEIGHT);
 
-        // 2. Dibujar el techo (Triángulo) - Se extiende hasta los primeros 50px de altura
+        // 2. Draw the roof (Triangle)
         ctx.fillStyle = ROOF_COLOR;
         ctx.beginPath();
         ctx.moveTo(0, 0); 
         ctx.lineTo(BASE_WIDTH, 0); 
-        ctx.lineTo(BASE_WIDTH / 2, 50); // Pico del techo
+        ctx.lineTo(BASE_WIDTH / 2, 50); // Roof peak
         ctx.closePath();
         ctx.fill();
         
-        // 3. Dibujar algunas ventanas (rectángulos amarillos)
+        // 3. Draw some windows (yellow rectangles)
         ctx.fillStyle = WINDOW_COLOR;
         ctx.fillRect(10, 80, 15, 15);
         ctx.fillRect(25, 120, 15, 15);
         ctx.fillRect(10, GAME_HEIGHT - 100, 15, 15);
         
-        // 4. Dibujar una "puerta" (rectángulo más oscuro)
+        // 4. Draw a "door" (darker rectangle)
         ctx.fillStyle = '#2c3e50'; 
         ctx.fillRect(20, GAME_HEIGHT - 40, 15, 40);
         
-        // NOTA: Se ha eliminado el texto "META"
-        /*
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 12px Inter';
-        ctx.textAlign = 'center';
-        ctx.fillText('META', BASE_WIDTH / 2, 30);
-        */
+        // The "META" text has been removed as per user request.
     }
 
 
@@ -509,81 +503,81 @@
         gameRunning = true;
         isPaused = false;
         
-        // Reiniciar estados del jugador y del juego
+        // Reset player and game states
         player.health = 125; 
         player.maxHealth = 125; 
-        player.y = GAME_HEIGHT / 2; // Posición central inicial
-        player.speed = BASE_SPEED; // Resetear velocidad
-        player.hasShield = false; // Resetear escudo
+        player.y = GAME_HEIGHT / 2; // Initial central position
+        player.speed = BASE_SPEED; // Reset speed
+        player.hasShield = false; // Reset shield
         score = 0;
         isGameOver = false;
         bananas = [];
         zombies = [];
         particles = [];
         frameCount = 0;
-        zombieSpawnRate = 60; // 1 zombi por segundo
+        zombieSpawnRate = 60; // 1 zombie per second
         
-        // Reiniciar Power-Up
+        // Reset Power-Up
         killsSincePowerup = 0;
         activePowerup = null;
         powerupOption = null;
         updatePowerupDisplay();
         
-        // Ocultar pantallas y actualizar UI
+        // Hide screens and update UI
         gameOverScreen.style.display = 'none';
         powerupChoiceScreen.style.display = 'none';
         updateHealthBar();
         updateScore();
         
-        // Iniciar el bucle de animación
+        // Start the animation loop
         animate(); 
     }
 
-    // Función que aplica el Power-Up seleccionado al jugador
+    // Function that applies the selected Power-Up to the player
     function applyPowerup(newPowerup) {
-        // 1. Resetear todos los efectos activos
+        // 1. Reset all active effects
         player.speed = BASE_SPEED; 
         player.hasShield = false;
         
-        // 2. Aplicar el nuevo Power-Up
+        // 2. Apply the new Power-Up
         activePowerup = newPowerup;
 
         if (activePowerup === 'SPEED') {
-            player.speed = BASE_SPEED * 2; // Duplicar velocidad
+            player.speed = BASE_SPEED * 2; // Double speed
         } else if (activePowerup === 'SHIELD') {
-            player.hasShield = true; // Activar escudo
+            player.hasShield = true; // Activate shield
         }
         
-        // 3. Resetear contador y notificar
+        // 3. Reset counter and notify
         killsSincePowerup = 0;
         updatePowerupDisplay();
         showPowerupMessage(POWERUP_NAMES[newPowerup]);
     }
 
 
-    // Función para seleccionar un Power-Up y pausar para la elección
+    // Function to select a Power-Up and pause for choice
     function grantPowerup() {
-        // Lista de Power-Ups disponibles
+        // List of available Power-Ups
         const powerupOptions = ['TRIPLE', 'PIERCE', 'SPEED', 'SHIELD', 'BIG_BANANA'];
         
-        // Seleccionar un Power-Up al azar
+        // Select a random Power-Up
         const randomIndex = Math.floor(Math.random() * powerupOptions.length);
         powerupOption = powerupOptions[randomIndex];
 
-        // Pausar el juego
+        // Pause the game
         isPaused = true; 
         powerupChoiceScreen.style.display = 'flex';
 
-        // Actualizar el modal de elección
+        // Update the choice modal
         const currentName = activePowerup ? POWERUP_NAMES[activePowerup] : 'Ninguno';
         currentPowerupName.textContent = currentName;
         newPowerupName.textContent = POWERUP_NAMES[powerupOption];
         
-        // Resetear contador mientras el juego está pausado (para que el siguiente sea 20 kills después de reanudar)
+        // Reset counter while the game is paused 
         killsSincePowerup = 0; 
     }
     
-    // Muestra un mensaje temporal en el centro de la pantalla
+    // Shows a temporary message in the center of the screen
     function showPowerupMessage(name) {
         powerupMessage.textContent = `${name} ACTIVO!`;
         powerupMessage.style.opacity = 1;
@@ -592,14 +586,14 @@
         }, 1500);
     }
 
-    // Actualiza el texto del Power-Up en el HUD
+    // Updates the Power-Up text in the HUD
     function updatePowerupDisplay() {
-        // Mostrar Power-Up activo o el progreso
+        // Show active Power-Up or progress
         let displayText = 'Sin Power-Up';
         
         if (activePowerup) {
             displayText = POWERUP_NAMES[activePowerup];
-            // Mostrar estado del escudo si está activo
+            // Show shield status if active
             if (activePowerup === 'SHIELD' && player.hasShield) {
                  displayText += ' (Listo)';
             }
@@ -610,7 +604,7 @@
             powerupDisplay.classList.add('text-ecf0f1', 'bg-transparent');
         }
 
-        // Si no hay Power-Up activo O el juego está pausado, mostrar el progreso
+        // If no active Power-Up OR game is paused, show progress
         if (!activePowerup || isPaused) {
             powerupDisplay.textContent = `Power-Up: ${killsSincePowerup}/${KILLS_TO_POWERUP}`;
         } else {
@@ -620,148 +614,148 @@
     }
 
 
-    // Función de disparo (crea una nueva banana)
+    // Shooting function (creates a new banana)
     function shoot() {
         const yCenter = player.y + player.height / 2;
         const xStart = player.x + player.width;
         
-        // Determinar el tipo de banana
+        // Determine banana type
         let bananaType = 'NORMAL';
         if (activePowerup === 'PIERCE') bananaType = 'PIERCE';
         if (activePowerup === 'BIG_BANANA') bananaType = 'BIG_BANANA';
 
 
-        // Disparo base
+        // Base shot
         bananas.push(new Banana(xStart, yCenter, bananaType));
 
-        // Power-Up Triple Shot
+        // Triple Shot Power-Up
         if (activePowerup === 'TRIPLE') {
-            // Disparo superior
+            // Upper shot
             bananas.push(new Banana(xStart, yCenter - 10, bananaType));
-            // Disparo inferior
+            // Lower shot
             bananas.push(new Banana(xStart, yCenter + 10, bananaType));
         }
     }
 
-    // Funciones para manejar la elección del Power-Up
+    // Functions to handle Power-Up choice
     function acceptPowerup() {
         if (!powerupOption) return;
         applyPowerup(powerupOption);
         powerupOption = null;
         powerupChoiceScreen.style.display = 'none';
         isPaused = false;
-        animate(); // Reanudar el bucle
+        animate(); // Resume loop
     }
 
     function rejectPowerup() {
-        // Simplemente descartamos la opción y reanudamos el juego.
+        // Simply discard the option and resume the game.
         powerupOption = null;
-        // Solo reiniciamos el contador de kills si el Power-Up actual NO es nulo
+        // Only reset the kill counter if the current Power-Up is NOT null
         if (activePowerup) {
              killsSincePowerup = 0;
         }
         updatePowerupDisplay();
         powerupChoiceScreen.style.display = 'none';
         isPaused = false;
-        animate(); // Reanudar el bucle
+        animate(); // Resume loop
     }
 
 
-    // Función para manejar las colisiones
+    // Function to handle collisions
     function handleCollisions() {
-        // Colisión entre Bananas y Zombis
+        // Collisions between Bananas and Zombies
         for (let i = bananas.length - 1; i >= 0; i--) {
             const banana = bananas[i];
-            let hit = false; // Bandera para saber si esta banana golpeó algo
+            let hit = false; // Flag to know if this banana hit something
 
             for (let j = zombies.length - 1; j >= 0; j--) {
                 const zombie = zombies[j];
 
-                // Detección de colisión: comprueba si la banana golpea el zombi
+                // Collision detection
                 if (
                     banana.x + banana.radius > zombie.x &&
                     banana.x - banana.radius < zombie.x + zombie.width &&
                     banana.y + banana.radius > zombie.y &&
                     banana.y - banana.radius < zombie.y + zombie.height
                 ) {
-                    // Colisión
+                    // Collision
                     
-                    // Reducir la vida del zombi
+                    // Reduce zombie health
                     zombie.currentHealth--;
 
-                    // Efecto de partículas (usamos el color de la banana para el impacto)
+                    // Particle effect (using banana color for impact)
                     for (let k = 0; k < 5; k++) { 
                         particles.push(new Particle(banana.x, banana.y, '#f1c40f')); 
                     }
                     
-                    // Verificar si el zombi muere
+                    // Check if the zombie dies
                     if (zombie.currentHealth <= 0) {
                         
-                        // Efecto de partículas de muerte (usamos el color del zombi)
+                        // Death particle effect (using zombie color)
                         for (let k = 0; k < 15; k++) { 
                             particles.push(new Particle(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, zombie.color));
                         }
                         
-                        // Eliminar el zombi
+                        // Remove the zombie
                         zombies.splice(j, 1);
                         
-                        // Aumentar puntuación y contador de Power-Up basado en el tipo de zombi
-                        score += zombie.points; // Usar los puntos definidos en el zombi
+                        // Increase score and Power-Up counter based on zombie type
+                        score += zombie.points; 
                         killsSincePowerup++;
                         updateScore();
                         updatePowerupDisplay();
 
-                        // Verificar si se obtiene un Power-Up
+                        // Check for Power-Up grant
                         if (killsSincePowerup >= KILLS_TO_POWERUP && !isPaused) {
                             grantPowerup();
                         }
                         
-                    } // Fin si el zombi muere
+                    } // End if zombie dies
                     
                     hit = true;
 
-                    // Si la banana NO es perforadora, se consume y se detiene el chequeo
+                    // If the banana is NOT piercing, it's consumed and checking stops
                     if (!banana.isPiercing) {
                         break; 
                     }
-                    // Si es perforadora, sigue iterando para golpear al siguiente zombi
+                    // If it is piercing, continue iterating to hit the next zombie
                 }
             }
 
-            // Si la banana no es perforadora Y golpeó, o si se salió de la pantalla, la eliminamos.
+            // If the banana is NOT piercing AND hit, or if it went off screen, remove it.
             if ((hit && !banana.isPiercing) || banana.x > GAME_WIDTH) {
                 bananas.splice(i, 1);
             }
         }
 
-        // Colisión entre Zombis y Jugador (si el zombi llega al lado izquierdo)
+        // Collision between Zombies and Player (if the zombie reaches the left side)
         for (let i = zombies.length - 1; i >= 0; i--) {
             const zombie = zombies[i];
 
             if (zombie.x < player.x + player.width) {
-                // Zombi llegó a la base del jugador
+                // Zombie reached the player's base
 
-                // 1. Verificar si tiene escudo
+                // 1. Check if the player has a shield
                 if (player.hasShield) {
-                    player.hasShield = false; // Romper el escudo
+                    player.hasShield = false; // Break the shield
                     updatePowerupDisplay();
-                    // Notificación visual del escudo
+                    // Shield visual notification
                     for (let k = 0; k < 20; k++) {
-                        particles.push(new Particle(player.x, player.y + player.height / 2, '#3498db')); // Partículas azules
+                        particles.push(new Particle(player.x, player.y + player.height / 2, '#3498db')); // Blue particles
                     }
-                    // Eliminar el zombi, pero no reducir vida
+                    // Remove the zombie, but do not reduce health
                     zombies.splice(i, 1); 
-                    continue; // Ir al siguiente zombi
+                    continue; // Go to the next zombie
                 }
 
-                // 2. Si no hay escudo, reducir vida
+                // 2. If no shield, reduce health
                 player.health -= 15; 
                 updateHealthBar();
                 
-                // Eliminar el zombi
+                // Remove the zombie
                 zombies.splice(i, 1);
 
-                // Verificar Game Over
+                // Check for Game Over
                 if (player.health <= 0) {
                     player.health = 0;
                     isGameOver = true;
@@ -771,27 +765,27 @@
         }
     }
 
-    // Función para actualizar la barra de vida en el DOM
+    // Function to update the health bar in the DOM
     function updateHealthBar() {
         const percentage = (player.health / player.maxHealth) * 100;
         healthBar.style.width = `${percentage}%`;
         
-        // Cambio de color según la vida restante
+        // Color change based on remaining health
         if (percentage < 30) {
-             healthBar.style.backgroundColor = '#c0392b'; // Rojo crítico
+             healthBar.style.backgroundColor = '#c0392b'; // Critical Red
         } else if (percentage < 60) {
-             healthBar.style.backgroundColor = '#e67e22'; // Naranja
+             healthBar.style.backgroundColor = '#e67e22'; // Orange
         } else {
-             healthBar.style.backgroundColor = '#2ecc71'; // Verde
+             healthBar.style.backgroundColor = '#2ecc71'; // Green
         }
     }
 
-    // Función para actualizar la puntuación en el DOM
+    // Function to update the score in the DOM
     function updateScore() {
         scoreDisplay.textContent = `Puntuación: ${score}`;
     }
     
-    // Función para mostrar la pantalla de Game Over
+    // Function to show the Game Over screen
     function showGameOver() {
         gameRunning = false;
         gameOverScreen.style.display = 'flex';
@@ -799,17 +793,17 @@
     }
 
 
-    // --- Bucle Principal del Juego ---
+    // --- Main Game Loop ---
     function animate() {
         if (isGameOver || !gameRunning || isPaused) return; 
 
-        // 1. Limpiar el Canvas
+        // 1. Clear the Canvas
         ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         
-        // 1.5. Dibujar la base que se defiende (antes del jugador)
+        // 1.5. Draw the defending base (before the player)
         drawBase();
 
-        // 2. Movimiento del Jugador
+        // 2. Player Movement
         if (keys.up && player.y > 0) {
             player.y -= player.speed;
         }
@@ -817,87 +811,87 @@
             player.y += player.speed;
         }
 
-        // 3. Generación de Zombis 
+        // 3. Zombie Generation
         frameCount++;
         if (frameCount % Math.floor(zombieSpawnRate) === 0) {
-            // Lógica para elegir el tipo de zombi:
+            // Logic to choose zombie type:
             let zombieType = 'NORMAL';
             const random = Math.random();
             
-            if (random < 0.15) { // 15% Zombi Rápido (Rojo)
+            if (random < 0.15) { // 15% Fast Zombie (Red)
                 zombieType = 'FAST';
-            } else if (random < 0.25) { // 10% Zombi Tanque (Gris)
+            } else if (random < 0.25) { // 10% Tank Zombie (Gray)
                 zombieType = 'TANK';
-            } else if (random < 0.30) { // 5% NUEVO Zombi Bruto (Morado)
+            } else if (random < 0.30) { // 5% NEW Brute Zombie (Purple)
                 zombieType = 'BRUTE';
             }
-            // 70% Zombi Normal (Verde)
+            // 70% Normal Zombie (Green)
 
             zombies.push(new Zombie(zombieType));
             
-            // Aumentar la dificultad (tasa de aparición más rápida)
+            // Increase difficulty (faster spawn rate)
             if (zombieSpawnRate > 20) {
                 zombieSpawnRate -= 0.1; 
             }
         }
 
-        // 4. Actualizar y dibujar Zombis
+        // 4. Update and Draw Zombies
         zombies.forEach((zombie) => {
             zombie.update();
             zombie.draw();
         });
 
-        // 5. Actualizar y dibujar Bananas
+        // 5. Update and Draw Bananas
         for (let i = bananas.length - 1; i >= 0; i--) {
             const banana = bananas[i];
             banana.update();
             banana.draw();
 
-            // La eliminación por salirse de la pantalla se maneja en handleCollisions 
+            // Removal for going off screen is handled in handleCollisions 
         }
         
-        // 6. Actualizar y dibujar Partículas
+        // 6. Update and Draw Particles
         for (let i = particles.length - 1; i >= 0; i--) {
             const particle = particles[i];
             particle.update();
             particle.draw();
 
-            // Eliminar partículas desvanecidas
+            // Remove faded particles
             if (particle.alpha <= 0 || particle.radius < 0.5) {
                 particles.splice(i, 1);
             }
         }
 
-        // 7. Dibujar al Jugador (rectángulo amarillo)
+        // 7. Draw Player (yellow rectangle)
         ctx.fillStyle = '#f1c40f'; 
         ctx.fillRect(player.x, player.y, player.width, player.height);
         
-        // Dibujar borde de escudo si está activo
+        // Draw shield border if active
         if (player.hasShield) {
-            ctx.strokeStyle = '#3498db'; // Azul
+            ctx.strokeStyle = '#3498db'; // Blue
             ctx.lineWidth = 3;
             ctx.strokeRect(player.x - 2, player.y - 2, player.width + 4, player.height + 4);
         }
 
-        // 8. Manejar Colisiones
+        // 8. Handle Collisions
         handleCollisions();
 
-        // 9. Llamar al siguiente cuadro
+        // 9. Request the next frame
         requestAnimationFrame(animate);
     }
 
-    // --- Controladores de Eventos ---
+    // --- Event Handlers ---
 
-    // Movimiento del teclado (W/S o flechas)
+    // Keyboard movement (W/S or arrows)
     document.addEventListener('keydown', (e) => {
-        if (isPaused) return; // Ignorar input si está pausado
+        if (isPaused) return; // Ignore input if paused
         
         if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') {
             keys.up = true;
         } else if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') {
             keys.down = true;
         } else if (e.key === ' ' && !keys.shoot && !isGameOver) { 
-            // La bandera keys.shoot previene el disparo automático si se mantiene presionada
+            // The keys.shoot flag prevents automatic shooting if held down
             keys.shoot = true;
             shoot(); 
         }
@@ -913,38 +907,38 @@
         }
     });
 
-    // Control de disparo para dispositivos móviles (botón)
+    // Shooting control for mobile devices (button)
     shootButton.addEventListener('click', () => {
         if (!isGameOver && !isPaused) {
             shoot();
         }
     });
 
-    // Control de disparo con clic izquierdo del ratón
+    // Shooting control with left mouse click
     canvas.addEventListener('mousedown', (e) => {
-        // e.button === 0 corresponde al clic izquierdo del ratón
+        // e.button === 0 is the left mouse click
         if (e.button === 0 && !isGameOver && !isPaused) {
-            e.preventDefault(); // Previene el comportamiento por defecto del navegador (e.g., selección)
+            e.preventDefault(); // Prevents default browser behavior (e.g., selection)
             shoot();
         }
     });
 
-    // Eventos del modal de Power-Up
+    // Power-Up modal events
     acceptPowerupButton.addEventListener('click', acceptPowerup);
     rejectPowerupButton.addEventListener('click', rejectPowerup);
 
 
-    // Botón de reinicio
+    // Restart button
     restartButton.addEventListener('click', () => {
         initializeGame();
     });
 
-    // Control táctil para movimiento 
+    // Touch control for movement 
     canvas.addEventListener('touchstart', (e) => {
         if (isPaused) return;
-        e.preventDefault(); // Importante para evitar el desplazamiento
+        e.preventDefault(); // Important to prevent scrolling
         
-        // Determinar si el toque es en la mitad superior o inferior del canvas
+        // Determine if the touch is in the upper or lower half of the canvas
         const touchY = e.touches[0].clientY;
         const rect = canvas.getBoundingClientRect();
         const relativeY = touchY - rect.top;
@@ -965,7 +959,7 @@
         keys.down = false;
     });
 
-    // Iniciar el juego cuando la ventana carga
+    // Start the game when the window loads
     window.onload = initializeGame;
 </script>
 
