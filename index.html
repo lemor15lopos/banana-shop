@@ -112,32 +112,22 @@
         .buy-btn { background-color: #ffe135; color: #000; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
         .buy-btn:hover { background-color: #fff; }
         
-        /* --- SECCIÓN DEL JUEGO --- */
-        #game-section {
-            text-align: center;
-            padding: 20px;
-            min-height: 70vh;
+        /* --- SECCIÓN CÓDIGOS (NUEVO) --- */
+        #codes { max-width: 500px; margin: 50px auto; padding: 30px; background: #1e1e1e; border-radius: 10px; box-shadow: 0 0 20px rgba(76, 175, 80, 0.1); text-align: center; }
+        #codes h2 { color: #4CAF50; margin-bottom: 25px; }
+        #codes p { color: #ccc; margin-bottom: 20px; font-size: 1.1rem; }
+        #code-input-group { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        #code-input { 
+            width: 180px; padding: 15px; border: 2px solid #333; background: #2a2a2a; 
+            color: #ff9900; border-radius: 5px; text-align: center; font-size: 1.5rem; 
+            letter-spacing: 5px; font-family: monospace;
         }
-        #game-section h2 {
-            color: #ff4444;
-            margin-bottom: 20px;
+        #code-submit-btn { 
+            padding: 15px 25px; background-color: #4CAF50; color: white; border: none; 
+            border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; 
         }
-        #game-canvas {
-            border: 3px solid #ff4444;
-            background-color: #000;
-            cursor: crosshair;
-            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
-        }
-        #game-stats {
-            margin-top: 10px;
-            font-size: 1.2rem;
-            color: #ffe135;
-        }
-        .game-controls {
-            color: #ccc;
-            font-size: 0.9rem;
-            margin-top: 20px;
-        }
+        #code-submit-btn:hover { background-color: #66BB6A; }
+        #code-message { margin-top: 15px; font-weight: bold; min-height: 20px; }
 
         /* --- SECCIÓN OCULTA (SECTA) --- */
         #secta-page {
@@ -148,7 +138,7 @@
             font-size: 4rem; color: #ff4444; text-shadow: 0 0 10px #ff4444; animation: pulse 2s infinite;
         }
         #secta-page p {
-            font-size: 1.2rem; color: #eee; max-width: 700px; margin: 30px auto;
+            font-size: 1.2rem; color: #eee; max-width: 700px; margin: 30px auto 40px;
             border: 1px dashed #ff4444; padding: 20px;
         }
         .secta-lore {
@@ -192,9 +182,12 @@
         #buy-money-btn { background-color: #4CAF50; color: white; }
         #buy-points-btn { background-color: #ff9900; color: #121212; }
         #buy-points-btn:disabled { background-color: #6d4b00; cursor: not-allowed; color: #aaa; }
+        
+        /* Botón de Cupón aplicado en el Modal */
+        #coupon-status { margin-top: 10px; padding: 8px; background-color: #333; color: #4CAF50; border-radius: 5px; font-size: 0.9rem; }
     </style>
 </head>
-<body onload="checkAuth(); generateBananaDetails(); generateProductCards(); grantDailyPoints(); updatePlatapointsDisplay(); createSnowflakes();">
+<body onload="checkAuth(); generateBananaDetails(); initProducts(); grantDailyPoints(); updatePlatapointsDisplay(); createSnowflakes();">
 
     <div class="snow" id="snow-container"></div>
 
@@ -209,7 +202,10 @@
         <button onclick="showSection('home')">🏠 Tienda (100)</button>
         <button onclick="showSection('details')">🍌 Info Plátanos (100)</button>
         <button onclick="showSection('cart')">🛒 Cesta (<span id="cart-count">0</span>)</button>
-        <button onclick="showSection('game-selection')">🎮 Juego</button>
+        <button onclick="showSection('games')">🎮 Juegos</button>
+        
+        <button onclick="showSection('codes')">🔑 Códigos</button>
+        
         <button onclick="logout()" style="margin-top: auto; background-color: #4a4a4a; color: #f0f0f0;">🚪 Cerrar Sesión</button>
     </nav>
 
@@ -249,6 +245,23 @@
 
     <section id="home" class="app-section">
         <h2 style="text-align: center; margin-bottom: 30px; color: #ffe135;">Catálogo Completo (100 Plátanos)</h2>
+        
+        <div id="controls-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <input type="text" id="search-input" oninput="updateProductView()" placeholder="Buscar plátano por nombre..."
+                   style="flex-grow: 1; padding: 10px; border-radius: 5px; background: #2a2a2a; color: #fff; border: 1px solid #ff4444; max-width: 400px;">
+            
+            <div id="sort-controls" style="text-align: right; display: flex; align-items: center;">
+                <label for="sort-select" style="color: #ccc; margin-right: 10px;">Ordenar por:</label>
+                <select id="sort-select" onchange="updateProductView()" 
+                        style="padding: 10px; border-radius: 5px; background: #2a2a2a; color: #fff; border: 1px solid #ff4444;">
+                    <option value="default">Por defecto (ID)</option>
+                    <option value="price_asc">Precio: Más Barato a Más Caro</option>
+                    <option value="price_desc">Precio: Más Caro a Más Barato</option>
+                    <option value="rating_desc">Valoración: Mejor Valorado</option>
+                    <option value="sales_desc">Ventas: Más Vendido</option>
+                </select>
+            </div>
+        </div>
         <div class="products-grid" id="product-list">
             </div>
     </section>
@@ -271,32 +284,64 @@
         </div>
     </section>
     
-    <section id="game-selection" class="app-section">
-        <h2 style="text-align: center; color: #ff4444; margin-bottom: 40px;">Selección de Juegos Bananeros</h2>
-        <div style="max-width: 600px; margin: 0 auto; display: flex; justify-content: space-around; gap: 20px;">
-            <button style="background-color: #4CAF50; color: white; border: none; padding: 20px; border-radius: 10px; font-size: 1.5rem; flex-grow: 1; cursor: pointer; transition: background-color 0.3s;" 
-                    onclick="window.open('https://lemor15lopos.github.io/banana-shooter/', '_blank')">
-                🍌 Banana vs Androides
-            </button>
-            <button style="background-color: #ff4444; color: white; border: none; padding: 20px; border-radius: 10px; font-size: 1.5rem; flex-grow: 1; cursor: pointer; transition: background-color 0.3s;" onclick="showSection('game')">
-                🎄 Banana Shooter (Interno)
-            </button>
+    <section id="codes" class="app-section">
+        <h2>Canjea tus Códigos de Descuento 🔑</h2>
+        <p>Introduce un código de 6 dígitos numéricos para conseguir recompensas o descuentos. **¡Algunos solo funcionan una vez!**</p>
+        
+        <div id="code-input-group">
+            <input type="text" id="code-input" placeholder="000 000" maxlength="6" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);" 
+                   pattern="\d{6}">
+            <button id="code-submit-btn" onclick="redeemCode()">Canjear</button>
         </div>
-        <p style="text-align: center; margin-top: 30px; color: #aaa;">
-            El General Khidir Karawita recomienda entrenamiento diario.
+        
+        <div id="code-message" style="color: #ff9900;"></div>
+        
+        <p style="margin-top: 30px; font-size: 0.9rem; color: #777;">
+            *Ejemplo de código (NO funciona): **123 456**. 
+            Debes ingresar los 6 dígitos juntos (ejemplo: 123456).
+        </p>
+        <p style="font-size: 0.9rem; color: #aaa;">
+            El canje de códigos requiere una sesión activa.
         </p>
     </section>
-
-    <section id="game-section" class="app-section">
-        <h2>🎄 ¡Modo Banana Shooter Activado! 🎯</h2>
-        <div id="game-stats">
-            Puntuación: <span id="game-score">0</span> | Pts. extra: <span id="game-points-earn">0</span>
+    <section id="games" class="app-section">
+        <h2 style="text-align: center; color: #ff4444; margin-bottom: 40px;">Zona de Juegos Bananeros</h2>
+        <div style="display: flex; justify-content: center; gap: 30px; padding: 20px; flex-wrap: wrap;">
+            
+            <a href="https://lemor15lopos.github.io/banana-shooter/" target="_blank" style="text-decoration: none;">
+                <button style="
+                    background-color: #4CAF50; /* Green */
+                    color: white; 
+                    border: none; 
+                    padding: 20px 40px; 
+                    border-radius: 10px; 
+                    font-size: 1.5rem; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    transition: 0.3s;
+                    box-shadow: 0 4px #388E3C;
+                " onmouseover="this.style.backgroundColor='#66BB6A'" onmouseout="this.style.backgroundColor='#4CAF50'">
+                    🍌 Banana VS Zombies
+                </button>
+            </a>
+            
+            <button style="
+                background-color: #F44336; /* Red */
+                color: white; 
+                border: none; 
+                padding: 20px 40px; 
+                border-radius: 10px; 
+                font-size: 1.5rem; 
+                font-weight: bold; 
+                cursor: pointer; 
+                transition: 0.3s;
+                box-shadow: 0 4px #D32F2F;
+            " onclick="alert('Banana Shooter: Próximamente en esta dimensión.')" onmouseover="this.style.backgroundColor='#E57373'" onmouseout="this.style.backgroundColor='#F44336'">
+                🔫 Banana shooter
+            </button>
         </div>
-        <canvas id="game-canvas" width="800" height="400"></canvas>
-        <div class="game-controls">
-            Clica en la pantalla para lanzar plátanos y destruir los alimentos equivocados. <br>
-            ¡Pulsa **ESC** para salir del juego!
-        </div>
+        <p style="text-align: center; color: #aaa; margin-top: 50px;">¡Elige tu arma bananera y prepárate para la acción!</p>
     </section>
     
     <div id="checkout-modal" onclick="closeCheckoutModal(event)">
@@ -313,6 +358,10 @@
             </div>
             <div class="modal-total modal-points">
                 Total en Puntos: <span id="modal-points-needed">0</span> Platapoints
+            </div>
+
+            <div id="coupon-status" style="display: none;">
+                💰 Descuento aplicado: <span id="discount-percent">0%</span>
             </div>
             
             <div class="modal-button-group">
@@ -367,58 +416,27 @@
         const sidebar = document.getElementById('sidebar');
         const menuBtn = document.getElementById('menu-toggle-btn');
         
-        // --- VARIABLES DEL JUEGO ---
-        const GAME_WIDTH = 800;
-        const GAME_HEIGHT = 400;
-        let canvas, ctx, gameLoop, isGameRunning = false;
-        let score = 0;
-        let pointsEarned = 0;
-        let enemies = [];
-        let projectiles = [];
-        let enemySpawnInterval = 1000; // 1 segundo
-        let lastSpawnTime = 0;
-        let enemySpeed = 1;
-
-        // Función de utilidad para obtener datos de usuarios (MODIFICADA)
+        // Variable para el descuento activo
+        let activeDiscount = 0; // 0 = sin descuento, 0.10 = 10%
+        
+        // Función de utilidad para obtener datos de usuarios
         function getUsers() {
-            let users;
             try {
-                users = JSON.parse(localStorage.getItem('bananaUsers')) || [];
+                return JSON.parse(localStorage.getItem('bananaUsers')) || [];
             } catch (e) {
                 console.error("Error al parsear usuarios de localStorage:", e);
-                users = [];
+                return [];
             }
-            
-            // Inyectar los usuarios administradores: Aitor/Ahmed, Dani/Ahmed, Iker/Ahmed
-            const adminUsers = [
-                { username: 'Aitor', password: 'Ahmed' },
-                { username: 'Dani', password: 'Ahmed' },
-                { username: 'Iker', password: 'Ahmed' }
-            ];
-            
-            adminUsers.forEach(admin => {
-                // Solo inyectar si no existe ya para no duplicar
-                if (!users.find(u => u.username === admin.username)) {
-                    users.push(admin);
-                }
-            });
-            
-            return users;
         }
         
-        // --- GESTIÓN DE PLATAPOINTS (MODIFICADA) ---
+        // --- GESTIÓN DE PLATAPOINTS ---
         
         function getPlatapoints() {
             const user = localStorage.getItem('sessionUser');
+            // Los usuarios admin no tienen puntos persistentes, devolvemos 0 para ellos
+            const adminUsers = ["Dani", "Aitor", "Iker", "Aless"];
             if (!user) return 0;
-            
-            // Usuarios admin que tienen muchos puntos por defecto
-            const adminUsernames = ['Aitor', 'Dani', 'Iker'];
-            
-            if (adminUsernames.includes(user)) {
-                // Los admins empiezan con 10000 puntos
-                return parseInt(localStorage.getItem(`Platapoints_${user}`) || '10000');
-            }
+            if (adminUsers.includes(user)) return 99999; // Puntos fijos para admin
             
             return parseInt(localStorage.getItem(`Platapoints_${user}`) || '0');
         }
@@ -426,6 +444,10 @@
         function setPlatapoints(points) {
             const user = localStorage.getItem('sessionUser');
             if (!user) return;
+            // Los usuarios admin no almacenan puntos, se ignoran las llamadas a setPlatapoints
+            const adminUsers = ["Dani", "Aitor", "Iker", "Aless"];
+            if (adminUsers.includes(user)) return;
+
             localStorage.setItem(`Platapoints_${user}`, points);
             updatePlatapointsDisplay();
         }
@@ -437,6 +459,10 @@
         function grantDailyPoints() {
             const user = localStorage.getItem('sessionUser');
             if (!user) return;
+            
+            // Excluir admins del chequeo de puntos diarios
+            const adminUsers = ["Dani", "Aitor", "Iker", "Aless"];
+            if (adminUsers.includes(user)) return;
 
             const lastLoginKey = `LastLogin_${user}`;
             const lastLoginDate = localStorage.getItem(lastLoginKey);
@@ -451,7 +477,7 @@
             }
         }
 
-        // --- LÓGICA DE AUTENTICACIÓN Y NAVEGACIÓN (MODIFICADA EN REGISTER) ---
+        // --- LÓGICA DE AUTENTICACIÓN Y NAVEGACIÓN ---
         
         function toggleAuthMode() {
             const isLogin = document.getElementById('login-form').style.display !== 'none';
@@ -469,17 +495,13 @@
             }
 
             let users = getUsers();
-            
-            // Esta verificación detecta si se intenta registrar un nombre de usuario ya existente (incluidos los admins inyectados)
             if (users.find(u => u.username === username)) {
                 alert("Ese usuario ya existe. Intenta iniciar sesión.");
                 return;
             }
 
-            // Para registrar, usamos la lista sin el admin inyectado
-            let storedUsers = JSON.parse(localStorage.getItem('bananaUsers')) || [];
-            storedUsers.push({ username: username, password: password });
-            localStorage.setItem('bananaUsers', JSON.stringify(storedUsers));
+            users.push({ username: username, password: password });
+            localStorage.setItem('bananaUsers', JSON.stringify(users));
             localStorage.setItem(`Platapoints_${username}`, 0); // Inicializar puntos
 
             alert("¡Registro exitoso! Ya puedes iniciar sesión.");
@@ -490,6 +512,20 @@
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value;
             const users = getUsers();
+
+            // --- INICIO: Lógica de Administrador (Dani, Aitor, Iker, Aless) ---
+            const adminUsers = ["Dani", "Aitor", "Iker", "Aless"];
+            const isAdmin = adminUsers.includes(username) && password === "Ahmed";
+            
+            if (isAdmin) {
+                localStorage.setItem('sessionUser', username);
+                alert(`👑 ¡Bienvenido, ADMINISTRADOR ${username} (Ahmed Salah IV)!`);
+                updateUIForSession(username);
+                updatePlatapointsDisplay();
+                showSection('home');
+                return; 
+            }
+            // --- FIN: Lógica de Administrador ---
 
             const user = users.find(u => u.username === username && u.password === password);
 
@@ -509,6 +545,7 @@
             if (!confirm("¿Estás seguro de que quieres cerrar la sesión?")) return;
             localStorage.removeItem('sessionUser');
             cart = [];
+            activeDiscount = 0; // Resetear descuento al cerrar sesión
             updateCartDisplay();
             updateUIForSession(null);
             showSection('intro');
@@ -554,41 +591,95 @@
             sidebar.classList.toggle('open');
         }
 
-        // --- FUNCIÓN showSection MANTENIDA ---
         function showSection(sectionId) {
             const user = localStorage.getItem('sessionUser');
-            // Las secciones de juego ahora son: 'game-selection' (menú) y 'game' (el juego interno)
-            const requiresAuth = ['home', 'details', 'cart', 'game', 'secta', 'game-selection'].includes(sectionId); 
+            // 'codes' añadido a las secciones que requieren autenticación
+            const requiresAuth = ['home', 'details', 'cart', 'games', 'codes', 'secta'].includes(sectionId); 
 
             if (requiresAuth && !user) {
                 alert("Debes iniciar sesión para acceder a esta sección.");
                 sectionId = 'auth';
             }
-
-            // Si cambiamos a CUALQUIER sección que no sea 'game', detener el Banana Shooter
-            if (sectionId !== 'game' && isGameRunning) {
-                stopGame();
-            } 
-            // Si entramos a 'game' y no está corriendo, iniciarlo.
-            else if (sectionId === 'game' && !isGameRunning) {
-                startGame();
-            }
-
+            
             document.querySelectorAll('.app-section').forEach(sec => {
                 sec.classList.remove('active');
             });
             
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.classList.add('active');
-            }
-            
+            document.getElementById(sectionId).classList.add('active');
             sidebar.classList.remove('open');
         }
         
-        // --- LÓGICA DE PRODUCTOS (GENERACIÓN DE 100 TARJETAS) (Mantenida) ---
+        // --- LÓGICA DE CÓDIGOS (NUEVA) ---
         
-        const BANANA_LORE = [
+        function getUsedCodes() {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return {};
+            try {
+                return JSON.parse(localStorage.getItem(`UsedCodes_${user}`)) || {};
+            } catch (e) {
+                console.error("Error al cargar códigos usados:", e);
+                return {};
+            }
+        }
+
+        function setCodeUsed(code) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            const usedCodes = getUsedCodes();
+            usedCodes[code] = true;
+            localStorage.setItem(`UsedCodes_${user}`, JSON.stringify(usedCodes));
+        }
+
+        function redeemCode() {
+            const codeInput = document.getElementById('code-input');
+            const codeMessage = document.getElementById('code-message');
+            const code = codeInput.value.trim();
+            const user = localStorage.getItem('sessionUser');
+
+            codeMessage.style.color = '#ff9900'; // Reset color
+
+            if (!user) {
+                codeMessage.innerText = "Error: Debes iniciar sesión para canjear códigos.";
+                return;
+            }
+
+            if (code.length !== 6 || !/^\d+$/.test(code)) {
+                codeMessage.innerText = "Error: El código debe ser exactamente 6 dígitos numéricos.";
+                return;
+            }
+
+            const usedCodes = getUsedCodes();
+
+            if (code === '257431') {
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has usado este código de descuento!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                
+                // Aplicar descuento
+                activeDiscount = 0.10; // 10%
+                
+                // Marcar como usado
+                setCodeUsed(code); 
+
+                codeMessage.innerText = "🎉 ¡Código APLICADO! Tienes un 10% de descuento en tu PRÓXIMA compra.";
+                codeMessage.style.color = '#4CAF50';
+                
+            } else {
+                codeMessage.innerText = "Error: Código no válido o caducado.";
+                codeMessage.style.color = '#ff4444';
+            }
+            
+            codeInput.value = ''; // Limpiar campo
+        }
+
+        // --- LÓGICA DE PRODUCTOS, FILTROS Y RATING (MANTENIDA) ---
+        
+        const BANANA_NAMES = [/* ... (Lista de 100 plátanos) ... */
+            "Plátano 001: Canarias/Original", "Plátano 002: El Silencioso de Sumatra", "Plátano 003: Curva de Felicidad Extrema", "Plátano 004: El Fantasma de Medianoche", "Plátano 005: Diamante Verde de Khidir", "Plátano 006: Bocado Estelar (Estrella M-31)", "Plátano 007: La Uña de Dragón", "Plátano 008: El Abuelo Longevo", "Plátano 009: Místico de Nepal", "Plátano 010: Sabor a Terremoto (Grado 5)", "Plátano 011: El Dorado de la Amazonía", "Plátano 012: La Cáscara Indestructible", "Plátano 013: Llorón de Invierno", "Plátano 014: Susurro del Desierto", "Plátano 015: Mutante de Chernobyl", "Plátano 016: La Flecha de Apolo", "Plátano 017: El Despertador Cósmico", "Plátano 018: Lágrima de Gigante", "Plátano 019: El Tostador Automático", "Plátano 020: Espejo del Tiempo", "Plátano 021: Corazón de Volcán", "Plátano 022: El Triturador de Dados", "Plátano 023: El Plátano Píxel", "Plátano 024: Viajero Interdimensional", "Plátano 025: El Grito de Múnich", "Plátano 026: Zumo de la Ilusión", "Plátano 027: El Fósil Viviente", "Plátano 028: Esencia de Lluvia Ácida", "Plátano 029: El Camaleón Dulce", "Plátano 030: El Rey de la Pradera", "Plátano 031: La Sombra Fugaz", "Plátano 032: El Guardián del Potasio", "Plátano 033: Alimento de Astronauta Nivel 3", "Plátano 034: La Llave del Solsticio", "Plátano 035: El Plátano Matemático (π)", "Plátano 036: Generador de Microondas", "Plátano 037: El Tesoro del Pirata", "Plátano 038: Piel de Serpiente Dorada", "Plátano 039: El Amigo Invisible", "Plátano 040: El Maestro Zen", "Plátano 041: La Trompeta del Ángel", "Plátano 042: La Pregunta Definitiva", "Plátano 043: El Suspiro de la Musa", "Plátano 044: Aura de Neón", "Plátano 045: El Resplandor de Júpiter", "Plátano 046: El Plátano Tundra", "Plátano 047: El Heraldo de la Tormenta", "Plátano 048: Elixir de la Juventud", "Plátano 049: La Pesadilla del Aguacate", "Plátano 050: El Anillo de Fuego", "Plátano 051: El Gigante Dormido", "Plátano 052: La Partitura Perdida", "Plátano 053: El Plátano Biónico", "Plátano 054: La Fuente de Cobre", "Plátano 055: El Misterio de Roswell", "Plátano 056: Aliento de Drácula", "Plátano 057: El Eco Infinito", "Plátano 058: El Mensaje Oculto", "Plátano 059: El Viajero Sin Destino", "Plátano 060: La Fruta Prohibida", "Plátano 061: El Plátano Súper Sónico", "Plátano 062: El Ojo del Huracán", "Plátano 063: La Semilla de la Verdad", "Plátano 064: El Escudo de Hades", "Plátano 065: La Espada de Zeus", "Plátano 066: El Secreto del Código Binario", "Plátano 067: El Plátano Holográfico", "Plátano 068: La Nebulosa Amarilla", "Plátano 069: La Danza del Loto", "Plátano 070: El Plátano de Cristal", "Plátano 071: El Corredor de Maratón", "Plátano 072: La Voz de la Conciencia", "Plátano 073: El Poema Olvidado", "Plátano 074: El Plátano Invisible (Recargado)", "Plátano 075: El Tesoro Sumergido", "Plátano 076: La Capa de Invisibilidad", "Plátano 077: El Rescate del Sol", "Plátano 078: La Sopa de la Abuela", "Plátano 079: El Reactor de Fusión Fría", "Plátano 080: El Plátano Cuántico", "Plátano 081: El Puente de Bifrost", "Plátano 082: El Monolito Negro", "Plátano 083: El Portal a Narnia", "Plátano 084: La Última Cena del Plátano", "Plátano 085: El Gato de Schrödinger", "Plátano 086: El Viaje de Chihiro", "Plátano 087: El Jardín Colgante", "Plátano 088: La Fuente de Sodio", "Plátano 089: El Espejismo de Dubai", "Plátano 090: La Llama Eterna", "Plátano 091: El Plátano de la Suerte (777)", "Plátano 092: La Leyenda de Zelda", "Plátano 093: El Sarcófago de Tutankamón", "Plátano 094: El Muro de Berlín", "Plátano 095: El Plátano Desintegrador", "Plátano 096: El Susurro de las Montañas", "Plátano 097: La Cáscara Dorada del Edén", "Plátano 098: El Corazón de Atlantis", "Plátano 099: La Profecía del Potasio", "Plátano 100: El Gran Final Navideño"
+        ];
+        const BANANA_LORE = [/* ... (Lores de plátanos) ... */
             "El clásico. Dulce, con pintitas y lleno de potasio. Ideal para recuperar energía después de programar.",
             "Duro como una piedra. Se usa para cocinar patacones o para lanzar a enemigos, ya que hace daño contundente.",
             "Cultivado con música clásica y masajes diarios. Su sabor es tan refinado que te hace hablar con acento elegante.",
@@ -600,13 +691,190 @@
             "Crece hacia atrás. Al comerlo, te hace dudar de todas tus decisiones pasadas. Peligroso para la filosofía.",
             "Cosechado únicamente bajo la luna nueva. Te da visión nocturna, pero te vuelve sensible al sol."
         ];
+        let bananaProducts = [];
         
+        function getProductDataFromLocalStorage() {
+            try {
+                const storedData = localStorage.getItem('bananaProductsData');
+                return storedData ? JSON.parse(storedData) : [];
+            } catch (e) {
+                console.error("Error al cargar datos de productos de localStorage:", e);
+                return [];
+            }
+        }
+        
+        function saveProductDataToLocalStorage() {
+            const dataToStore = bananaProducts.map(p => ({
+                id: p.id,
+                rating: p.rating,
+                salesCount: p.salesCount
+            }));
+            localStorage.setItem('bananaProductsData', JSON.stringify(dataToStore));
+        }
+        
+        function generateBananaProducts() {
+            if (bananaProducts.length > 0) return; 
+
+            for (let i = 1; i <= 100; i++) {
+                const name = BANANA_NAMES[i - 1]; 
+                const price = parseFloat((1.00 + (i * 0.09)).toFixed(2)); 
+                const pointsCost = Math.round(price * 10); 
+                const salesCount = i === 1 ? 500 : Math.floor(Math.random() * 150) + 1;
+                const initialRating = Math.min(5, 3.5 + (Math.random() * 1.5));
+                
+                bananaProducts.push({
+                    id: i,
+                    name: name,
+                    price: price,
+                    pointsCost: pointsCost,
+                    salesCount: salesCount,
+                    rating: {
+                        average: parseFloat(initialRating.toFixed(1)),
+                        count: Math.floor(Math.random() * 50) + 10 
+                    },
+                    hue: (i * 10) % 360,
+                });
+            }
+        }
+        
+        function initProducts() {
+            generateBananaProducts(); 
+            
+            const storedData = getProductDataFromLocalStorage();
+            if (storedData.length > 0) {
+                storedData.forEach(storedItem => {
+                    const product = bananaProducts.find(p => p.id === storedItem.id);
+                    if (product) {
+                        product.rating = storedItem.rating;
+                        product.salesCount = storedItem.salesCount; 
+                    }
+                });
+            }
+            updateProductView();
+        }
+
+        function renderProductCards(products) {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            
+            if (products.length === 0) {
+                 productList.innerHTML = '<p style="text-align: center; color: #ff4444; font-size: 1.5rem;">❌ ¡No se encontraron plátanos con ese criterio! 🍌</p>';
+                 return;
+            }
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.classList.add('product-card');
+                
+                const isOriginal = product.id === 1;
+                const iconDisplay = isOriginal ? '<span class="product-icon" style="filter: none; color: #ff9900; text-shadow: 0 0 10px #ffe135;">🍌</span>' :
+                                                 `<span class="product-icon">🍌</span>`;
+
+                const nameDisplay = product.name; 
+                const fullStars = Math.floor(product.rating.average);
+                const ratingVisual = '⭐'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+
+                card.innerHTML = `
+                    ${iconDisplay}
+                    <h3 class="product-title">${nameDisplay}</h3>
+                    
+                    <div class="product-rating" style="margin-bottom: 5px;">
+                        <span style="color: #ffe135; font-weight: bold;">${product.rating.average.toFixed(1)} ${ratingVisual}</span>
+                        <small style="display: block; color: #aaa;">(${product.rating.count} valoraciones)</small>
+                    </div>
+                    
+                    <span class="product-price">${product.price.toFixed(2)} €</span>
+                    <span class="product-points">Coste: ${product.pointsCost} Platapoints</span>
+                    <p style="font-size: 0.8rem; color: #777; margin: 5px 0 10px;">Ventas: ${product.salesCount}</p>
+
+                    <div class="rate-product" style="margin: 10px 0;">
+                        <small style="color: #ccc;">Valora:</small>
+                        <div style="font-size: 1.5rem;">
+                            ${[1, 2, 3, 4, 5].map(star => 
+                                `<span style="cursor: pointer; color: #ff4444;" 
+                                       onclick="rateProduct(${product.id}, ${star})"
+                                       title="${star} estrellas">★</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <button class="buy-btn" onclick="addToCart('${product.name}', ${product.price}, ${product.pointsCost})">Añadir a la Cesta</button>
+                `;
+                
+                productList.appendChild(card);
+            });
+        }
+        
+        function updateProductView() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+            const criteria = document.getElementById('sort-select').value;
+            let productsToRender = [...bananaProducts]; 
+
+            if (searchTerm) {
+                productsToRender = productsToRender.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            switch (criteria) {
+                case 'price_asc':
+                    productsToRender.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price_desc':
+                    productsToRender.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating_desc':
+                    productsToRender.sort((a, b) => {
+                        if (b.rating.average !== a.rating.average) {
+                            return b.rating.average - a.rating.average;
+                        }
+                        return b.rating.count - a.rating.count;
+                    });
+                    break;
+                case 'sales_desc':
+                    productsToRender.sort((a, b) => b.salesCount - a.salesCount);
+                    break;
+                case 'default':
+                default:
+                    productsToRender.sort((a, b) => a.id - b.id);
+                    break;
+            }
+
+            renderProductCards(productsToRender);
+        }
+        
+        function rateProduct(productId, rating) {
+            if (!localStorage.getItem('sessionUser')) {
+                alert("⚠️ Debes iniciar sesión para poder valorar productos.");
+                showSection('auth');
+                return;
+            }
+            
+            const productIndex = bananaProducts.findIndex(p => p.id === productId);
+            if (productIndex === -1) return;
+
+            const product = bananaProducts[productIndex];
+            
+            const currentTotalScore = product.rating.average * product.rating.count;
+            const newCount = product.rating.count + 1;
+            const newTotalScore = currentTotalScore + rating;
+            const newAverage = newTotalScore / newCount;
+
+            product.rating.average = parseFloat(newAverage.toFixed(1));
+            product.rating.count = newCount;
+            
+            saveProductDataToLocalStorage();
+
+            alert(`¡Gracias por tu valoración! Has votado ${rating} estrellas para ${product.name}. Nueva media: ${product.rating.average.toFixed(1)}.`);
+            updateProductView(); 
+        }
+
         function generateBananaDetails() {
             const detailsList = document.getElementById('details-list');
             detailsList.innerHTML = ''; 
             
             for (let i = 1; i <= 100; i++) {
-                const name = `Plátano ${String(i).padStart(3, '0')}: Variedad Secreta V-${i}`;
+                const name = BANANA_NAMES[i - 1]; 
                 const description = BANANA_LORE[(i - 1) % BANANA_LORE.length] + ` (Nivel de rareza ${Math.floor(i / 10)}).`;
                 
                 const itemDiv = document.createElement('div');
@@ -618,40 +886,22 @@
                 detailsList.appendChild(itemDiv);
             }
         }
-        
-        function generateProductCards() {
-            const productList = document.getElementById('product-list');
-            productList.innerHTML = '';
-            
-            for (let i = 1; i <= 100; i++) {
-                const name = `Plátano ${String(i).padStart(3, '0')}: Variedad Secreta V-${i}`;
-                const price = (1.00 + (i * 0.09)).toFixed(2); 
-                const pointsCost = Math.round(price * 10); 
-                
-                const card = document.createElement('div');
-                card.classList.add('product-card');
-                
-                const hue = (i * 10) % 360;
-                
-                card.innerHTML = `
-                    <span class="product-icon" style="filter: hue-rotate(${hue}deg) saturate(1.5);">🍌</span>
-                    <h3 class="product-title">${name}</h3>
-                    <span class="product-price">${price} €</span>
-                    <span class="product-points">Coste: ${pointsCost} Platapoints</span>
-                    <button class="buy-btn" onclick="addToCart('${name}', ${price}, ${pointsCost})">Añadir a la Cesta</button>
-                `;
-                
-                productList.appendChild(card);
-            }
-        }
 
-        // --- FUNCIONES DEL CARRITO Y CHECKOUT (Mantenidas) ---
+
+        // --- FUNCIONES DEL CARRITO Y CHECKOUT (Modificado para descuento) ---
 
         function addToCart(name, price, pointsCost) {
             if (!localStorage.getItem('sessionUser')) {
                  alert("⚠️ Inicia sesión primero para añadir productos a la cesta.");
                  showSection('auth');
                  return;
+            }
+            
+            const product = bananaProducts.find(p => p.name.includes(name));
+            if (product) {
+                product.salesCount += 1;
+                saveProductDataToLocalStorage();
+                updateProductView();
             }
 
             cart.push({ name, price: parseFloat(price), pointsCost: parseInt(pointsCost) });
@@ -669,20 +919,20 @@
 
             listElement.innerHTML = '';
 
-            let totalMoney = 0;
+            let totalMoneyBase = 0;
             let totalPoints = 0;
 
             if (cart.length === 0) {
                 listElement.innerHTML = '<li style="text-align:center; color: #777;">La cesta está vacía :(</li>';
             } else {
                 cart.forEach((item) => {
+                    totalMoneyBase += item.price;
+                    totalPoints += item.pointsCost;
+                    
                     const priceBase = item.price;
                     const ivaGopal = priceBase * 0.10;
                     const ivaKhidir = priceBase * 0.05;
                     const finalPrice = priceBase + ivaGopal + ivaKhidir;
-                    
-                    totalMoney += finalPrice;
-                    totalPoints += item.pointsCost;
                     
                     const li = document.createElement('li');
                     li.classList.add('cart-item');
@@ -696,8 +946,20 @@
                     listElement.appendChild(li);
                 });
             }
+            
+            // Cálculo del Total: Aplicar descuento a la base antes de mostrar en la cesta
+            let finalTotalMoney;
+            if (activeDiscount > 0) {
+                // Aplicar descuento a la suma base antes de IVA, pero mostramos el total con IVA aplicado al modal
+                // Para el display simple de la cesta, mostramos el total base + IVA normal
+                const totalMoneyWithIVA = totalMoneyBase * 1.15; // 10% + 5% IVA
+                totalMoneyElement.innerText = totalMoneyWithIVA.toFixed(2);
+                
+            } else {
+                const totalMoneyWithIVA = totalMoneyBase * 1.15;
+                totalMoneyElement.innerText = totalMoneyWithIVA.toFixed(2);
+            }
 
-            totalMoneyElement.innerText = totalMoney.toFixed(2);
             totalPointsElement.innerText = totalPoints;
         }
 
@@ -708,12 +970,28 @@
             }
             
             const userPoints = getPlatapoints();
-            const totalMoney = parseFloat(document.getElementById('cart-total').innerText);
             const totalPointsNeeded = parseInt(document.getElementById('cart-points-total').innerText);
+            
+            // Recalcular total de dinero con descuento si aplica
+            let totalMoneyBase = 0;
+            cart.forEach(item => totalMoneyBase += item.price);
+
+            let totalMoneyWithDiscount;
+            if (activeDiscount > 0) {
+                 // Aplica descuento a la base, luego añade el IVA (15% total)
+                 const discountedBase = totalMoneyBase * (1 - activeDiscount);
+                 totalMoneyWithDiscount = discountedBase * 1.15;
+                 document.getElementById('coupon-status').style.display = 'block';
+                 document.getElementById('discount-percent').innerText = `${(activeDiscount * 100).toFixed(0)}%`;
+            } else {
+                totalMoneyWithDiscount = totalMoneyBase * 1.15;
+                document.getElementById('coupon-status').style.display = 'none';
+            }
+            
             const canAfford = userPoints >= totalPointsNeeded;
 
             document.getElementById('modal-user-points').innerText = userPoints;
-            document.getElementById('modal-money-total').innerText = totalMoney.toFixed(2);
+            document.getElementById('modal-money-total').innerText = totalMoneyWithDiscount.toFixed(2);
             document.getElementById('modal-points-needed').innerText = totalPointsNeeded;
             document.getElementById('modal-item-count').innerText = cart.length;
 
@@ -738,30 +1016,38 @@
         
         function completeCheckout(method) {
             const totalPointsNeeded = parseInt(document.getElementById('cart-points-total').innerText);
-            const totalMoney = parseFloat(document.getElementById('cart-total').innerText);
-            
+            const totalMoney = parseFloat(document.getElementById('modal-money-total').innerText); // Usar el total ya calculado con descuento
+
             document.getElementById('checkout-modal').style.display = 'none'; 
 
             if (method === 'points') {
                 const userPoints = getPlatapoints();
                 if (userPoints >= totalPointsNeeded) {
-                    const newPoints = userPoints - totalPointsNeeded;
-                    setPlatapoints(newPoints);
+                    const user = localStorage.getItem('sessionUser');
+                    const adminUsers = ["Dani", "Aitor", "Iker", "Aless"];
+
+                    if (!adminUsers.includes(user)) {
+                        const newPoints = userPoints - totalPointsNeeded;
+                        setPlatapoints(newPoints);
+                    }
+                    
                     alert(`✅ ¡Compra exitosa! Se han gastado ${totalPointsNeeded} Platapoints. ¡Gracias por tu fidelidad!`);
                     finalizePurchase();
                 } else {
                     alert("ERROR: ¡Puntos insuficientes! Por favor, selecciona el pago con dinero.");
                 }
             } else if (method === 'money') {
-                alert(`💵 ¡Compra exitosa! Se han pagado ${totalMoney.toFixed(2)} € (IVA de Gopal y Khidir incluido).`);
+                alert(`💵 ¡Compra exitosa! Se han pagado ${totalMoney.toFixed(2)} € (IVA y Descuento aplicado si correspondía).`);
                 finalizePurchase();
             }
         }
         
         function finalizePurchase() {
              cart = [];
+             activeDiscount = 0; // Deshabilitar el descuento después de la compra
              updateCartDisplay();
              showSection('home');
+             updateProductView(); 
         }
 
         // --- DECORACIÓN NAVIDEÑA (Mantenida) ---
@@ -777,194 +1063,6 @@
                 container.appendChild(flake);
             }
         }
-
-        // --- LÓGICA DEL JUEGO BANANA SHOOTER (Mantenida) ---
-        
-        function startGame() {
-            if (isGameRunning) return;
-            
-            canvas = document.getElementById('game-canvas');
-            ctx = canvas.getContext('2d');
-            canvas.width = GAME_WIDTH;
-            canvas.height = GAME_HEIGHT;
-            
-            score = 0;
-            pointsEarned = 0;
-            enemies = [];
-            projectiles = [];
-            isGameRunning = true;
-            lastSpawnTime = Date.now();
-            enemySpeed = 1;
-
-            // Se cambia el evento a 'click' para que lance el proyectil desde la parte inferior central
-            canvas.addEventListener('click', handleShoot);
-            document.addEventListener('keydown', handleGameKeys);
-            
-            gameLoop = requestAnimationFrame(updateGame);
-        }
-
-        function stopGame() {
-            if (!isGameRunning) return;
-            
-            isGameRunning = false;
-            cancelAnimationFrame(gameLoop);
-            canvas.removeEventListener('click', handleShoot);
-            document.removeEventListener('keydown', handleGameKeys);
-
-            alert(`¡Juego Terminado! Puntuación final: ${score}. Has ganado ${pointsEarned} Platapoints.`);
-            
-            // Otorgar los puntos ganados al usuario
-            const currentPoints = getPlatapoints();
-            setPlatapoints(currentPoints + pointsEarned);
-        }
-
-        function handleGameKeys(e) {
-            if (e.key === "Escape") {
-                stopGame();
-                // Volver a la sección de la selección de juegos
-                showSection('game-selection'); 
-            }
-        }
-
-        // Clase para representar a los enemigos
-        class Enemy {
-            constructor(x, y, label) {
-                this.x = x;
-                this.y = y;
-                this.radius = 20;
-                this.color = '#ff4444'; // Rojo Navideño
-                this.label = label;
-                this.speed = enemySpeed * 0.5; // Velocidad de descenso
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.closePath();
-                
-                ctx.fillStyle = '#fff';
-                ctx.font = '16px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(this.label, this.x, this.y + 5);
-            }
-
-            update() {
-                // Ahora el enemigo desciende lentamente
-                this.y += this.speed;
-                // Se mantiene el movimiento horizontal sutil
-                this.x += Math.sin(Date.now() / 1000) * 0.5;
-            }
-        }
-
-        // Clase para los proyectiles (plátanos)
-        class Projectile {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = 8;
-                this.velocity = 10; 
-            }
-
-            draw() {
-                // Centramos la imagen del plátano en la posición del proyectil
-                ctx.font = '20px Arial';
-                ctx.fillText('🍌', this.x - 10, this.y + 5);
-            }
-
-            update() {
-                // El proyectil sube
-                this.y -= this.velocity;
-            }
-        }
-        
-        function spawnEnemy() {
-            // Los enemigos ahora aparecen por la parte superior
-            const x = Math.random() * (GAME_WIDTH - 40) + 20; 
-            const y = -20;
-            const enemyLabels = ['🍎', '🥑', '🥝', '🫐', '🥦']; 
-            const label = enemyLabels[Math.floor(Math.random() * enemyLabels.length)];
-            
-            enemies.push(new Enemy(x, y, label));
-        }
-
-        function handleShoot(e) {
-            // El proyectil se lanza desde la parte inferior central
-            const centerX = GAME_WIDTH / 2;
-            const bottomY = GAME_HEIGHT;
-            projectiles.push(new Projectile(centerX, bottomY));
-        }
-
-        function updateGameStats() {
-            document.getElementById('game-score').innerText = score;
-            document.getElementById('game-points-earn').innerText = pointsEarned;
-
-            if (score > 0 && score % 100 === 0) {
-                enemySpeed += 0.5;
-                enemySpawnInterval = Math.max(500, enemySpawnInterval - 50);
-            }
-        }
-
-        function updateGame(timestamp) {
-            if (!isGameRunning) return;
-
-            ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-            // Spawning de enemigos
-            if (timestamp - lastSpawnTime > enemySpawnInterval) {
-                spawnEnemy();
-                lastSpawnTime = timestamp;
-            }
-
-            // Actualizar y dibujar enemigos
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                const enemy = enemies[i];
-                enemy.update();
-                enemy.draw();
-
-                // Detección de enemigo que llega al final (alerta al jugador)
-                if (enemy.y > GAME_HEIGHT) {
-                    enemies.splice(i, 1);
-                    score -= 5; 
-                    if (score < 0) score = 0;
-                    updateGameStats();
-                }
-            }
-
-            // Actualizar, dibujar y gestionar colisiones de proyectiles
-            for (let i = projectiles.length - 1; i >= 0; i--) {
-                const proj = projectiles[i];
-                proj.update();
-                proj.draw();
-
-                // Eliminación de proyectiles fuera de la pantalla
-                if (proj.y < 0) {
-                    projectiles.splice(i, 1);
-                    continue;
-                }
-                
-                // Detección de colisión (Plátano vs. Enemigo)
-                for (let j = enemies.length - 1; j >= 0; j--) {
-                    const enemy = enemies[j];
-                    const distance = Math.hypot(proj.x - enemy.x, proj.y - enemy.y);
-
-                    if (distance < proj.radius + enemy.radius) {
-                        // Impacto!
-                        score += 10;
-                        pointsEarned += 1;
-                        enemies.splice(j, 1); // Eliminar enemigo
-                        projectiles.splice(i, 1); // Eliminar proyectil
-                        updateGameStats();
-                        break; // El proyectil solo puede golpear un enemigo
-                    }
-                }
-            }
-            
-            updateGameStats();
-            gameLoop = requestAnimationFrame(updateGame);
-        }
-
     </script>
 </body>
 </html>
