@@ -187,7 +187,7 @@
         #coupon-status { margin-top: 10px; padding: 8px; background-color: #333; color: #4CAF50; border-radius: 5px; font-size: 0.9rem; }
     </style>
 </head>
-<body onload="checkAuth(); generateBananaDetails(); initProducts(); grantDailyPoints(); updatePlatapointsDisplay(); createSnowflakes();">
+<body onload="checkAuth(); generateBananaDetails(); initProducts(); grantDailyPoints(); updatePlatapointsDisplay(); createSnowflakes(); updateGameSection();">
 
     <div class="snow" id="snow-container"></div>
 
@@ -305,6 +305,7 @@
             El canje de códigos requiere una sesión activa.
         </p>
     </section>
+    
     <section id="games" class="app-section">
         <h2 style="text-align: center; color: #ff4444; margin-bottom: 40px;">Zona de Juegos Bananeros</h2>
         <div style="display: flex; justify-content: center; gap: 30px; padding: 20px; flex-wrap: wrap;">
@@ -340,6 +341,26 @@
             " onclick="alert('Banana Shooter: Próximamente en esta dimensión.')" onmouseover="this.style.backgroundColor='#E57373'" onmouseout="this.style.backgroundColor='#F44336'">
                 🔫 Banana shooter
             </button>
+            
+            <div id="secret-game-container" style="display: none;">
+                <a href="https://lemor15lopos.github.io/Flappy-Plane/" target="_blank" style="text-decoration: none;">
+                    <button style="
+                        background-color: #ff9900; /* Orange/Gold */
+                        color: #121212; 
+                        border: none; 
+                        padding: 20px 40px; 
+                        border-radius: 10px; 
+                        font-size: 1.5rem; 
+                        font-weight: bold; 
+                        cursor: pointer; 
+                        transition: 0.3s;
+                        box-shadow: 0 4px #cc7a00;
+                    " onmouseover="this.style.backgroundColor='#ffc107'" onmouseout="this.style.backgroundColor='#ff9900'">
+                        ✈️ Juego Secreto
+                    </button>
+                </a>
+            </div>
+            
         </div>
         <p style="text-align: center; color: #aaa; margin-top: 50px;">¡Elige tu arma bananera y prepárate para la acción!</p>
     </section>
@@ -522,6 +543,7 @@
                 alert(`👑 ¡Bienvenido, ADMINISTRADOR ${username} (Ahmed Salah IV)!`);
                 updateUIForSession(username);
                 updatePlatapointsDisplay();
+                updateGameSection(); // Llamar también al login
                 showSection('home');
                 return; 
             }
@@ -535,6 +557,7 @@
                 alert(`¡Bienvenido de vuelta, ${username}!`);
                 updateUIForSession(username);
                 updatePlatapointsDisplay();
+                updateGameSection(); // Llamar también al login
                 showSection('home');
             } else {
                 alert("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
@@ -548,6 +571,7 @@
             activeDiscount = 0; // Resetear descuento al cerrar sesión
             updateCartDisplay();
             updateUIForSession(null);
+            updateGameSection(); // Llamar también al cerrar sesión
             showSection('intro');
             alert("Sesión cerrada correctamente.");
         }
@@ -565,6 +589,7 @@
             const user = localStorage.getItem('sessionUser');
             updateUIForSession(user);
             updatePlatapointsDisplay();
+            updateGameSection(); // Añadido para asegurar que el estado se carga al inicio
             document.getElementById('intro').classList.add('active'); 
         }
 
@@ -607,6 +632,11 @@
             
             document.getElementById(sectionId).classList.add('active');
             sidebar.classList.remove('open');
+            
+            // Si vamos a la sección de juegos, actualizamos su estado
+            if (sectionId === 'games') {
+                updateGameSection();
+            }
         }
         
         // --- LÓGICA DE CÓDIGOS (NUEVA) ---
@@ -628,6 +658,27 @@
             const usedCodes = getUsedCodes();
             usedCodes[code] = true;
             localStorage.setItem(`UsedCodes_${user}`, JSON.stringify(usedCodes));
+        }
+
+        // FUNCIÓN PARA MOSTRAR/OCULTAR EL ENLACE DEL JUEGO SECRETO
+        function updateGameSection() {
+            const user = localStorage.getItem('sessionUser');
+            const secretGameDiv = document.getElementById('secret-game-container');
+
+            if (!user || !secretGameDiv) {
+                if (secretGameDiv) secretGameDiv.style.display = 'none';
+                return;
+            }
+
+            const usedCodes = getUsedCodes();
+            const code = '696969';
+            
+            // Si el código ha sido usado, mostrar el enlace del juego
+            if (usedCodes[code]) {
+                secretGameDiv.style.display = 'block';
+            } else {
+                secretGameDiv.style.display = 'none';
+            }
         }
 
         function redeemCode() {
@@ -666,6 +717,22 @@
                 codeMessage.innerText = "🎉 ¡Código APLICADO! Tienes un 10% de descuento en tu PRÓXIMA compra.";
                 codeMessage.style.color = '#4CAF50';
                 
+            } else if (code === '696969') { // Lógica para Juego Secreto
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has usado este código de juego!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                
+                // Marcar como usado
+                setCodeUsed(code); 
+                
+                // Mostrar el botón del juego
+                updateGameSection(); 
+
+                codeMessage.innerText = "🎉 ¡Felicidades! Se ha desbloqueado un nuevo juego secreto. ¡Búscalo ahora en la sección de Juegos!";
+                codeMessage.style.color = '#4CAF50';
+
             } else {
                 codeMessage.innerText = "Error: Código no válido o caducado.";
                 codeMessage.style.color = '#ff4444';
