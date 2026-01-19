@@ -15,31 +15,24 @@
             background-color: #121212;
         }
 
-        /* Simulación de Nieve (CSS Animation) */
-        .snow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 5000;
-            /* Fondo sutilmente navideño para la nieve */
-            background: rgba(28, 0, 0, 0.2); 
-        }
-        .flake {
-            position: absolute; width: 5px; height: 5px; background: white; border-radius: 50%;
-            opacity: 0.8; animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100vh); opacity: 0.8; }
-            100% { transform: translateY(100vh); opacity: 0.3; }
+        header {
+            display: flex; align-items: center; justify-content: center; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            border-bottom: 2px solid #fff06b; 
+            margin: 0; position: relative;
+            z-index: 100;
         }
 
         /* --- ESTILOS GENERALES Y LAYOUT --- */
         .menu-btn {
             position: fixed; top: 20px; left: 20px; font-size: 30px; background: none; border: none;
-            color: #ff4444; /* Rojo Navideño */
+            color: #ffe135; /* Rojo Navideño */
             cursor: pointer; z-index: 2000; padding: 5px; display: flex;
             flex-direction: column; justify-content: center; align-items: center; gap: 5px;
         }
         .menu-btn div {
-            width: 30px; height: 3px; background-color: #ff4444; border-radius: 2px; transition: 0.3s;
+            width: 30px; height: 3px; background-color: #ffe135; border-radius: 2px; transition: 0.3s;
         }
 
         #sidebar {
@@ -54,7 +47,7 @@
             background: none; border: none; color: white; padding: 20px; text-align: left;
             font-size: 1.2rem; cursor: pointer; border-bottom: 1px solid #1a331a; transition: 0.3s;
         }
-        #sidebar button:hover { background-color: #ff4444; color: #fff; padding-left: 30px; }
+        #sidebar button:hover { background-color: #ffe135; color: #fff; padding-left: 30px; }
         
         .sidebar-points {
             padding: 15px 20px;
@@ -69,12 +62,12 @@
             display: flex; align-items: center; justify-content: center; padding: 40px;
             /* Degradado de Verde/Negro para ambiente festivo */
             background: linear-gradient(to bottom, #0d210d, #121212); 
-            border-bottom: 2px solid #ff4444; /* Rojo Navideño */
+            border-bottom: 2px solid #ffe135; /* Rojo Navideño */
             margin-top: 0; position: relative;
         }
         .logo-img { 
             font-size: 4rem; margin-right: 20px; 
-            color: #ff4444; 
+            color: #ffe135; 
             animation: float 3s ease-in-out infinite; 
             text-shadow: 0 0 10px #ffe135; 
         }
@@ -88,14 +81,14 @@
 
         /* --- SECCIÓN INTRODUCCIÓN & AUTENTICACIÓN --- */
         #intro { text-align: center; padding: 80px 20px; }
-        #intro h2 { font-size: 3rem; color: #ff4444; }
+        #intro h2 { font-size: 3rem; color: #ffe135; }
         #intro p { font-size: 1.2rem; max-width: 800px; margin: 20px auto 40px; }
-        #start-btn { background-color: #ff4444; color: #fff; border: none; padding: 15px 30px; border-radius: 5px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        #start-btn { background-color: #ffe135; color: #fff; border: none; padding: 15px 30px; border-radius: 5px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
         #auth { max-width: 400px; margin: 100px auto; padding: 30px; background: #1e1e1e; border-radius: 10px; box-shadow: 0 0 20px rgba(255, 68, 68, 0.1); }
-        #auth h2 { text-align: center; color: #ff4444; margin-bottom: 25px; }
+        #auth h2 { text-align: center; color: #ffe135; margin-bottom: 25px; }
         .auth-form input[type="text"], .auth-form input[type="password"] { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #333; background: #2a2a2a; color: white; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
-        .auth-form button { width: 100%; padding: 15px; background-color: #ff4444; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .auth-form button:hover { background-color: #ff6666; }
+        .auth-form button { width: 100%; padding: 15px; background-color: #ffe135; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+        .auth-form button:hover { background-color: #FFD400; }
         #toggle-form { display: block; margin-top: 15px; text-align: center; color: #aaa; cursor: pointer; font-size: 0.9rem; }
 
         /* --- SECCIÓN TIENDA Y PRODUCTOS --- */
@@ -104,7 +97,7 @@
             background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 20px; 
             text-align: center; transition: transform 0.3s, box-shadow 0.3s;
         }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 68, 68, 0.2); border-color: #ff4444; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 68, 68, 0.2); border-color: #ffe135; }
         .product-icon { font-size: 5rem; margin-bottom: 15px; display: block; }
         .product-title { font-size: 1.5rem; margin-bottom: 10px; }
         .product-price { color: #ffe135; font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; display: block; }
@@ -132,14 +125,14 @@
         /* --- SECCIÓN OCULTA (SECTA) --- */
         #secta-page {
             text-align: center; padding: 80px 20px; min-height: 80vh;
-            background: radial-gradient(circle, #4d0000 0%, #121212 70%); /* Degradado Rojo Oscuro */
+            background: radial-gradient(circle, #ffe135 0%, #121212 70%); /* Degradado Rojo Oscuro */
         }
         #secta-page h2 {
-            font-size: 4rem; color: #ff4444; text-shadow: 0 0 10px #ff4444; animation: pulse 2s infinite;
+            font-size: 4rem; color: #ffe135; text-shadow: 0 0 10px #ffe135; animation: pulse 2s infinite;
         }
         #secta-page p {
             font-size: 1.2rem; color: #eee; max-width: 700px; margin: 30px auto 40px;
-            border: 1px dashed #ff4444; padding: 20px;
+            border: 1px dashed #ffe135; padding: 20px;
         }
         .secta-lore {
             max-width: 900px;
@@ -147,9 +140,9 @@
             padding: 20px;
             background: #222;
             border-radius: 10px;
-            border: 1px solid #ff4444;
+            border: 1px solid #ffe135;
         }
-        .secta-lore h3 { color: #ffe135; border-bottom: 1px dotted #ff4444; padding-bottom: 10px; text-align: center; }
+        .secta-lore h3 { color: #ffe135; border-bottom: 1px dotted #ffe135; padding-bottom: 10px; text-align: center; }
         .secta-lore ul { list-style-type: none; padding-left: 0; text-align: left; }
         .secta-lore li { margin-bottom: 15px; color: #ccc; line-height: 1.4; }
         .secta-lore li strong { color: #ff9900; }
@@ -160,7 +153,7 @@
         }
         .footer-info small { color: #777; display: block; margin-bottom: 20px; line-height: 1.5; }
         .khidir-container { margin-top: 30px; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
-        .khidir-container img { max-width: 250px; border: 3px solid #ff4444; border-radius: 10px; margin-bottom: 10px; opacity: 0.9; }
+        .khidir-container img { max-width: 250px; border: 3px solid #ffe135; border-radius: 10px; margin-bottom: 10px; opacity: 0.9; }
 
         /* --- MODAL DE CHECKOUT (Mantenido) --- */
         #checkout-modal {
@@ -248,12 +241,12 @@
         
         <div id="controls-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
             <input type="text" id="search-input" oninput="updateProductView()" placeholder="Buscar plátano por nombre..."
-                   style="flex-grow: 1; padding: 10px; border-radius: 5px; background: #2a2a2a; color: #fff; border: 1px solid #ff4444; max-width: 400px;">
+                   style="flex-grow: 1; padding: 10px; border-radius: 5px; background: #2a2a2a; color: #fff; border: 1px solid #ffe135; max-width: 400px;">
             
             <div id="sort-controls" style="text-align: right; display: flex; align-items: center;">
                 <label for="sort-select" style="color: #ccc; margin-right: 10px;">Ordenar por:</label>
                 <select id="sort-select" onchange="updateProductView()" 
-                        style="padding: 10px; border-radius: 5px; background: #2a2a2a; color: #fff; border: 1px solid #ff4444;">
+                        style="padding: 10px; border-radius: 5px; background: #2a2a2a; color: #fff; border: 1px solid #ffe135;">
                     <option value="default">Por defecto (ID)</option>
                     <option value="price_asc">Precio: Más Barato a Más Caro</option>
                     <option value="price_desc">Precio: Más Caro a Más Barato</option>
@@ -307,7 +300,7 @@
     </section>
     
     <section id="games" class="app-section">
-        <h2 style="text-align: center; color: #ff4444; margin-bottom: 40px;">Zona de Juegos Bananeros</h2>
+        <h2 style="text-align: center; color: #ffe135; margin-bottom: 40px;">Zona de Juegos Bananeros</h2>
         <div style="display: flex; justify-content: center; gap: 30px; padding: 20px; flex-wrap: wrap;">
             
             <a href="https://lemor15lopos.github.io/banana-shooter/" target="_blank" style="text-decoration: none;">
@@ -337,7 +330,7 @@
                 font-weight: bold; 
                 cursor: pointer; 
                 transition: 0.3s;
-                box-shadow: 0 4px #D32F2F;
+                box-shadow: 0 4px #d4c656z;
             " onclick="alert('Banana Shooter: Próximamente en esta dimensión.')" onmouseover="this.style.backgroundColor='#E57373'" onmouseout="this.style.backgroundColor='#F44336'">
                 🔫 Banana shooter
             </button>
@@ -695,7 +688,7 @@
             }
 
             if (code.length !== 6 || !/^\d+$/.test(code)) {
-                codeMessage.innerText = "Error: El código debe ser exactamente 6 dígitos numéricos.";
+                codeMessage.innerText = "Error: El código debe ser de 6 dígitos numéricos.";
                 return;
             }
 
@@ -825,7 +818,7 @@
             productList.innerHTML = '';
             
             if (products.length === 0) {
-                 productList.innerHTML = '<p style="text-align: center; color: #ff4444; font-size: 1.5rem;">❌ ¡No se encontraron plátanos con ese criterio! 🍌</p>';
+                 productList.innerHTML = '<p style="text-align: center; color: #ffe135; font-size: 1.5rem;">❌ ¡No se encontraron plátanos con ese criterio! 🍌</p>';
                  return;
             }
 
@@ -858,7 +851,7 @@
                         <small style="color: #ccc;">Valora:</small>
                         <div style="font-size: 1.5rem;">
                             ${[1, 2, 3, 4, 5].map(star => 
-                                `<span style="cursor: pointer; color: #ff4444;" 
+                                `<span style="cursor: pointer; color: #ffe135;" 
                                        onclick="rateProduct(${product.id}, ${star})"
                                        title="${star} estrellas">★</span>`
                             ).join('')}
