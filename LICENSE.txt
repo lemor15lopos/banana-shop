@@ -1,0 +1,44 @@
+=======================================================================
+          LICENCIA DE USO Y DISTRIBUCIÓN - BANANA SHOP IMPERIAL
+                     VERSIÓN 2.0 - EDICIÓN POTASIO
+=======================================================================
+
+1. CONCESIÓN DE LA LICENCIA
+Por la presente, Banana Shop concede al usuario (en adelante, "El Iniciado") 
+una licencia no exclusiva, personal e intransferible para utilizar el 
+software "Banana Shop Imperial" bajo los términos de esta Licencia de 
+Potasio. Al abrir este archivo o ejecutar el software, usted acepta 
+quedar vinculado por los términos aquí descritos.
+
+2. PROPIEDAD INTELECTUAL
+Todo el contenido, incluyendo pero no limitado a: el código fuente, los 
+algoritmos de cálculo de Platapoints, las imágenes de bananas de las 100 
+variedades, y la estructura de la "Secta del Plátano", son propiedad 
+exclusiva de Banana Shop y sus fundadores. Queda prohibida la copia 
+parcial o total sin el consentimiento expreso del Gran Maestro Bananero.
+
+3. REGLAS DE CONDUCTA (CÓDIGO DE HONOR)
+El Iniciado se compromete a:
+   a) No referirse al plátano como una "fruta común" en contextos públicos.
+   b) Respetar el color Amarillo Claro (#fff06b) como el estándar sagrado.
+   c) No intentar hackear el sistema de Platapoints mediante inyecciones 
+      de código que no sean de origen vegetal.
+   d) Mantener el secreto de la ubicación de la "Bóveda de Códigos".
+
+4. LIMITACIÓN DE RESPONSABILIDAD
+Banana Shop no se hace responsable de:
+   - Resbalones accidentales causados por cáscaras virtuales.
+   - Adicción severa a la recolección de Platapoints.
+   - Transformaciones metafísicas tras alcanzar el rango de "Imperial".
+   - Pérdida de datos si el archivo index.html no mantiene sus 
+     69,000 caracteres reglamentarios.
+
+5. JURISDICCIÓN
+Cualquier disputa legal relacionada con esta licencia será resuelta bajo 
+las leyes de la República Independiente de la Banana, en presencia de 
+Khidir Karawita y el consejo superior de la Secta.
+
+-----------------------------------------------------------------------
+"En el potasio confiamos, por la curva nos guiamos."
+© 2026 Banana Shop Imperial. Todos los derechos reservados.
+-----------------------------------------------------------------------
