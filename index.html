@@ -92,18 +92,70 @@
         #toggle-form { display: block; margin-top: 15px; text-align: center; color: #aaa; cursor: pointer; font-size: 0.9rem; }
 
         /* --- SECCIÓN TIENDA Y PRODUCTOS --- */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
         .product-card { 
-            background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 20px; 
-            text-align: center; transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #1e1e1e; border: 2px solid #333; border-radius: 18px; padding: 20px; 
+            text-align: center; transition: transform 0.35s, box-shadow 0.35s;
+            position: relative; overflow: hidden;
         }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 68, 68, 0.2); border-color: #ffe135; }
-        .product-icon { font-size: 5rem; margin-bottom: 15px; display: block; }
-        .product-title { font-size: 1.5rem; margin-bottom: 10px; }
-        .product-price { color: #ffe135; font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; display: block; }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--card-accent, #ffe135);
+            border-radius: 18px 18px 0 0;
+        }
+        .product-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 8px 28px var(--card-glow, rgba(255,225,53,0.25)); 
+            border-color: var(--card-accent, #ffe135); 
+        }
+        .product-icon { 
+            font-size: 4.5rem; margin-bottom: 12px; display: block; 
+            animation: var(--card-icon-anim, none);
+        }
+        .product-card-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--card-bg-gradient, none);
+            opacity: 0.08;
+            pointer-events: none;
+            border-radius: 16px;
+        }
+        .product-title { font-size: 1.3rem; margin-bottom: 8px; color: var(--card-title-color, #fff); }
+        .product-price { color: var(--card-accent, #ffe135); font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; display: block; }
         .product-points { color: #ff9900; font-size: 0.9rem; margin-bottom: 10px; }
-        .buy-btn { background-color: #ffe135; color: #000; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
-        .buy-btn:hover { background-color: #fff; }
+        .buy-btn { 
+            background: var(--card-btn-bg, #ffe135); 
+            color: var(--card-btn-color, #000); 
+            border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; 
+            transition: filter 0.2s, transform 0.1s;
+            box-shadow: 0 3px 8px var(--card-glow, rgba(255,225,53,0.3));
+        }
+        .buy-btn:hover { filter: brightness(1.15); transform: scale(1.04); }
+        .card-badge {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: var(--card-accent, #ffe135);
+            color: #000;
+            font-size: 0.62rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        @keyframes float-slow { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes pulse-glow { 0%,100%{filter:drop-shadow(0 0 4px gold)} 50%{filter:drop-shadow(0 0 16px gold)} }
+        @keyframes flicker { 0%,100%{opacity:1} 45%{opacity:0.6} 55%{opacity:0.9} }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+        @keyframes bounce-icon { 0%,100%{transform:translateY(0) scaleY(1)} 40%{transform:translateY(-14px) scaleY(1.05)} 60%{transform:translateY(-10px)} }
+        @keyframes rainbow { 0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)} }
+        @keyframes freeze { 0%,100%{filter:brightness(1) saturate(1)} 50%{filter:brightness(1.5) saturate(0.2) hue-rotate(200deg)} }
+        @keyframes neon-pulse { 0%,100%{filter:drop-shadow(0 0 5px #ff00ff)} 50%{filter:drop-shadow(0 0 18px #00ffff)} }
+        @keyframes drift { 0%,100%{transform:translateX(0) rotate(0deg)} 50%{transform:translateX(6px) rotate(4deg)} }
         
         /* --- SECCIÓN CÓDIGOS (NUEVO) --- */
         #codes { max-width: 500px; margin: 50px auto; padding: 30px; background: #1e1e1e; border-radius: 10px; box-shadow: 0 0 20px rgba(76, 175, 80, 0.1); text-align: center; }
@@ -740,17 +792,211 @@
             "Plátano 001: Canarias/Original", "Plátano 002: El Silencioso de Sumatra", "Plátano 003: Curva de Felicidad Extrema", "Plátano 004: El Fantasma de Medianoche", "Plátano 005: Diamante Verde de Khidir", "Plátano 006: Bocado Estelar (Estrella M-31)", "Plátano 007: La Uña de Dragón", "Plátano 008: El Abuelo Longevo", "Plátano 009: Místico de Nepal", "Plátano 010: Sabor a Terremoto (Grado 5)", "Plátano 011: El Dorado de la Amazonía", "Plátano 012: La Cáscara Indestructible", "Plátano 013: Llorón de Invierno", "Plátano 014: Susurro del Desierto", "Plátano 015: Mutante de Chernobyl", "Plátano 016: La Flecha de Apolo", "Plátano 017: El Despertador Cósmico", "Plátano 018: Lágrima de Gigante", "Plátano 019: El Tostador Automático", "Plátano 020: Espejo del Tiempo", "Plátano 021: Corazón de Volcán", "Plátano 022: El Triturador de Dados", "Plátano 023: El Plátano Píxel", "Plátano 024: Viajero Interdimensional", "Plátano 025: El Grito de Múnich", "Plátano 026: Zumo de la Ilusión", "Plátano 027: El Fósil Viviente", "Plátano 028: Esencia de Lluvia Ácida", "Plátano 029: El Camaleón Dulce", "Plátano 030: El Rey de la Pradera", "Plátano 031: La Sombra Fugaz", "Plátano 032: El Guardián del Potasio", "Plátano 033: Alimento de Astronauta Nivel 3", "Plátano 034: La Llave del Solsticio", "Plátano 035: El Plátano Matemático (π)", "Plátano 036: Generador de Microondas", "Plátano 037: El Tesoro del Pirata", "Plátano 038: Piel de Serpiente Dorada", "Plátano 039: El Amigo Invisible", "Plátano 040: El Maestro Zen", "Plátano 041: La Trompeta del Ángel", "Plátano 042: La Pregunta Definitiva", "Plátano 043: El Suspiro de la Musa", "Plátano 044: Aura de Neón", "Plátano 045: El Resplandor de Júpiter", "Plátano 046: El Plátano Tundra", "Plátano 047: El Heraldo de la Tormenta", "Plátano 048: Elixir de la Juventud", "Plátano 049: La Pesadilla del Aguacate", "Plátano 050: El Anillo de Fuego", "Plátano 051: El Gigante Dormido", "Plátano 052: La Partitura Perdida", "Plátano 053: El Plátano Biónico", "Plátano 054: La Fuente de Cobre", "Plátano 055: El Misterio de Roswell", "Plátano 056: Aliento de Drácula", "Plátano 057: El Eco Infinito", "Plátano 058: El Mensaje Oculto", "Plátano 059: El Viajero Sin Destino", "Plátano 060: La Fruta Prohibida", "Plátano 061: El Plátano Súper Sónico", "Plátano 062: El Ojo del Huracán", "Plátano 063: La Semilla de la Verdad", "Plátano 064: El Escudo de Hades", "Plátano 065: La Espada de Zeus", "Plátano 066: El Secreto del Código Binario", "Plátano 067: El Plátano Holográfico", "Plátano 068: La Nebulosa Amarilla", "Plátano 069: La Danza del Loto", "Plátano 070: El Plátano de Cristal", "Plátano 071: El Corredor de Maratón", "Plátano 072: La Voz de la Conciencia", "Plátano 073: El Poema Olvidado", "Plátano 074: El Plátano Invisible (Recargado)", "Plátano 075: El Tesoro Sumergido", "Plátano 076: La Capa de Invisibilidad", "Plátano 077: El Rescate del Sol", "Plátano 078: La Sopa de la Abuela", "Plátano 079: El Reactor de Fusión Fría", "Plátano 080: El Plátano Cuántico", "Plátano 081: El Puente de Bifrost", "Plátano 082: El Monolito Negro", "Plátano 083: El Portal a Narnia", "Plátano 084: La Última Cena del Plátano", "Plátano 085: El Gato de Schrödinger", "Plátano 086: El Viaje de Chihiro", "Plátano 087: El Jardín Colgante", "Plátano 088: La Fuente de Sodio", "Plátano 089: El Espejismo de Dubai", "Plátano 090: La Llama Eterna", "Plátano 091: El Plátano de la Suerte (777)", "Plátano 092: La Leyenda de Zelda", "Plátano 093: El Sarcófago de Tutankamón", "Plátano 094: El Muro de Berlín", "Plátano 095: El Plátano Desintegrador", "Plátano 096: El Susurro de las Montañas", "Plátano 097: La Cáscara Dorada del Edén", "Plátano 098: El Corazón de Atlantis", "Plátano 099: La Profecía del Potasio", "Plátano 100: El Gran Final Navideño"
         ];
         const BANANA_LORE = [/* ... (Lores de plátanos) ... */
-            "El clásico. Dulce, con pintitas y lleno de potasio. Ideal para recuperar energía después de programar.",
-            "Duro como una piedra. Se usa para cocinar patacones o para lanzar a enemigos, ya que hace daño contundente.",
-            "Cultivado con música clásica y masajes diarios. Su sabor es tan refinado que te hace hablar con acento elegante.",
-            "Un plátano etéreo. No alimenta el cuerpo, pero alimenta el alma. 0 calorías porque técnicamente no existe.",
-            "Recolectado en el Glaciar Ártico. Consume uno y podrás escuchar los secretos de los pingüinos. Causa congelación ligera.",
-            "Expuesto a radiación controlada. Brilla en la oscuridad y te da un 5% de probabilidad de súper fuerza durante 10 segundos.",
-            "Solo visible si te concentras mucho. Si lo lanzas, nadie sabrá de dónde vino el impacto.",
-            "Un bocado enciende una llama en tu estómago. Ideal para los días fríos o para quemar calorías rápidamente.",
-            "Crece hacia atrás. Al comerlo, te hace dudar de todas tus decisiones pasadas. Peligroso para la filosofía.",
-            "Cosechado únicamente bajo la luna nueva. Te da visión nocturna, pero te vuelve sensible al sol."
+            /* 001 */ "El clásico. Dulce, con pintitas y lleno de potasio. Ideal para recuperar energía después de programar.",
+            /* 002 */ "Duro como una piedra. Se usa para cocinar patacones o para lanzar a enemigos, ya que hace daño contundente.",
+            /* 003 */ "Cultivado con música clásica y masajes diarios. Su sabor es tan refinado que te hace hablar con acento elegante.",
+            /* 004 */ "Un plátano etéreo. No alimenta el cuerpo, pero alimenta el alma. 0 calorías porque técnicamente no existe.",
+            /* 005 */ "Recolectado en el Glaciar Ártico. Consume uno y podrás escuchar los secretos de los pingüinos. Causa congelación ligera.",
+            /* 006 */ "Expuesto a radiación controlada. Brilla en la oscuridad y te da un 5% de probabilidad de súper fuerza durante 10 segundos.",
+            /* 007 */ "Solo visible si te concentras mucho. Si lo lanzas, nadie sabrá de dónde vino el impacto.",
+            /* 008 */ "Un bocado enciende una llama en tu estómago. Ideal para los días fríos o para quemar calorías rápidamente.",
+            /* 009 */ "Crece hacia atrás. Al comerlo, te hace dudar de todas tus decisiones pasadas. Peligroso para la filosofía.",
+            /* 010 */ "Cosechado únicamente bajo la luna nueva. Te da visión nocturna, pero te vuelve sensible al sol.",
+            /* 011 */ "Encontrado en las profundidades de la Amazonía por el explorador Rodrigo Bananez. Al comerlo, puedes entender el idioma de los loros, aunque solo hablan de chismes.",
+            /* 012 */ "Su piel es tan resistente que ha sido usada como escudo en tres guerras medievales bananeras. El interior es sorprendentemente suave y sabe a mantequilla caramelizada.",
+            /* 013 */ "Crece exclusivamente en invierno y llora savia azucarada cuando hace frío. Los aldeanos lo usan como termómetro natural y como ingrediente secreto en su ponche.",
+            /* 014 */ "Cultivado en el desierto del Sahara sin una sola gota de agua. Sobrevive absorbiendo la humedad del aliento de los camellos. Sabe a fechas y misterio.",
+            /* 015 */ "Fruto de un accidente nuclear menor en 1986. Tiene tres puntas, emite un suave zumbido radioactivo y te hace crecer el pelo un 300% más rápido durante 48 horas.",
+            /* 016 */ "Lanzado al espacio en 1972 como experimento botánico. Viajó a Marte, volvió solo y ahora crece con una inclinación perfecta de 45 grados apuntando siempre al norte.",
+            /* 017 */ "Al amanecer emite un pitido de 80 decibelios para despertar a toda la plantación. Los vecinos lo odian. Los búhos también. Su zumo actúa como café triple espresso.",
+            /* 018 */ "Tan grande que un solo ejemplar pesa 4 kilos. Cada bocado contiene exactamente 1000 calorías. Los gigantes nórdicos lo usan como bocadillo de media mañana.",
+            /* 019 */ "Al pelarlo, el calor de tus manos activa una reacción química que lo tuesta automáticamente. Sale de la cáscara crujiente y con un aroma a caramelo tostado irresistible.",
+            /* 020 */ "Cada vez que lo observas, parece diferente. Algunos lo ven amarillo, otros lo ven morado, otros lloran sin saber por qué. Los físicos cuánticos lo estudian en secreto.",
+            /* 021 */ "Cultivado en la ladera de un volcán activo. Su piel roja ardiente avisa de que quema hasta 30 minutos después de pelado. El interior es fría lava de vainilla.",
+            /* 022 */ "Tiene la propiedad única de destruir estadísticamente el azar. Tras comerlo, todas tus tiradas de dados salen 6 durante exactamente 24 horas. Los casinos lo han prohibido.",
+            /* 023 */ "Generado digitalmente por una IA en 2021 y materializado mediante impresión 3D orgánica. Su sabor es idéntico al píxel número 1.337 de un atardecer en alta definición.",
+            /* 024 */ "Capaz de traversar dimensiones paralelas. Se han encontrado cáscaras suyas en civilizaciones que aún no han evolucionado. Viene con manual de instrucciones en 14 idiomas extintos.",
+            /* 025 */ "Su aroma recuerda al Grito de Munch pero en forma olfativa. Al comerlo experimentas una angustia existencial de 4 segundos seguida de una euforia incontrolable de 3 minutos.",
+            /* 026 */ "Exprimido produce un líquido dorado que hace creer a quien lo bebe que todo es ilusión. Muy popular entre filósofos, magos de feria y personas que han visto demasiado Matrix.",
+            /* 027 */ "Tiene 65 millones de años según el carbono 14. Sobrevivió a los dinosaurios gracias a su piel blindada y su actitud pasivo-agresiva. Sabe a tierra húmeda y nostalgia.",
+            /* 028 */ "Cultivado en zonas de lluvia ácida controlada. Su piel está llena de cráteres microscópicos. Comerlo te confiere resistencia química temporal y un aliento muy interesante.",
+            /* 029 */ "Cambia de color según tu estado de ánimo: amarillo brillante si estás feliz, morado oscuro si mientes, y a rayas si estás intentando recordar dónde dejaste las llaves.",
+            /* 030 */ "El plátano más respetado de la pradera africana. Los leones lo rodean pero nunca lo tocan. Se dice que quien lo come nunca más tiene miedo a hablar en público.",
+            /* 031 */ "Se mueve ligeramente cuando nadie lo mira. Las cámaras de seguridad lo han captado desplazarse hasta 3 centímetros en una noche. Nadie investiga por miedo a las respuestas.",
+            /* 032 */ "Contiene el 400% de la dosis diaria recomendada de potasio. Los médicos lo llaman la bomba de potasio. Los superhéroes lo llaman desayuno. Los riñones lloran.",
+            /* 033 */ "Diseñado especialmente para consumo en gravedad cero. No tiene migas, no genera gases y sabe igual en cualquier planeta. Ha sido enviado a 7 misiones espaciales.",
+            /* 034 */ "Solo madura dos veces al año: en los solsticios. Quien lo come en el momento exacto del solsticio de verano se dice que puede ver brevemente el futuro, pero solo el aburrido.",
+            /* 035 */ "Su longitud es exactamente 3.14159 centímetros. Irónicamente, calcular su circunferencia es imposible. Los matemáticos lo llaman 'el plátano irracional'. Sabe a pi de limón.",
+            /* 036 */ "Al colocarlo en el microondas emite una señal de radiofrecuencia que sintoniza automáticamente la radio con la canción que más odias. Su calor interno es de 2.4 GHz exactos.",
+            /* 037 */ "Encontrado en un cofre bajo el mar Caribe junto a monedas de oro. Lleva sumergido 300 años pero está perfectamente conservado. Sabe a ron, sal y libertad.",
+            /* 038 */ "Su textura exterior imita exactamente las escamas de una serpiente pitón dorada. Los herpetólogos lo confunden constantemente. Al morderlo cruje como si dijera 'ssss'.",
+            /* 039 */ "Nadie sabe cuándo llegó a la plantación. Simplemente aparece. No tiene raíces conocidas. Ayuda con las tareas del hogar si le pides las cosas con amabilidad.",
+            /* 040 */ "Cultivado en un monasterio budista tibetano. Cada ejemplar ha meditado junto a monjes durante 3 años antes de madurar. Al comerlo sientes una calma de exactamente 11 minutos.",
+            /* 041 */ "Produce un tono musical de 440 Hz al pelarlo. Si pelas tres a la vez suenan como una trompeta celestial. Los vecinos se quejan. Los ángeles aplauden.",
+            /* 042 */ "La respuesta al universo está codificada en su ADN según el Instituto Bananero de Astrofísica. Lamentablemente, para leer el código necesitas comerte 42 de ellos seguidos.",
+            /* 043 */ "Fuente de inspiración para 847 obras de arte, 12 sinfonías y un poema épico en swahili. Al comerlo las musas te susurran ideas durante 20 minutos. El 90% son malas.",
+            /* 044 */ "Brilla con luz de neón rosa bajo luz ultravioleta. Muy popular en discotecas, festivales y operaciones de búsqueda y rescate nocturnas en entornos festivos.",
+            /* 045 */ "Cultivado en la estratosfera gracias a un globo especial. Absorbe la radiación de Júpiter cuando el planeta está en oposición. Le da un sabor sutilmente gaseoso y grandioso.",
+            /* 046 */ "Crece en la tundra siberiana a -40°C. Su interior está permanentemente congelado. Se sirve directamente como helado. Tarda 6 horas en descongelarse si quieres batido.",
+            /* 047 */ "Aparece únicamente 24 horas antes de una tormenta eléctrica. Su piel tiene carga estática natural. Al comerlo, tu pelo se eriza y puedes predecir el tiempo con un 73% de precisión.",
+            /* 048 */ "Contiene una enzima descubierta en 2003 que revierte el envejecimiento celular en células de plátano. En humanos solo funciona en las uñas de los pies. Investigación en curso.",
+            /* 049 */ "Tiene una rivalidad histórica con el aguacate. Al colocarlos juntos en un frutero, el plátano siempre gana el concurso de durabilidad. Los aguacates maduran de rabia en 12 horas.",
+            /* 050 */ "Crece en el borde del cinturón de fuego del Pacífico. Su interior contiene magma solidificado de azúcar. Al morderlo el centro explota en un estallido dulce de 200°C.",
+            /* 051 */ "Dormido durante décadas bajo tierra como un volcán inactivo. Cuando lo despiertas —es decir, lo pelas— libera un vapor denso de aroma tropical capaz de despertar a cualquier persona en coma leve.",
+            /* 052 */ "Contiene una melodía grabada en su fibra molecular. Al masticarlo correctamente en ciertos intervalos, suena la Quinta Sinfonía de Beethoven. Solo lo han logrado 3 personas en la historia.",
+            /* 053 */ "Tiene un exoesqueleto de titanio orgánico bajo la piel. Sus células musculares se regeneran solas. Si lo dejas caer, rebota. Si lo golpeas, eres tú quien sale herido.",
+            /* 054 */ "Sus venas internas son de cobre puro comestible. Conduce la electricidad estática lo suficiente como para encender una bombilla LED pequeña. Los electricistas lo llaman 'el cable sabroso'.",
+            /* 055 */ "Encontrado en el área 51 dentro de un frigorífico sin etiqueta. Tiene marcas de mordiscos de forma no identificada. Su composición molecular tiene un elemento que no está en la tabla periódica.",
+            /* 056 */ "Solo madura de noche y debe ser consumido antes del amanecer. Tiene un sabor oscuro, profundo y ligeramente amargo. Garlic repelente natural incluido. Muy popular en Transilvania.",
+            /* 057 */ "Cuando lo comes en un lugar silencioso, escuchas el eco de todos los plátanos que han existido antes que él. Es una experiencia espiritual y algo perturbadora. Dura 7 segundos.",
+            /* 058 */ "Contiene un mensaje microscópico grabado en su núcleo. Para leerlo necesitas un microscopio de 10.000 aumentos. Hasta ahora solo dice: 'Sí, esto era una prueba. Enhorabuena.'",
+            /* 059 */ "No tiene origen conocido. Aparece en distintos continentes sin explicación botánica. Algunos creen que camina de noche. Los mapas de sus apariciones forman la constelación de Orión.",
+            /* 060 */ "Prohibido por 7 religiones distintas por razones que ninguna quiere explicar públicamente. Tiene un sabor tan perfecto que te hace replantear tus prioridades vitales. Adictivo.",
+            /* 061 */ "Viaja más rápido que el sonido al caer al suelo. Genera una pequeña onda de choque audible. Recomendado para uso en exteriores. No apto para pisos con vecinos en el piso de abajo.",
+            /* 062 */ "Perfectamente esférico en su interior a pesar de la forma curva exterior. Los meteorólogos lo usan como modelo para el ojo de los huracanes. Calma todo a su alrededor en un radio de 2 metros.",
+            /* 063 */ "Contiene una semilla con toda la información genética de las 100 variedades de la tienda. Si la plantas, según la leyenda, crece un árbol con los 100 tipos a la vez. Nadie lo ha intentado aún.",
+            /* 064 */ "Fabricado con la resistencia de un escudo olímpico. Usado por Hades como pisapapeles durante siglos. Tiene una frialdad perpetua de 4°C sin importar el ambiente. Ideal para verano.",
+            /* 065 */ "Tan afilado en sus extremos que puede cortar papel. Zeus lo usó como espada en una disputa menor sobre quién controla el monte Olimpo los martes. Ganó. El papel perdió.",
+            /* 066 */ "Su piel, leída correctamente en binario, contiene el código fuente de un videojuego de los 80 no publicado. Los hackers lo buscan desesperadamente. Los speedrunners aún más.",
+            /* 067 */ "Proyecta su propia imagen en 3D cuando se ilumina con luz LED. Puedes ver una versión holográfica tuya comiéndolo antes de comerlo. Es raro pero ahorra suspenso.",
+            /* 068 */ "Formado por gas y partículas de polvo estelar compactadas. Al comerlo sientes que flotas ligeramente durante 8 segundos. Los astrónomos lo describen como 'saber a cosmos con vainilla'.",
+            /* 069 */ "Cultivado por monjes del loto en un lago sagrado. Solo puede recogerse bailando. Cada ejemplar tiene una coreografía diferente grabada en su cáscara en forma de pictogramas.",
+            /* 070 */ "Transparente como el cristal pero completamente sólido. Puedes ver su interior en tiempo real mientras lo comes. Algo raro ocurre cuando llegas al centro: el plátano te mira de vuelta.",
+            /* 071 */ "Contiene la dosis exacta de carbohidratos para completar un maratón de 42km. Ni uno más. Comer dos te convierte en un corredor de ultramaratón pero con temblores incontrolables.",
+            /* 072 */ "Cuando lo comes en silencio absoluto, escuchas una voz interior que no es la tuya. Da consejos financieros razonablemente buenos. Los inversores lo compran por cajas enteras.",
+            /* 073 */ "Inspiró 14 poemas del siglo XIX que fueron perdidos en un incendio. Solo queda el plátano como testimonio. Su aroma huele a tinta vieja, papel y melancolía romántica.",
+            /* 074 */ "Completamente invisible hasta que lo tocas, momento en que se vuelve súper visible con destellos. Recargado en la versión 2.0 con modo stealth mejorado y actualización de firmware.",
+            /* 075 */ "Hallado en el fondo del Atlántico junto a restos de un galeón español. Conservado en sal y misterio durante 400 años. Su sabor combina perfectamente con el arrepentimiento.",
+            /* 076 */ "Posee una capa molecular que dobla la luz a su alrededor. Al comerlo, eres invisible durante exactamente 3 minutos. Advertencia: la ropa no desaparece contigo.",
+            /* 077 */ "Según la mitología solar inca, este plátano rescató al sol cuando este cayó en un charco en el año 800 d.C. Desde entonces irradia un calor reconfortante de aprox. 28°C.",
+            /* 078 */ "La receta secreta de la abuela de Khidir Karawita lo incluye en su sopa legendaria. Sin este ingrediente, la sopa pierde sus propiedades curativas y simplemente sabe a agua caliente.",
+            /* 079 */ "Produce una reacción de fusión fría en contacto con leche entera. Genera 0.003 vatios de energía por hora. 300 de ellos podrían alimentar una bombilla. El potencial es enorme.",
+            /* 080 */ "Existe en superposición cuántica: está maduro y verde al mismo tiempo hasta que lo observas. Los físicos discuten si comerlo colapsa la función de onda o solo el almuerzo.",
+            /* 081 */ "Crece en el puente entre los nueve reinos nórdicos. Thor lo usó como ofrenda a las Nornas. Su sabor varía según el reino en el que lo comes. En Midgard sabe a plátano normal.",
+            /* 082 */ "Negro, perfecto, rectangular, de proporciones exactas 1:4:9. Al tocarlo, los primates circundantes dan un salto evolutivo de exactamente una generación. HAL 9000 lo aprueba.",
+            /* 083 */ "Encontrado en el armario de una habitación en Oxford. Tiene un fauno dentro (pequeño). Al comerlo entras brevemente a un mundo nevado donde todo el mundo habla de plátanos.",
+            /* 084 */ "El último plátano servido en la última cena bananera antes de la Gran Hambruna del Potasio de 2089 (según el lore oficial). Conservado en oro y nostalgia. Sabe a época dorada.",
+            /* 085 */ "Existe en dos estados simultáneamente: comido y sin comer. La caja en la que viene tiene una advertencia de que no se abra si uno prefiere la incertidumbre. Sabor: indeterminado.",
+            /* 086 */ "Cada ejemplar es una obra de arte animada según el espíritu de las aguas en la mitología japonesa. Recorre el río de tu sistema digestivo como una aventura espiritual de 4 horas.",
+            /* 087 */ "Cultivado en los jardines colgantes de una ciudad flotante sobre las nubes de Venus. Su sabor cambia con la altitud. En tierra firme sabe a plátano. A 2000 metros sabe a paraíso.",
+            /* 088 */ "Sus venas están cargadas de sodio puro comestible. Al comerlo tu sangre mejora su conductividad eléctrica un 0.02%. Muy demandado por científicos que trabajan con electroencefalogramas.",
+            /* 089 */ "Solo existe como reflejo en el horizonte del desierto de Dubai. Cuando te acercas, desaparece. El único modo de obtenerlo es no mirarlo directamente. Sabe exactamente como imaginas.",
+            /* 090 */ "Su llama interior nunca se apaga. Puedes guardarlo en el congelador y seguirá tibio al sacarlo. Usado como fuente de calor en expediciones árticas. También funciona como nightlight.",
+            /* 091 */ "Tres sietes grabados en su piel por la naturaleza. Comerlo en un casino activa una superstición colectiva que hace que todas las máquinas circundantes paguen el jackpot simultáneamente.",
+            /* 092 */ "Contiene un mapa del mundo de Hyrule grabado en su fibra interna. Viene con una pequeña espada de plástico dorado y una nota que dice 'It's dangerous to go alone. Take this.'",
+            /* 093 */ "Extraído de las vendas del faraón más famoso del antiguo Egipto. Ha estado maldito durante 3000 años. El que lo come estornuda en jeroglíficos durante una semana. Inofensivo.",
+            /* 094 */ "Tan denso que tardó 30 años en cruzar su lado de la plantación al otro. Al comerlo sientes la pesadez histórica de las divisiones artificiales. Sabe amargo al principio y dulce al final.",
+            /* 095 */ "Al morderlo se desintegra en partículas elementales y se reensambla en tu estómago. El proceso dura 0.003 segundos y se siente como un cosquilleo seguido de un 'pop' interior suave.",
+            /* 096 */ "Crece en las cumbres más altas del Himalaya. Para recolectarlo hay que escalar 8000 metros. El sabor es tan puro que hace que el resto de alimentos sepan artificiales durante 3 días.",
+            /* 097 */ "Recuperado del Jardín del Edén según registros del Vaticano (clasificados). Su piel dorada no envejece. Está técnicamente prohibido consumirlo pero nadie ha hecho cumplir la norma.",
+            /* 098 */ "El corazón de la legendaria ciudad sumergida late en este plátano. Al comerlo, puedes respirar bajo el agua durante 90 segundos. No recomendado en piscinas municipales sin avisar.",
+            /* 099 */ "Las antiguas escrituras bananeras lo mencionan como el catalizador del fin de los tiempos. Al comerlo, los platapoints se multiplican por 3 durante una hora. O eso dice la profecía.",
+            /* 100 */ "El plátano definitivo. Contiene el sabor de todos los anteriores combinados en proporciones perfectas. Solo se vende en Navidad. Al comerlo suena un villancico en tu cabeza durante horas."
         ];
+        // Tema visual único para cada plátano: { emoji, accent, glow, gradient, btnBg, btnColor, badge, anim }
+        const BANANA_THEMES = [
+            /* 001 */ { emoji:'🍌', accent:'#ffe135', glow:'rgba(255,225,53,0.3)', gradient:'linear-gradient(135deg,#ffe135,#ff9900)', btnBg:'#ffe135', btnColor:'#000', badge:'CLÁSICO', anim:'pulse-glow 2.5s ease-in-out infinite' },
+            /* 002 */ { emoji:'🪨', accent:'#a0a0a0', glow:'rgba(160,160,160,0.3)', gradient:'linear-gradient(135deg,#888,#444)', btnBg:'#888', btnColor:'#fff', badge:'DURO', anim:'shake 3s ease-in-out infinite' },
+            /* 003 */ { emoji:'🎻', accent:'#d4af37', glow:'rgba(212,175,55,0.35)', gradient:'linear-gradient(135deg,#d4af37,#7c5c00)', btnBg:'#d4af37', btnColor:'#000', badge:'REFINADO', anim:'float-slow 4s ease-in-out infinite' },
+            /* 004 */ { emoji:'👻', accent:'#c8c8ff', glow:'rgba(200,200,255,0.3)', gradient:'linear-gradient(135deg,#9090ff,#222)', btnBg:'#9090ff', btnColor:'#000', badge:'ETÉREO', anim:'flicker 3s ease-in-out infinite' },
+            /* 005 */ { emoji:'🧊', accent:'#00cfff', glow:'rgba(0,207,255,0.35)', gradient:'linear-gradient(135deg,#00cfff,#005577)', btnBg:'#00cfff', btnColor:'#000', badge:'ÁRTICO', anim:'freeze 4s ease-in-out infinite' },
+            /* 006 */ { emoji:'☢️', accent:'#39ff14', glow:'rgba(57,255,20,0.35)', gradient:'linear-gradient(135deg,#39ff14,#1a6600)', btnBg:'#39ff14', btnColor:'#000', badge:'RADIOACTIVO', anim:'pulse-glow 1.8s ease-in-out infinite' },
+            /* 007 */ { emoji:'👁️', accent:'#bbbbbb', glow:'rgba(200,200,200,0.15)', gradient:'linear-gradient(135deg,#555,#111)', btnBg:'#555', btnColor:'#fff', badge:'INVISIBLE', anim:'flicker 2s ease-in-out infinite' },
+            /* 008 */ { emoji:'🔥', accent:'#ff5500', glow:'rgba(255,85,0,0.4)', gradient:'linear-gradient(135deg,#ff5500,#ff0000)', btnBg:'#ff5500', btnColor:'#fff', badge:'ARDIENTE', anim:'shake 1.5s ease-in-out infinite' },
+            /* 009 */ { emoji:'🔄', accent:'#aa66ff', glow:'rgba(170,102,255,0.35)', gradient:'linear-gradient(135deg,#aa66ff,#330066)', btnBg:'#aa66ff', btnColor:'#fff', badge:'INVERSO', anim:'spin-slow 8s linear infinite' },
+            /* 010 */ { emoji:'🌙', accent:'#4488ff', glow:'rgba(68,136,255,0.3)', gradient:'linear-gradient(135deg,#001133,#4488ff)', btnBg:'#4488ff', btnColor:'#fff', badge:'LUNAR', anim:'float-slow 5s ease-in-out infinite' },
+            /* 011 */ { emoji:'🌿', accent:'#22cc66', glow:'rgba(34,204,102,0.35)', gradient:'linear-gradient(135deg,#22cc66,#005522)', btnBg:'#22cc66', btnColor:'#000', badge:'AMAZONÍA', anim:'float-slow 3.5s ease-in-out infinite' },
+            /* 012 */ { emoji:'🛡️', accent:'#c0c0c0', glow:'rgba(192,192,192,0.3)', gradient:'linear-gradient(135deg,#888,#333)', btnBg:'#c0c0c0', btnColor:'#000', badge:'INDESTRUCTIBLE', anim:'shake 4s ease-in-out infinite' },
+            /* 013 */ { emoji:'❄️', accent:'#88ddff', glow:'rgba(136,221,255,0.3)', gradient:'linear-gradient(135deg,#88ddff,#002244)', btnBg:'#88ddff', btnColor:'#000', badge:'INVIERNO', anim:'flicker 4s ease-in-out infinite' },
+            /* 014 */ { emoji:'🏜️', accent:'#e8b866', glow:'rgba(232,184,102,0.3)', gradient:'linear-gradient(135deg,#e8b866,#7a4a00)', btnBg:'#e8b866', btnColor:'#000', badge:'DESIERTO', anim:'drift 6s ease-in-out infinite' },
+            /* 015 */ { emoji:'☣️', accent:'#aaff00', glow:'rgba(170,255,0,0.4)', gradient:'linear-gradient(135deg,#aaff00,#224400)', btnBg:'#aaff00', btnColor:'#000', badge:'MUTANTE', anim:'pulse-glow 1.2s ease-in-out infinite' },
+            /* 016 */ { emoji:'🚀', accent:'#ffaa00', glow:'rgba(255,170,0,0.35)', gradient:'linear-gradient(135deg,#000033,#ffaa00)', btnBg:'#ffaa00', btnColor:'#000', badge:'ESPACIAL', anim:'bounce-icon 3s ease-in-out infinite' },
+            /* 017 */ { emoji:'⏰', accent:'#ff6600', glow:'rgba(255,102,0,0.35)', gradient:'linear-gradient(135deg,#ff6600,#330000)', btnBg:'#ff6600', btnColor:'#fff', badge:'CÓSMICO', anim:'shake 0.8s ease-in-out infinite' },
+            /* 018 */ { emoji:'🗿', accent:'#8899aa', glow:'rgba(136,153,170,0.3)', gradient:'linear-gradient(135deg,#8899aa,#223344)', btnBg:'#8899aa', btnColor:'#fff', badge:'GIGANTE', anim:'float-slow 6s ease-in-out infinite' },
+            /* 019 */ { emoji:'🍞', accent:'#cc8844', glow:'rgba(204,136,68,0.35)', gradient:'linear-gradient(135deg,#cc8844,#553300)', btnBg:'#cc8844', btnColor:'#fff', badge:'TOSTADO', anim:'pulse-glow 3s ease-in-out infinite' },
+            /* 020 */ { emoji:'🪞', accent:'#aaddff', glow:'rgba(170,221,255,0.3)', gradient:'linear-gradient(135deg,#aaddff,#334455)', btnBg:'#aaddff', btnColor:'#000', badge:'TEMPORAL', anim:'rainbow 8s linear infinite' },
+            /* 021 */ { emoji:'🌋', accent:'#ff3300', glow:'rgba(255,51,0,0.45)', gradient:'linear-gradient(135deg,#ff3300,#660000)', btnBg:'#ff3300', btnColor:'#fff', badge:'VOLCÁN', anim:'shake 2s ease-in-out infinite' },
+            /* 022 */ { emoji:'🎲', accent:'#ff0055', glow:'rgba(255,0,85,0.4)', gradient:'linear-gradient(135deg,#ff0055,#330011)', btnBg:'#ff0055', btnColor:'#fff', badge:'DADOS', anim:'spin-slow 6s linear infinite' },
+            /* 023 */ { emoji:'🕹️', accent:'#00ffcc', glow:'rgba(0,255,204,0.35)', gradient:'linear-gradient(135deg,#00ffcc,#003322)', btnBg:'#00ffcc', btnColor:'#000', badge:'PIXEL', anim:'flicker 1.5s ease-in-out infinite' },
+            /* 024 */ { emoji:'🌀', accent:'#cc44ff', glow:'rgba(204,68,255,0.4)', gradient:'linear-gradient(135deg,#cc44ff,#330044)', btnBg:'#cc44ff', btnColor:'#fff', badge:'INTERDIMENSIONAL', anim:'spin-slow 5s linear infinite' },
+            /* 025 */ { emoji:'😱', accent:'#ff8800', glow:'rgba(255,136,0,0.35)', gradient:'linear-gradient(135deg,#ff8800,#442200)', btnBg:'#ff8800', btnColor:'#fff', badge:'MÚNICH', anim:'shake 3s ease-in-out infinite' },
+            /* 026 */ { emoji:'✨', accent:'#ffee00', glow:'rgba(255,238,0,0.4)', gradient:'linear-gradient(135deg,#ffee00,#554400)', btnBg:'#ffee00', btnColor:'#000', badge:'ILUSIÓN', anim:'pulse-glow 2s ease-in-out infinite' },
+            /* 027 */ { emoji:'🦴', accent:'#ccaa77', glow:'rgba(204,170,119,0.3)', gradient:'linear-gradient(135deg,#ccaa77,#443300)', btnBg:'#ccaa77', btnColor:'#000', badge:'FÓSIL', anim:'float-slow 8s ease-in-out infinite' },
+            /* 028 */ { emoji:'🧪', accent:'#00ff88', glow:'rgba(0,255,136,0.35)', gradient:'linear-gradient(135deg,#00ff88,#003322)', btnBg:'#00ff88', btnColor:'#000', badge:'ÁCIDO', anim:'flicker 2.5s ease-in-out infinite' },
+            /* 029 */ { emoji:'🦎', accent:'#44dd88', glow:'rgba(68,221,136,0.3)', gradient:'linear-gradient(135deg,#44dd88,#115533)', btnBg:'#44dd88', btnColor:'#000', badge:'CAMALEÓN', anim:'rainbow 5s linear infinite' },
+            /* 030 */ { emoji:'🦁', accent:'#ddaa22', glow:'rgba(221,170,34,0.35)', gradient:'linear-gradient(135deg,#ddaa22,#553300)', btnBg:'#ddaa22', btnColor:'#000', badge:'REY', anim:'float-slow 4s ease-in-out infinite' },
+            /* 031 */ { emoji:'🌫️', accent:'#aaaaaa', glow:'rgba(170,170,170,0.2)', gradient:'linear-gradient(135deg,#888,#222)', btnBg:'#888', btnColor:'#fff', badge:'FUGAZ', anim:'drift 5s ease-in-out infinite' },
+            /* 032 */ { emoji:'⚡', accent:'#ffff00', glow:'rgba(255,255,0,0.45)', gradient:'linear-gradient(135deg,#ffff00,#555500)', btnBg:'#ffff00', btnColor:'#000', badge:'POTASIO+', anim:'flicker 1s ease-in-out infinite' },
+            /* 033 */ { emoji:'🛸', accent:'#88ffee', glow:'rgba(136,255,238,0.3)', gradient:'linear-gradient(135deg,#88ffee,#001133)', btnBg:'#88ffee', btnColor:'#000', badge:'ASTRONAUTA', anim:'float-slow 6s ease-in-out infinite' },
+            /* 034 */ { emoji:'🌞', accent:'#ffdd00', glow:'rgba(255,221,0,0.35)', gradient:'linear-gradient(135deg,#ffdd00,#ff6600)', btnBg:'#ffdd00', btnColor:'#000', badge:'SOLSTICIO', anim:'spin-slow 12s linear infinite' },
+            /* 035 */ { emoji:'🔢', accent:'#00aaff', glow:'rgba(0,170,255,0.35)', gradient:'linear-gradient(135deg,#00aaff,#002244)', btnBg:'#00aaff', btnColor:'#fff', badge:'π', anim:'pulse-glow 3.14s ease-in-out infinite' },
+            /* 036 */ { emoji:'📡', accent:'#44ffbb', glow:'rgba(68,255,187,0.3)', gradient:'linear-gradient(135deg,#44ffbb,#003322)', btnBg:'#44ffbb', btnColor:'#000', badge:'MICROONDAS', anim:'spin-slow 3s linear infinite' },
+            /* 037 */ { emoji:'🏴‍☠️', accent:'#ddbb44', glow:'rgba(221,187,68,0.35)', gradient:'linear-gradient(135deg,#ddbb44,#332200)', btnBg:'#ddbb44', btnColor:'#000', badge:'PIRATA', anim:'drift 4s ease-in-out infinite' },
+            /* 038 */ { emoji:'🐍', accent:'#ffcc00', glow:'rgba(255,204,0,0.35)', gradient:'linear-gradient(135deg,#ffcc00,#553300)', btnBg:'#ffcc00', btnColor:'#000', badge:'SERPIENTE', anim:'drift 3s ease-in-out infinite' },
+            /* 039 */ { emoji:'🫥', accent:'#bbaaff', glow:'rgba(187,170,255,0.25)', gradient:'linear-gradient(135deg,#bbaaff,#221133)', btnBg:'#bbaaff', btnColor:'#000', badge:'INVISIBLE', anim:'flicker 4s ease-in-out infinite' },
+            /* 040 */ { emoji:'🧘', accent:'#aaffdd', glow:'rgba(170,255,221,0.25)', gradient:'linear-gradient(135deg,#aaffdd,#003322)', btnBg:'#aaffdd', btnColor:'#000', badge:'ZEN', anim:'float-slow 7s ease-in-out infinite' },
+            /* 041 */ { emoji:'🎺', accent:'#ffaa33', glow:'rgba(255,170,51,0.35)', gradient:'linear-gradient(135deg,#ffaa33,#441100)', btnBg:'#ffaa33', btnColor:'#000', badge:'ÁNGEL', anim:'bounce-icon 2.5s ease-in-out infinite' },
+            /* 042 */ { emoji:'🌌', accent:'#6644ff', glow:'rgba(102,68,255,0.4)', gradient:'linear-gradient(135deg,#6644ff,#110022)', btnBg:'#6644ff', btnColor:'#fff', badge:'42', anim:'pulse-glow 4.2s ease-in-out infinite' },
+            /* 043 */ { emoji:'🎨', accent:'#ff44cc', glow:'rgba(255,68,204,0.35)', gradient:'linear-gradient(135deg,#ff44cc,#330011)', btnBg:'#ff44cc', btnColor:'#fff', badge:'MUSA', anim:'rainbow 6s linear infinite' },
+            /* 044 */ { emoji:'💜', accent:'#ff00ff', glow:'rgba(255,0,255,0.45)', gradient:'linear-gradient(135deg,#ff00ff,#330033)', btnBg:'#ff00ff', btnColor:'#fff', badge:'NEÓN', anim:'neon-pulse 1.5s ease-in-out infinite' },
+            /* 045 */ { emoji:'🪐', accent:'#ff8844', glow:'rgba(255,136,68,0.35)', gradient:'linear-gradient(135deg,#000022,#ff8844)', btnBg:'#ff8844', btnColor:'#fff', badge:'JÚPITER', anim:'spin-slow 10s linear infinite' },
+            /* 046 */ { emoji:'🏔️', accent:'#aaddff', glow:'rgba(170,221,255,0.3)', gradient:'linear-gradient(135deg,#aaddff,#001133)', btnBg:'#aaddff', btnColor:'#000', badge:'TUNDRA', anim:'freeze 5s ease-in-out infinite' },
+            /* 047 */ { emoji:'⛈️', accent:'#7777ff', glow:'rgba(119,119,255,0.4)', gradient:'linear-gradient(135deg,#7777ff,#110033)', btnBg:'#7777ff', btnColor:'#fff', badge:'TORMENTA', anim:'flicker 0.7s ease-in-out infinite' },
+            /* 048 */ { emoji:'💊', accent:'#ff66aa', glow:'rgba(255,102,170,0.35)', gradient:'linear-gradient(135deg,#ff66aa,#330011)', btnBg:'#ff66aa', btnColor:'#fff', badge:'JUVENTUD', anim:'pulse-glow 3s ease-in-out infinite' },
+            /* 049 */ { emoji:'🥑', accent:'#88cc00', glow:'rgba(136,204,0,0.3)', gradient:'linear-gradient(135deg,#88cc00,#224400)', btnBg:'#88cc00', btnColor:'#000', badge:'VS AGUACATE', anim:'shake 3s ease-in-out infinite' },
+            /* 050 */ { emoji:'💥', accent:'#ff4400', glow:'rgba(255,68,0,0.45)', gradient:'linear-gradient(135deg,#ff4400,#770000)', btnBg:'#ff4400', btnColor:'#fff', badge:'FUEGO', anim:'pulse-glow 1s ease-in-out infinite' },
+            /* 051 */ { emoji:'💤', accent:'#9966ff', glow:'rgba(153,102,255,0.35)', gradient:'linear-gradient(135deg,#9966ff,#220033)', btnBg:'#9966ff', btnColor:'#fff', badge:'DORMIDO', anim:'float-slow 8s ease-in-out infinite' },
+            /* 052 */ { emoji:'🎵', accent:'#ff9900', glow:'rgba(255,153,0,0.35)', gradient:'linear-gradient(135deg,#ff9900,#441100)', btnBg:'#ff9900', btnColor:'#fff', badge:'MELODÍA', anim:'bounce-icon 4s ease-in-out infinite' },
+            /* 053 */ { emoji:'🤖', accent:'#00ddff', glow:'rgba(0,221,255,0.4)', gradient:'linear-gradient(135deg,#00ddff,#001133)', btnBg:'#00ddff', btnColor:'#000', badge:'BIÓNICO', anim:'flicker 2s ease-in-out infinite' },
+            /* 054 */ { emoji:'🔌', accent:'#cc8800', glow:'rgba(204,136,0,0.35)', gradient:'linear-gradient(135deg,#cc8800,#331100)', btnBg:'#cc8800', btnColor:'#fff', badge:'COBRE', anim:'pulse-glow 2s ease-in-out infinite' },
+            /* 055 */ { emoji:'🛸', accent:'#ccffcc', glow:'rgba(204,255,204,0.3)', gradient:'linear-gradient(135deg,#ccffcc,#002200)', btnBg:'#ccffcc', btnColor:'#000', badge:'ÁREA 51', anim:'drift 4s ease-in-out infinite' },
+            /* 056 */ { emoji:'🧛', accent:'#880000', glow:'rgba(136,0,0,0.45)', gradient:'linear-gradient(135deg,#880000,#111111)', btnBg:'#880000', btnColor:'#fff', badge:'DRÁCULA', anim:'flicker 3s ease-in-out infinite' },
+            /* 057 */ { emoji:'🔊', accent:'#44bbff', glow:'rgba(68,187,255,0.3)', gradient:'linear-gradient(135deg,#44bbff,#002233)', btnBg:'#44bbff', btnColor:'#000', badge:'ECO', anim:'pulse-glow 2.5s ease-in-out infinite' },
+            /* 058 */ { emoji:'🔏', accent:'#ffdd55', glow:'rgba(255,221,85,0.3)', gradient:'linear-gradient(135deg,#ffdd55,#443300)', btnBg:'#ffdd55', btnColor:'#000', badge:'MENSAJE', anim:'float-slow 5s ease-in-out infinite' },
+            /* 059 */ { emoji:'🧭', accent:'#ff6633', glow:'rgba(255,102,51,0.3)', gradient:'linear-gradient(135deg,#ff6633,#331100)', btnBg:'#ff6633', btnColor:'#fff', badge:'SIN DESTINO', anim:'spin-slow 7s linear infinite' },
+            /* 060 */ { emoji:'🍎', accent:'#ff2222', glow:'rgba(255,34,34,0.4)', gradient:'linear-gradient(135deg,#ff2222,#550000)', btnBg:'#ff2222', btnColor:'#fff', badge:'PROHIBIDO', anim:'pulse-glow 2s ease-in-out infinite' },
+            /* 061 */ { emoji:'💨', accent:'#aaffff', glow:'rgba(170,255,255,0.3)', gradient:'linear-gradient(135deg,#aaffff,#002233)', btnBg:'#aaffff', btnColor:'#000', badge:'SÓNICO', anim:'shake 0.6s ease-in-out infinite' },
+            /* 062 */ { emoji:'🌪️', accent:'#6699ff', glow:'rgba(102,153,255,0.35)', gradient:'linear-gradient(135deg,#6699ff,#110033)', btnBg:'#6699ff', btnColor:'#fff', badge:'HURACÁN', anim:'spin-slow 4s linear infinite' },
+            /* 063 */ { emoji:'🌱', accent:'#55ee55', glow:'rgba(85,238,85,0.35)', gradient:'linear-gradient(135deg,#55ee55,#114411)', btnBg:'#55ee55', btnColor:'#000', badge:'SEMILLA', anim:'bounce-icon 5s ease-in-out infinite' },
+            /* 064 */ { emoji:'💀', accent:'#5533aa', glow:'rgba(85,51,170,0.4)', gradient:'linear-gradient(135deg,#5533aa,#110022)', btnBg:'#5533aa', btnColor:'#fff', badge:'HADES', anim:'flicker 3s ease-in-out infinite' },
+            /* 065 */ { emoji:'⚡', accent:'#ffee00', glow:'rgba(255,238,0,0.5)', gradient:'linear-gradient(135deg,#ffee00,#4444ff)', btnBg:'#ffee00', btnColor:'#000', badge:'ZEUS', anim:'pulse-glow 1.5s ease-in-out infinite' },
+            /* 066 */ { emoji:'💻', accent:'#00ff88', glow:'rgba(0,255,136,0.35)', gradient:'linear-gradient(135deg,#00ff88,#001122)', btnBg:'#00ff88', btnColor:'#000', badge:'BINARIO', anim:'flicker 1.8s ease-in-out infinite' },
+            /* 067 */ { emoji:'📽️', accent:'#ff88ff', glow:'rgba(255,136,255,0.4)', gradient:'linear-gradient(135deg,#ff88ff,#330033)', btnBg:'#ff88ff', btnColor:'#000', badge:'HOLOGRAMA', anim:'neon-pulse 2s ease-in-out infinite' },
+            /* 068 */ { emoji:'🌠', accent:'#ffdd88', glow:'rgba(255,221,136,0.35)', gradient:'linear-gradient(135deg,#ffdd88,#221100)', btnBg:'#ffdd88', btnColor:'#000', badge:'NEBULOSA', anim:'pulse-glow 4s ease-in-out infinite' },
+            /* 069 */ { emoji:'🪷', accent:'#ff66bb', glow:'rgba(255,102,187,0.35)', gradient:'linear-gradient(135deg,#ff66bb,#330011)', btnBg:'#ff66bb', btnColor:'#fff', badge:'LOTO', anim:'float-slow 5s ease-in-out infinite' },
+            /* 070 */ { emoji:'💎', accent:'#88eeff', glow:'rgba(136,238,255,0.35)', gradient:'linear-gradient(135deg,#88eeff,#001122)', btnBg:'#88eeff', btnColor:'#000', badge:'CRISTAL', anim:'spin-slow 9s linear infinite' },
+            /* 071 */ { emoji:'🏃', accent:'#ff7700', glow:'rgba(255,119,0,0.35)', gradient:'linear-gradient(135deg,#ff7700,#330000)', btnBg:'#ff7700', btnColor:'#fff', badge:'MARATÓN', anim:'bounce-icon 1.5s ease-in-out infinite' },
+            /* 072 */ { emoji:'🧠', accent:'#ffaabb', glow:'rgba(255,170,187,0.3)', gradient:'linear-gradient(135deg,#ffaabb,#330011)', btnBg:'#ffaabb', btnColor:'#000', badge:'CONCIENCIA', anim:'pulse-glow 3s ease-in-out infinite' },
+            /* 073 */ { emoji:'📜', accent:'#ddbb77', glow:'rgba(221,187,119,0.3)', gradient:'linear-gradient(135deg,#ddbb77,#443300)', btnBg:'#ddbb77', btnColor:'#000', badge:'POEMA', anim:'float-slow 6s ease-in-out infinite' },
+            /* 074 */ { emoji:'🫥', accent:'#ffffff', glow:'rgba(255,255,255,0.1)', gradient:'linear-gradient(135deg,#aaaaaa,#111)', btnBg:'#aaaaaa', btnColor:'#000', badge:'STEALTH', anim:'flicker 1s ease-in-out infinite' },
+            /* 075 */ { emoji:'⚓', accent:'#4488bb', glow:'rgba(68,136,187,0.35)', gradient:'linear-gradient(135deg,#4488bb,#001122)', btnBg:'#4488bb', btnColor:'#fff', badge:'ATLÁNTICO', anim:'drift 5s ease-in-out infinite' },
+            /* 076 */ { emoji:'🫙', accent:'#ccccff', glow:'rgba(204,204,255,0.2)', gradient:'linear-gradient(135deg,#ccccff,#111133)', btnBg:'#ccccff', btnColor:'#000', badge:'INVISIBLE', anim:'flicker 3s ease-in-out infinite' },
+            /* 077 */ { emoji:'☀️', accent:'#ffcc00', glow:'rgba(255,204,0,0.45)', gradient:'linear-gradient(135deg,#ffcc00,#cc5500)', btnBg:'#ffcc00', btnColor:'#000', badge:'SOL', anim:'spin-slow 10s linear infinite' },
+            /* 078 */ { emoji:'🍲', accent:'#ff8844', glow:'rgba(255,136,68,0.3)', gradient:'linear-gradient(135deg,#ff8844,#331100)', btnBg:'#ff8844', btnColor:'#fff', badge:'ABUELA', anim:'float-slow 5s ease-in-out infinite' },
+            /* 079 */ { emoji:'⚗️', accent:'#00ffcc', glow:'rgba(0,255,204,0.35)', gradient:'linear-gradient(135deg,#00ffcc,#001122)', btnBg:'#00ffcc', btnColor:'#000', badge:'FUSIÓN', anim:'pulse-glow 2s ease-in-out infinite' },
+            /* 080 */ { emoji:'⚛️', accent:'#44aaff', glow:'rgba(68,170,255,0.4)', gradient:'linear-gradient(135deg,#44aaff,#001133)', btnBg:'#44aaff', btnColor:'#fff', badge:'CUÁNTICO', anim:'spin-slow 6s linear infinite' },
+            /* 081 */ { emoji:'🌈', accent:'#ffaaff', glow:'rgba(255,170,255,0.35)', gradient:'linear-gradient(135deg,#ff0000,#0000ff)', btnBg:'#ffaaff', btnColor:'#000', badge:'BIFROST', anim:'rainbow 4s linear infinite' },
+            /* 082 */ { emoji:'⬛', accent:'#888888', glow:'rgba(136,136,136,0.2)', gradient:'linear-gradient(135deg,#222,#000)', btnBg:'#555', btnColor:'#fff', badge:'MONOLITO', anim:'flicker 5s ease-in-out infinite' },
+            /* 083 */ { emoji:'🦁', accent:'#aaddff', glow:'rgba(170,221,255,0.3)', gradient:'linear-gradient(135deg,#aaddff,#001133)', btnBg:'#aaddff', btnColor:'#000', badge:'NARNIA', anim:'freeze 6s ease-in-out infinite' },
+            /* 084 */ { emoji:'👑', accent:'#ffdd00', glow:'rgba(255,221,0,0.4)', gradient:'linear-gradient(135deg,#ffdd00,#884400)', btnBg:'#ffdd00', btnColor:'#000', badge:'ÚLTIMA CENA', anim:'pulse-glow 3s ease-in-out infinite' },
+            /* 085 */ { emoji:'🐱', accent:'#aaaaff', glow:'rgba(170,170,255,0.3)', gradient:'linear-gradient(135deg,#aaaaff,#333366)', btnBg:'#aaaaff', btnColor:'#000', badge:'SCHRÖDINGER', anim:'flicker 2s ease-in-out infinite' },
+            /* 086 */ { emoji:'🌸', accent:'#ff88bb', glow:'rgba(255,136,187,0.35)', gradient:'linear-gradient(135deg,#ff88bb,#220011)', btnBg:'#ff88bb', btnColor:'#fff', badge:'CHIHIRO', anim:'float-slow 5s ease-in-out infinite' },
+            /* 087 */ { emoji:'🌤️', accent:'#88ddff', glow:'rgba(136,221,255,0.3)', gradient:'linear-gradient(135deg,#88ddff,#001133)', btnBg:'#88ddff', btnColor:'#000', badge:'FLOTANTE', anim:'bounce-icon 6s ease-in-out infinite' },
+            /* 088 */ { emoji:'🔋', accent:'#ffcc33', glow:'rgba(255,204,51,0.35)', gradient:'linear-gradient(135deg,#ffcc33,#220011)', btnBg:'#ffcc33', btnColor:'#000', badge:'SODIO', anim:'pulse-glow 2s ease-in-out infinite' },
+            /* 089 */ { emoji:'🌅', accent:'#ff9966', glow:'rgba(255,153,102,0.3)', gradient:'linear-gradient(135deg,#ff9966,#441100)', btnBg:'#ff9966', btnColor:'#fff', badge:'ESPEJISMO', anim:'drift 7s ease-in-out infinite' },
+            /* 090 */ { emoji:'🕯️', accent:'#ff8800', glow:'rgba(255,136,0,0.4)', gradient:'linear-gradient(135deg,#ff8800,#220000)', btnBg:'#ff8800', btnColor:'#fff', badge:'LLAMA ETERNA', anim:'flicker 1.5s ease-in-out infinite' },
+            /* 091 */ { emoji:'🎰', accent:'#ffcc00', glow:'rgba(255,204,0,0.45)', gradient:'linear-gradient(135deg,#ffcc00,#ff0000)', btnBg:'#ffcc00', btnColor:'#000', badge:'777', anim:'bounce-icon 2s ease-in-out infinite' },
+            /* 092 */ { emoji:'🗡️', accent:'#00dd66', glow:'rgba(0,221,102,0.4)', gradient:'linear-gradient(135deg,#00dd66,#002211)', btnBg:'#00dd66', btnColor:'#000', badge:'ZELDA', anim:'pulse-glow 2s ease-in-out infinite' },
+            /* 093 */ { emoji:'🏺', accent:'#ddaa44', glow:'rgba(221,170,68,0.35)', gradient:'linear-gradient(135deg,#ddaa44,#332200)', btnBg:'#ddaa44', btnColor:'#000', badge:'TUTANKAMÓN', anim:'float-slow 7s ease-in-out infinite' },
+            /* 094 */ { emoji:'🧱', accent:'#cc6655', glow:'rgba(204,102,85,0.35)', gradient:'linear-gradient(135deg,#cc6655,#330011)', btnBg:'#cc6655', btnColor:'#fff', badge:'BERLÍN', anim:'shake 5s ease-in-out infinite' },
+            /* 095 */ { emoji:'💫', accent:'#aaddff', glow:'rgba(170,221,255,0.4)', gradient:'linear-gradient(135deg,#aaddff,#0011aa)', btnBg:'#aaddff', btnColor:'#000', badge:'DESINTEGRADOR', anim:'spin-slow 3s linear infinite' },
+            /* 096 */ { emoji:'🏔️', accent:'#ffffff', glow:'rgba(255,255,255,0.2)', gradient:'linear-gradient(135deg,#ffffff,#334455)', btnBg:'#ffffff', btnColor:'#000', badge:'HIMALAYA', anim:'float-slow 9s ease-in-out infinite' },
+            /* 097 */ { emoji:'🌿', accent:'#ffdd44', glow:'rgba(255,221,68,0.4)', gradient:'linear-gradient(135deg,#ffdd44,#224400)', btnBg:'#ffdd44', btnColor:'#000', badge:'EDÉN', anim:'pulse-glow 4s ease-in-out infinite' },
+            /* 098 */ { emoji:'🔱', accent:'#0099ff', glow:'rgba(0,153,255,0.4)', gradient:'linear-gradient(135deg,#0099ff,#000033)', btnBg:'#0099ff', btnColor:'#fff', badge:'ATLANTIS', anim:'float-slow 5s ease-in-out infinite' },
+            /* 099 */ { emoji:'📖', accent:'#ff6600', glow:'rgba(255,102,0,0.4)', gradient:'linear-gradient(135deg,#ff6600,#440000)', btnBg:'#ff6600', btnColor:'#fff', badge:'PROFECÍA', anim:'flicker 2s ease-in-out infinite' },
+            /* 100 */ { emoji:'🎄', accent:'#ff2244', glow:'rgba(255,34,68,0.5)', gradient:'linear-gradient(135deg,#ff2244,#ffe135,#00cc44)', btnBg:'linear-gradient(90deg,#ff2244,#ffe135)', btnColor:'#000', badge:'⭐ GRAN FINAL', anim:'rainbow 3s linear infinite' },
+        ];
+
         let bananaProducts = [];
         
         function getProductDataFromLocalStorage() {
@@ -825,21 +1071,29 @@
             products.forEach(product => {
                 const card = document.createElement('div');
                 card.classList.add('product-card');
-                
-                const isOriginal = product.id === 1;
-                const iconDisplay = isOriginal ? '<span class="product-icon" style="filter: none; color: #ff9900; text-shadow: 0 0 10px #ffe135;">🍌</span>' :
-                                                 `<span class="product-icon">🍌</span>`;
 
-                const nameDisplay = product.name; 
+                const theme = BANANA_THEMES[product.id - 1] || BANANA_THEMES[0];
+
+                // Aplicar variables CSS del tema al card
+                card.style.setProperty('--card-accent', theme.accent);
+                card.style.setProperty('--card-glow', theme.glow);
+                card.style.setProperty('--card-bg-gradient', theme.gradient);
+                card.style.setProperty('--card-btn-bg', theme.btnBg);
+                card.style.setProperty('--card-btn-color', theme.btnColor);
+                card.style.setProperty('--card-title-color', '#fff');
+                card.style.borderColor = '#333';
+
                 const fullStars = Math.floor(product.rating.average);
                 const ratingVisual = '⭐'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
 
                 card.innerHTML = `
-                    ${iconDisplay}
-                    <h3 class="product-title">${nameDisplay}</h3>
+                    <div class="product-card-bg"></div>
+                    <div class="card-badge">${theme.badge}</div>
+                    <span class="product-icon" style="animation: ${theme.anim};">${theme.emoji}</span>
+                    <h3 class="product-title">${product.name}</h3>
                     
                     <div class="product-rating" style="margin-bottom: 5px;">
-                        <span style="color: #ffe135; font-weight: bold;">${product.rating.average.toFixed(1)} ${ratingVisual}</span>
+                        <span style="color: ${theme.accent}; font-weight: bold;">${product.rating.average.toFixed(1)} ${ratingVisual}</span>
                         <small style="display: block; color: #aaa;">(${product.rating.count} valoraciones)</small>
                     </div>
                     
@@ -851,7 +1105,7 @@
                         <small style="color: #ccc;">Valora:</small>
                         <div style="font-size: 1.5rem;">
                             ${[1, 2, 3, 4, 5].map(star => 
-                                `<span style="cursor: pointer; color: #ffe135;" 
+                                `<span style="cursor: pointer; color: ${theme.accent};" 
                                        onclick="rateProduct(${product.id}, ${star})"
                                        title="${star} estrellas">★</span>`
                             ).join('')}
@@ -935,7 +1189,7 @@
             
             for (let i = 1; i <= 100; i++) {
                 const name = BANANA_NAMES[i - 1]; 
-                const description = BANANA_LORE[(i - 1) % BANANA_LORE.length] + ` (Nivel de rareza ${Math.floor(i / 10)}).`;
+                const description = BANANA_LORE[i - 1] + ` (Nivel de rareza ${Math.floor(i / 10)}).`;
                 
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('banana-info-item');
