@@ -430,7 +430,7 @@
             
             <a href="https://lemor15lopos.github.io/banana-shooter/" target="_blank" style="text-decoration: none;">
                 <button style="
-                    background-color: #4CAF50; /* Green */
+                    background-color: #4CAF50;
                     color: white; 
                     border: none; 
                     padding: 20px 40px; 
@@ -446,7 +446,7 @@
             </a>
             
             <button style="
-                background-color: #F44336; /* Red */
+                background-color: #F44336;
                 color: white; 
                 border: none; 
                 padding: 20px 40px; 
@@ -455,15 +455,41 @@
                 font-weight: bold; 
                 cursor: pointer; 
                 transition: 0.3s;
-                box-shadow: 0 4px #d4c656z;
+                box-shadow: 0 4px #b71c1c;
             " onclick="alert('Banana Shooter: Próximamente en esta dimensión.')" onmouseover="this.style.backgroundColor='#E57373'" onmouseout="this.style.backgroundColor='#F44336'">
-                🔫 Banana shooter
+                🔫 Banana Shooter
             </button>
+
+            <!-- BANANA WORLD 2 -->
+            <a href="https://lemor15lopos.github.io/banana-world/" target="_blank" style="text-decoration: none;" id="bw2-link">
+                <button style="
+                    background: linear-gradient(135deg, #ffe135, #ff9900);
+                    color: #121212; 
+                    border: none; 
+                    padding: 20px 40px; 
+                    border-radius: 10px; 
+                    font-size: 1.5rem; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    transition: 0.3s;
+                    box-shadow: 0 4px #cc7a00;
+                    position: relative;
+                " onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='brightness(1)'">
+                    🌍 Banana World 
+                    <span style="
+                        position: absolute; top: -10px; right: -10px;
+                        background: #ff3355; color: white;
+                        font-size: 0.6rem; font-weight: bold;
+                        padding: 3px 8px; border-radius: 20px;
+                        letter-spacing: 1px; text-transform: uppercase;
+                    ">NUEVO</span>
+                </button>
+            </a>
             
             <div id="secret-game-container" style="display: none;">
                 <a href="https://lemor15lopos.github.io/Flappy-Plane/" target="_blank" style="text-decoration: none;">
                     <button style="
-                        background-color: #ff9900; /* Orange/Gold */
+                        background-color: #ff9900;
                         color: #121212; 
                         border: none; 
                         padding: 20px 40px; 
@@ -1757,6 +1783,7 @@
             alert(`🎉 ¡Bienvenido al ${tier.name}! Todos tus beneficios están activos.\n\n${tier.perks.map(p => '✔ ' + p.label).join('\n')}`);
         }
 
+        // --- BANANA WORLD 2 ---
         // --- DECORACIÓN NAVIDEÑA (Mantenida) ---
         function createSnowflakes() {
             const container = document.getElementById('snow-container');
