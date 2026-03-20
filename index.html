@@ -174,6 +174,78 @@
         #code-submit-btn:hover { background-color: #66BB6A; }
         #code-message { margin-top: 15px; font-weight: bold; min-height: 20px; }
 
+        /* --- SECCIÓN VIP --- */
+        #vip { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
+        #vip h2 { text-align: center; font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(90deg, #FFD700, #ff9900, #ffe135); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #vip .vip-subtitle { text-align: center; color: #aaa; font-size: 1.1rem; margin-bottom: 40px; }
+
+        .vip-current-badge {
+            text-align: center; margin-bottom: 30px; padding: 14px 20px;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 10px; border: 1px solid #ffe135;
+            font-size: 1.1rem; color: #ffe135;
+        }
+
+        .vip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+
+        .vip-card {
+            border-radius: 18px; padding: 28px 22px; text-align: center;
+            position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+        .vip-card:hover { transform: translateY(-6px); }
+        .vip-card.tier-bronce { background: linear-gradient(160deg, #1e1610, #2a1f0e); border-color: #cd7f32; box-shadow: 0 0 18px rgba(205,127,50,0.2); }
+        .vip-card.tier-plata  { background: linear-gradient(160deg, #141a1a, #1a2525); border-color: #a8c0c0; box-shadow: 0 0 18px rgba(168,192,192,0.2); }
+        .vip-card.tier-oro    { background: linear-gradient(160deg, #1a1700, #2a2500); border-color: #FFD700; box-shadow: 0 0 18px rgba(255,215,0,0.25); }
+        .vip-card.tier-diamante { background: linear-gradient(160deg, #0a0a1e, #12122e); border-color: #a78bfa; box-shadow: 0 0 22px rgba(167,139,250,0.3); }
+
+        .vip-tier-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; }
+        .vip-tier-name { font-size: 1.6rem; font-weight: bold; margin-bottom: 4px; }
+        .tier-bronce   .vip-tier-name { color: #cd7f32; }
+        .tier-plata    .vip-tier-name { color: #c0d8d8; }
+        .tier-oro      .vip-tier-name { color: #FFD700; }
+        .tier-diamante .vip-tier-name { color: #a78bfa; }
+
+        .vip-price { font-size: 2rem; font-weight: bold; color: #fff; margin: 10px 0 4px; }
+        .vip-price span { font-size: 1rem; color: #aaa; }
+        .vip-points-cost { font-size: 0.9rem; color: #ff9900; margin-bottom: 16px; }
+
+        .vip-perks { list-style: none; padding: 0; margin: 0 0 20px; text-align: left; }
+        .vip-perks li { padding: 6px 0; color: #ddd; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .vip-perks li:last-child { border-bottom: none; }
+        .vip-perks li::before { content: '✔ '; color: #4CAF50; font-weight: bold; }
+        .vip-perks li.inherited::before { content: '↑ '; color: #888; }
+
+        .vip-buy-btn {
+            width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 1rem;
+            font-weight: bold; cursor: pointer; transition: filter 0.2s, transform 0.1s;
+        }
+        .vip-buy-btn:hover { filter: brightness(1.15); transform: scale(1.02); }
+        .tier-bronce   .vip-buy-btn { background: linear-gradient(90deg,#cd7f32,#e8a96a); color: #1a0f00; }
+        .tier-plata    .vip-buy-btn { background: linear-gradient(90deg,#8ab0b0,#c0d8d8); color: #0a1414; }
+        .tier-oro      .vip-buy-btn { background: linear-gradient(90deg,#FFD700,#ffe135); color: #1a1400; }
+        .tier-diamante .vip-buy-btn { background: linear-gradient(90deg,#7c3aed,#a78bfa); color: #fff; }
+
+        .vip-buy-btn:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; filter: none; }
+
+        .vip-owned-badge {
+            position: absolute; top: 14px; right: 14px;
+            background: #4CAF50; color: #fff; font-size: 0.7rem;
+            font-weight: bold; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;
+        }
+
+        /* Beneficios VIP activos */
+        .vip-perks-active {
+            margin-top: 40px; padding: 24px; background: #1a1a1a;
+            border-radius: 14px; border: 1px solid #333;
+        }
+        .vip-perks-active h3 { color: #ffe135; margin-bottom: 16px; font-size: 1.3rem; }
+        .vip-active-list { display: flex; flex-wrap: wrap; gap: 12px; }
+        .vip-active-perk {
+            background: #222; border-radius: 8px; padding: 10px 16px;
+            font-size: 0.9rem; color: #ddd; border-left: 3px solid #4CAF50;
+        }
+
         /* --- SECCIÓN OCULTA (SECTA) --- */
         #secta-page {
             text-align: center; padding: 80px 20px; min-height: 80vh;
@@ -250,6 +322,7 @@
         <button onclick="showSection('games')">🎮 Juegos</button>
         
         <button onclick="showSection('codes')">🔑 Códigos</button>
+        <button onclick="showSection('vip')">👑 Planes VIP</button>
         
         <button onclick="logout()" style="margin-top: auto; background-color: #4a4a4a; color: #f0f0f0;">🚪 Cerrar Sesión</button>
     </nav>
@@ -438,6 +511,22 @@
         </div>
     </div>
 
+    <section id="vip" class="app-section">
+        <h2>👑 Planes VIP</h2>
+        <p class="vip-subtitle">Hazte VIP y desbloquea beneficios exclusivos permanentes en el Banana Shop.</p>
+
+        <div class="vip-current-badge" id="vip-current-badge">
+            🎖️ Tu plan actual: <strong id="vip-tier-label">Sin plan VIP</strong>
+        </div>
+
+        <div class="vip-grid" id="vip-grid"></div>
+
+        <div class="vip-perks-active" id="vip-active-section" style="display:none;">
+            <h3>⚡ Tus beneficios activos</h3>
+            <div class="vip-active-list" id="vip-active-list"></div>
+        </div>
+    </section>
+
     <section id="secta" class="app-section">
         <h2>El Culto de Banana Ahmed Salah IV</h2>
         <p>Has encontrado la verdad ultrasecreta. Prepárate para las revelaciones que reescribirán la historia... ¡de la frutería!</p>
@@ -589,6 +678,7 @@
                 updateUIForSession(username);
                 updatePlatapointsDisplay();
                 updateGameSection(); // Llamar también al login
+                applyVipEffects(getVipTier());
                 showSection('home');
                 return; 
             }
@@ -603,6 +693,7 @@
                 updateUIForSession(username);
                 updatePlatapointsDisplay();
                 updateGameSection(); // Llamar también al login
+                applyVipEffects(getVipTier());
                 showSection('home');
             } else {
                 alert("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
@@ -664,7 +755,7 @@
         function showSection(sectionId) {
             const user = localStorage.getItem('sessionUser');
             // 'codes' añadido a las secciones que requieren autenticación
-            const requiresAuth = ['home', 'details', 'cart', 'games', 'codes', 'secta'].includes(sectionId); 
+            const requiresAuth = ['home', 'details', 'cart', 'games', 'codes', 'vip', 'secta'].includes(sectionId); 
 
             if (requiresAuth && !user) {
                 alert("Debes iniciar sesión para acceder a esta sección.");
@@ -681,6 +772,10 @@
             // Si vamos a la sección de juegos, actualizamos su estado
             if (sectionId === 'games') {
                 updateGameSection();
+            }
+            // Si vamos a VIP, renderizamos las tarjetas
+            if (sectionId === 'vip') {
+                renderVipSection();
             }
         }
         
@@ -777,6 +872,70 @@
 
                 codeMessage.innerText = "🎉 ¡Felicidades! Se ha desbloqueado un nuevo juego secreto. ¡Búscalo ahora en la sección de Juegos!";
                 codeMessage.style.color = '#4CAF50';
+
+            } else if (code === '123456') {
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has canjeado este código!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                const currentPoints = getPlatapoints();
+                setPlatapoints(currentPoints + 50);
+                setCodeUsed(code);
+                updatePlatapointsDisplay();
+                codeMessage.innerText = "🍌 ¡Código BIENVENIDA! Has recibido 50 Platapoints. ¡Bienvenido al Banana Shop!";
+                codeMessage.style.color = '#4CAF50';
+
+            } else if (code === '888888') {
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has canjeado este código!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                const currentPoints = getPlatapoints();
+                setPlatapoints(currentPoints + 200);
+                setCodeUsed(code);
+                updatePlatapointsDisplay();
+                codeMessage.innerText = "👑 ¡Código VIP desbloqueado! Has recibido 200 Platapoints. ¡Eres un VIP del Banana Shop!";
+                codeMessage.style.color = '#FFD700';
+
+            } else if (code === '314159') {
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has canjeado este código!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                activeDiscount = 0.25; // 25%
+                setCodeUsed(code);
+                codeMessage.innerText = "🥧 ¡Código PI activado! Tienes un 25% de descuento en tu próxima compra. ¡Matemáticamente delicioso!";
+                codeMessage.style.color = '#4CAF50';
+
+            } else if (code === '000777') {
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has canjeado este código!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                const currentPoints = getPlatapoints();
+                setPlatapoints(currentPoints + 100);
+                setCodeUsed(code);
+                updatePlatapointsDisplay();
+                codeMessage.innerText = "🍀 ¡Código de la SUERTE! Has ganado 100 Platapoints. ¡Qué afortunado!";
+                codeMessage.style.color = '#00e676';
+
+            } else if (code === '420420') {
+                if (usedCodes[code]) {
+                    codeMessage.innerText = "Error: ¡Ya has canjeado este código!";
+                    codeMessage.style.color = '#ff4444';
+                    return;
+                }
+                const currentPoints = getPlatapoints();
+                setPlatapoints(currentPoints + 500);
+                activeDiscount = 0.50; // 50%
+                setCodeUsed(code);
+                updatePlatapointsDisplay();
+                codeMessage.innerText = "💥 ¡Código LEGENDARIO! +500 Platapoints Y 50% de descuento. ¡Este código es una locura!";
+                codeMessage.style.color = '#ff00ff';
 
             } else {
                 codeMessage.innerText = "Error: Código no válido o caducado.";
@@ -1362,6 +1521,240 @@
              updateCartDisplay();
              showSection('home');
              updateProductView(); 
+        }
+
+        // --- LÓGICA VIP ---
+
+        const VIP_TIERS = [
+            {
+                id: 'bronce',
+                name: 'VIP Bronce',
+                icon: '🥉',
+                cssClass: 'tier-bronce',
+                priceMoney: 4.99,
+                pricePoints: 150,
+                perks: [
+                    { id: 'daily_bonus', label: '+5 Platapoints diarios extra' },
+                    { id: 'discount_5', label: '5% de descuento permanente en tienda' },
+                    { id: 'badge_bronce', label: 'Insignia Bronce en el perfil 🥉' },
+                ],
+                inherited: []
+            },
+            {
+                id: 'plata',
+                name: 'VIP Plata',
+                icon: '🥈',
+                cssClass: 'tier-plata',
+                priceMoney: 9.99,
+                pricePoints: 300,
+                perks: [
+                    { id: 'daily_bonus_10', label: '+10 Platapoints diarios extra' },
+                    { id: 'discount_15', label: '15% de descuento permanente en tienda' },
+                    { id: 'badge_plata', label: 'Insignia Plata en el perfil 🥈' },
+                    { id: 'early_access', label: 'Acceso anticipado a novedades 🔓' },
+                ],
+                inherited: ['bronce']
+            },
+            {
+                id: 'oro',
+                name: 'VIP Oro',
+                icon: '🥇',
+                cssClass: 'tier-oro',
+                priceMoney: 19.99,
+                pricePoints: 600,
+                perks: [
+                    { id: 'daily_bonus_25', label: '+25 Platapoints diarios extra' },
+                    { id: 'discount_30', label: '30% de descuento permanente en tienda' },
+                    { id: 'badge_oro', label: 'Insignia Oro en el perfil 🥇' },
+                    { id: 'exclusive_bananas', label: 'Acceso a plátanos exclusivos ORO 🍌✨' },
+                    { id: 'custom_title', label: 'Título personalizado en el sidebar 👑' },
+                ],
+                inherited: ['bronce', 'plata']
+            },
+            {
+                id: 'diamante',
+                name: 'VIP Diamante',
+                icon: '💎',
+                cssClass: 'tier-diamante',
+                priceMoney: 39.99,
+                pricePoints: 1200,
+                perks: [
+                    { id: 'daily_bonus_50', label: '+50 Platapoints diarios extra' },
+                    { id: 'discount_50', label: '50% de descuento permanente en tienda 🔥' },
+                    { id: 'badge_diamante', label: 'Insignia Diamante animada 💎' },
+                    { id: 'unlimited_codes', label: 'Códigos VIP exclusivos cada semana 🔑' },
+                    { id: 'god_mode', label: 'Modo Dios: nombre en el header con efecto arcoíris 🌈' },
+                    { id: 'secta_pass', label: 'Acceso directo a la Secta Bananera 🍌🕵️' },
+                ],
+                inherited: ['bronce', 'plata', 'oro']
+            }
+        ];
+
+        const TIER_ORDER = ['bronce', 'plata', 'oro', 'diamante'];
+
+        function getVipTier() {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return null;
+            return localStorage.getItem(`VipTier_${user}`) || null;
+        }
+
+        function setVipTier(tierId) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            localStorage.setItem(`VipTier_${user}`, tierId);
+        }
+
+        function getEffectivePerks(tierId) {
+            const tier = VIP_TIERS.find(t => t.id === tierId);
+            if (!tier) return [];
+            const perks = [];
+            // Heredados
+            tier.inherited.forEach(inheritedId => {
+                const inheritedTier = VIP_TIERS.find(t => t.id === inheritedId);
+                if (inheritedTier) {
+                    inheritedTier.perks.forEach(p => perks.push({ ...p, isInherited: true, fromTier: inheritedTier.name }));
+                }
+            });
+            // Propios
+            tier.perks.forEach(p => perks.push({ ...p, isInherited: false }));
+            return perks;
+        }
+
+        function applyVipEffects(tierId) {
+            if (!tierId) return;
+            const perks = getEffectivePerks(tierId);
+            
+            // Descuento permanente VIP
+            const discountPerk = perks.find(p => ['discount_50','discount_30','discount_15','discount_5'].includes(p.id));
+            if (discountPerk) {
+                const discountMap = { discount_50: 0.50, discount_30: 0.30, discount_15: 0.15, discount_5: 0.05 };
+                const vipDiscount = discountMap[discountPerk.id] || 0;
+                if (vipDiscount > activeDiscount) activeDiscount = vipDiscount;
+            }
+
+            // Modo Dios: arcoíris en el título
+            const titleH1 = document.querySelector('#title-container h1');
+            if (perks.find(p => p.id === 'god_mode')) {
+                titleH1.style.animation = 'rainbow 2s linear infinite';
+                titleH1.style.webkitTextFillColor = '';
+                titleH1.style.background = 'linear-gradient(90deg,#ff0000,#ff9900,#ffe135,#00ff00,#00ffff,#0000ff,#ff00ff)';
+                titleH1.style.webkitBackgroundClip = 'text';
+                titleH1.style.webkitTextFillColor = 'transparent';
+            }
+
+            // Título sidebar VIP
+            if (perks.find(p => p.id === 'custom_title')) {
+                const sidebarPts = document.querySelector('.sidebar-points');
+                if (sidebarPts && !sidebarPts.querySelector('.vip-sidebar-label')) {
+                    const label = document.createElement('div');
+                    label.className = 'vip-sidebar-label';
+                    label.style.cssText = 'font-size:0.75rem;color:#FFD700;margin-top:4px;';
+                    label.innerText = '👑 ' + VIP_TIERS.find(t=>t.id===tierId).name;
+                    sidebarPts.appendChild(label);
+                }
+            }
+        }
+
+        function renderVipSection() {
+            const currentTierId = getVipTier();
+            const grid = document.getElementById('vip-grid');
+            const tierLabel = document.getElementById('vip-tier-label');
+            const activeSection = document.getElementById('vip-active-section');
+            const activeList = document.getElementById('vip-active-list');
+
+            // Badge actual
+            if (currentTierId) {
+                const t = VIP_TIERS.find(x => x.id === currentTierId);
+                tierLabel.innerText = t ? `${t.icon} ${t.name}` : 'Sin plan VIP';
+            } else {
+                tierLabel.innerText = 'Sin plan VIP';
+            }
+
+            // Render cards
+            grid.innerHTML = '';
+            VIP_TIERS.forEach(tier => {
+                const currentIdx = TIER_ORDER.indexOf(currentTierId);
+                const tierIdx = TIER_ORDER.indexOf(tier.id);
+                const isOwned = currentTierId && tierIdx <= currentIdx;
+                const isCurrentExact = tier.id === currentTierId;
+
+                // Perks list: propios + heredados marcados
+                const allInheritedPerks = [];
+                tier.inherited.forEach(iid => {
+                    const itier = VIP_TIERS.find(t => t.id === iid);
+                    if (itier) itier.perks.forEach(p => allInheritedPerks.push({ ...p, inherited: true }));
+                });
+                const ownPerks = tier.perks.map(p => ({ ...p, inherited: false }));
+                const allPerks = [...allInheritedPerks, ...ownPerks];
+
+                const perksHTML = allPerks.map(p =>
+                    `<li class="${p.inherited ? 'inherited' : ''}">${p.label}${p.inherited ? ' <em style="color:#666;font-size:0.8em">(incluido)</em>' : ''}</li>`
+                ).join('');
+
+                const btnLabel = isOwned ? (isCurrentExact ? '✔ Plan Actual' : '✔ Incluido') : `Comprar por ${tier.pricePoints} Pts`;
+                const btnDisabled = isOwned ? 'disabled' : '';
+
+                grid.innerHTML += `
+                <div class="vip-card ${tier.cssClass}">
+                    ${isOwned ? `<div class="vip-owned-badge">${isCurrentExact ? 'ACTIVO' : 'INCLUIDO'}</div>` : ''}
+                    <span class="vip-tier-icon">${tier.icon}</span>
+                    <div class="vip-tier-name">${tier.name}</div>
+                    <div class="vip-price">${tier.priceMoney.toFixed(2)} € <span>/ mes</span></div>
+                    <div class="vip-points-cost">o ${tier.pricePoints} Platapoints</div>
+                    <ul class="vip-perks">${perksHTML}</ul>
+                    <button class="vip-buy-btn" onclick="buyVip('${tier.id}')" ${btnDisabled}>${btnLabel}</button>
+                </div>`;
+            });
+
+            // Beneficios activos
+            if (currentTierId) {
+                const perks = getEffectivePerks(currentTierId);
+                activeList.innerHTML = perks.map(p =>
+                    `<div class="vip-active-perk" style="border-left-color:${p.isInherited ? '#666' : '#4CAF50'}">
+                        ${p.isInherited ? '↑' : '⚡'} ${p.label}
+                    </div>`
+                ).join('');
+                activeSection.style.display = 'block';
+            } else {
+                activeSection.style.display = 'none';
+            }
+        }
+
+        function buyVip(tierId) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) { alert("Debes iniciar sesión."); return; }
+
+            const currentTierId = getVipTier();
+            const currentIdx = TIER_ORDER.indexOf(currentTierId);
+            const newIdx = TIER_ORDER.indexOf(tierId);
+
+            if (currentIdx >= newIdx) {
+                alert("Ya tienes este plan o uno superior.");
+                return;
+            }
+
+            const tier = VIP_TIERS.find(t => t.id === tierId);
+            const userPoints = getPlatapoints();
+
+            if (userPoints < tier.pricePoints) {
+                alert(`❌ No tienes suficientes Platapoints.\nNecesitas: ${tier.pricePoints} Pts\nTienes: ${userPoints} Pts`);
+                return;
+            }
+
+            const confirm_buy = confirm(
+                `👑 ¿Comprar ${tier.icon} ${tier.name}?\n\nCoste: ${tier.pricePoints} Platapoints\n\nEsto desbloqueará:\n${tier.perks.map(p => '• ' + p.label).join('\n')}${tier.inherited.length ? '\n\nMás todos los beneficios de planes inferiores.' : ''}`
+            );
+            if (!confirm_buy) return;
+
+            const adminUsers = ["Dani", "Aitor", "Iker", "Aless"];
+            if (!adminUsers.includes(user)) {
+                setPlatapoints(userPoints - tier.pricePoints);
+            }
+
+            setVipTier(tierId);
+            applyVipEffects(tierId);
+            renderVipSection();
+            alert(`🎉 ¡Bienvenido al ${tier.name}! Todos tus beneficios están activos.\n\n${tier.perks.map(p => '✔ ' + p.label).join('\n')}`);
         }
 
         // --- DECORACIÓN NAVIDEÑA (Mantenida) ---
