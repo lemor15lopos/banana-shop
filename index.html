@@ -6,7 +6,7 @@
     <title>Banana Shop</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍌</text></svg>">
     <style>
-        /* --- TEMAS Y DECORACIÓN NAVIDEÑA --- */
+        /* --- ESTILOS BASE --- */
         body {
             margin: 0; padding: 0; background-color: #121212; color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,7 +27,7 @@
         /* --- ESTILOS GENERALES Y LAYOUT --- */
         .menu-btn {
             position: fixed; top: 20px; left: 20px; font-size: 30px; background: none; border: none;
-            color: #ffe135; /* Rojo Navideño */
+            color: #ffe135;
             cursor: pointer; z-index: 2000; padding: 5px; display: flex;
             flex-direction: column; justify-content: center; align-items: center; gap: 5px;
         }
@@ -36,33 +36,57 @@
         }
 
         #sidebar {
-            position: fixed; top: 0; left: -250px; width: 250px; height: 100%;
-            background-color: #0d210d; /* Verde Oscuro Navideño */
+            position: fixed; top: 0; left: -270px; width: 270px; height: 100%;
+            background-color: #1a1a1a;
             box-shadow: 2px 0 10px rgba(0,0,0,0.8);
-            transition: left 0.4s ease-in-out; z-index: 1999; padding-top: 80px;
+            transition: left 0.4s ease-in-out; z-index: 1999;
             display: flex; flex-direction: column;
+            overflow: hidden;
         }
         #sidebar.open { left: 0; }
-        #sidebar button {
-            background: none; border: none; color: white; padding: 20px; text-align: left;
-            font-size: 1.2rem; cursor: pointer; border-bottom: 1px solid #1a331a; transition: 0.3s;
+        #sidebar-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-top: 80px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #1a1a1a;
         }
-        #sidebar button:hover { background-color: #ffe135; color: #fff; padding-left: 30px; }
+        #sidebar-scroll::-webkit-scrollbar { width: 5px; }
+        #sidebar-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
+        #sidebar-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+        #sidebar button {
+            background: none; border: none; color: white; padding: 16px 20px; text-align: left;
+            font-size: 1.1rem; cursor: pointer; border-bottom: 1px solid #222; transition: 0.3s;
+            width: 100%;
+        }
+        #sidebar button:hover { background-color: #ffe135; color: #000; padding-left: 30px; }
+        #sidebar-logout {
+            flex-shrink: 0;
+            border-top: 1px solid #333;
+        }
+        #sidebar-logout button {
+            background-color: #2a2a2a !important;
+            color: #f0f0f0 !important;
+            padding: 16px 20px !important;
+            width: 100%;
+        }
+        #sidebar-logout button:hover { background-color: #ff4444 !important; color: #fff !important; padding-left: 30px !important; }
         
         .sidebar-points {
             padding: 15px 20px;
-            background-color: #1a331a;
+            background-color: #222;
             color: #ff9900;
             text-align: center;
             font-weight: bold;
-            border-top: 1px solid #2d582d;
+            border-top: 1px solid #444;
         }
 
         header {
             display: flex; align-items: center; justify-content: center; padding: 40px;
-            /* Degradado de Verde/Negro para ambiente festivo */
-            background: linear-gradient(to bottom, #0d210d, #121212); 
-            border-bottom: 2px solid #ffe135; /* Rojo Navideño */
+            background: #1a1a1a;
+            border-bottom: 2px solid #ffe135;
             margin-top: 0; position: relative;
         }
         .logo-img { 
@@ -157,6 +181,55 @@
         @keyframes neon-pulse { 0%,100%{filter:drop-shadow(0 0 5px #ff00ff)} 50%{filter:drop-shadow(0 0 18px #00ffff)} }
         @keyframes drift { 0%,100%{transform:translateX(0) rotate(0deg)} 50%{transform:translateX(6px) rotate(4deg)} }
         
+        /* --- SECCIÓN CATEGORÍAS --- */
+        #categorias { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+
+        .categoria-bloque {
+            margin-bottom: 40px;
+            background: #1a1a1a;
+            border-radius: 14px;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+        .categoria-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 22px;
+            cursor: pointer;
+            background: #222;
+            border-bottom: 1px solid #333;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .categoria-header:hover { background: #2a2a2a; }
+        .categoria-header-left { display: flex; align-items: center; gap: 12px; }
+        .categoria-icono { font-size: 1.8rem; }
+        .categoria-nombre { font-size: 1.2rem; font-weight: bold; color: #ffe135; }
+        .categoria-count { font-size: 0.85rem; color: #aaa; margin-left: 8px; }
+        .categoria-flecha { font-size: 1rem; color: #aaa; transition: transform 0.3s; }
+        .categoria-flecha.abierto { transform: rotate(180deg); }
+
+        .categoria-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+            padding: 16px 22px;
+        }
+        .categoria-item {
+            display: flex; align-items: center; gap: 10px;
+            background: #252525;
+            border-radius: 10px;
+            padding: 10px 14px;
+            border: 1px solid #333;
+            transition: border-color 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+        .categoria-item:hover { background: #2e2e2e; border-color: #ffe135; }
+        .categoria-item-emoji { font-size: 1.4rem; flex-shrink: 0; }
+        .categoria-item-info { overflow: hidden; }
+        .categoria-item-nombre { font-size: 0.85rem; color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .categoria-item-precio { font-size: 0.78rem; color: #ffe135; font-weight: bold; }
+        .categoria-item-badge { font-size: 0.65rem; color: #aaa; }
+
         /* --- SECCIÓN CÓDIGOS (NUEVO) --- */
         #codes { max-width: 500px; margin: 50px auto; padding: 30px; background: #1e1e1e; border-radius: 10px; box-shadow: 0 0 20px rgba(76, 175, 80, 0.1); text-align: center; }
         #codes h2 { color: #4CAF50; margin-bottom: 25px; }
@@ -302,29 +375,286 @@
         
         /* Botón de Cupón aplicado en el Modal */
         #coupon-status { margin-top: 10px; padding: 8px; background-color: #333; color: #4CAF50; border-radius: 5px; font-size: 0.9rem; }
+        /* --- PERFIL --- */
+        .perfil-container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+        .perfil-header { display: flex; align-items: center; gap: 24px; background: #1e1e1e; border-radius: 16px; padding: 28px; margin-bottom: 24px; border: 1px solid #333; }
+        .perfil-avatar { font-size: 5rem; background: #252525; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border: 3px solid #ffe135; flex-shrink: 0; }
+        .perfil-info h2 { margin: 0 0 6px; color: #fff; font-size: 1.8rem; }
+        .perfil-vip-badge { font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; }
+        .perfil-titulo { margin: 0; color: #ff9900; font-size: 1rem; }
+        .perfil-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+        .perfil-stat { background: #1e1e1e; border-radius: 12px; padding: 18px; text-align: center; border: 1px solid #333; }
+        .perfil-stat-val { display: block; font-size: 2rem; font-weight: bold; color: #ffe135; }
+        .perfil-stat-label { font-size: 0.8rem; color: #aaa; }
+        .perfil-avatares, .perfil-temas, .perfil-logros { background: #1e1e1e; border-radius: 14px; padding: 22px; margin-bottom: 20px; border: 1px solid #333; }
+        .perfil-avatares h3, .perfil-temas h3, .perfil-logros h3 { margin: 0 0 16px; color: #ffe135; }
+        .avatar-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .avatar-opt { font-size: 2rem; background: #252525; border-radius: 10px; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s; }
+        .avatar-opt:hover { transform: scale(1.1); }
+        .avatar-opt.selected { border-color: #ffe135; background: #2e2e00; }
+        .temas-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tema-opt { padding: 8px 18px; border-radius: 20px; border: 2px solid transparent; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: transform 0.15s, border-color 0.2s; }
+        .tema-opt:hover { transform: scale(1.05); }
+        .tema-opt.selected { border-color: #fff; }
+        .logros-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .logro-card { background: #252525; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; border: 1px solid #333; transition: border-color 0.2s; }
+        .logro-card.desbloqueado { border-color: #ffe135; background: #1e1a00; }
+        .logro-card.bloqueado { opacity: 0.45; filter: grayscale(0.7); }
+        .logro-icono { font-size: 2rem; flex-shrink: 0; }
+        .logro-info-nombre { font-size: 0.9rem; font-weight: bold; color: #fff; }
+        .logro-info-desc { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
+
+        /* --- HISTORIAL --- */
+        .historial-vacio { text-align: center; color: #777; padding: 60px 0; font-size: 1.1rem; }
+        .historial-item { background: #1e1e1e; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .historial-fecha { font-size: 0.78rem; color: #aaa; margin-bottom: 4px; }
+        .historial-nombre { font-size: 0.95rem; color: #eee; }
+        .historial-metodo { font-size: 0.78rem; padding: 3px 10px; border-radius: 20px; font-weight: bold; }
+        .historial-metodo.dinero { background: #1a3a1a; color: #4CAF50; }
+        .historial-metodo.puntos { background: #3a2a00; color: #ff9900; }
+        .historial-precio { font-size: 1rem; font-weight: bold; color: #ffe135; text-align: right; }
+
+        /* --- RANKING --- */
+        .ranking-item { background: #1e1e1e; border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; border: 1px solid #333; display: flex; align-items: center; gap: 16px; transition: border-color 0.2s; }
+        .ranking-item.yo { border-color: #ffe135; background: #1e1a00; }
+        .ranking-pos { font-size: 1.5rem; font-weight: bold; width: 36px; text-align: center; flex-shrink: 0; }
+        .ranking-avatar { font-size: 1.8rem; }
+        .ranking-nombre { font-size: 1rem; font-weight: bold; color: #fff; flex: 1; }
+        .ranking-puntos { font-size: 1rem; color: #ffe135; font-weight: bold; }
+        .ranking-compras { font-size: 0.8rem; color: #aaa; }
+
+        /* --- MISIONES --- */
+        .mision-card { background: #1e1e1e; border-radius: 14px; padding: 20px; margin-bottom: 14px; border: 1px solid #333; }
+        .mision-card.completada { border-color: #4CAF50; background: #0d1e0d; }
+        .mision-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .mision-titulo { font-size: 1.05rem; font-weight: bold; color: #fff; }
+        .mision-recompensa { background: #2a1f00; color: #ff9900; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: bold; white-space: nowrap; }
+        .mision-desc { font-size: 0.88rem; color: #aaa; margin-bottom: 12px; }
+        .mision-barra-bg { background: #333; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 6px; }
+        .mision-barra { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #ffe135, #ff9900); transition: width 0.5s; }
+        .mision-progreso-txt { font-size: 0.78rem; color: #aaa; display: flex; justify-content: space-between; }
+        .mision-completada-badge { color: #4CAF50; font-weight: bold; font-size: 0.9rem; }
+        .btn-reclamar { background: #ffe135; color: #000; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; margin-top: 8px; transition: filter 0.2s; }
+        .btn-reclamar:hover { filter: brightness(1.15); }
+
+        /* --- NOTICIAS --- */
+        .noticia-card { background: #1e1e1e; border-radius: 14px; padding: 22px; margin-bottom: 16px; border: 1px solid #333; border-left: 4px solid #ffe135; }
+        .noticia-fecha { font-size: 0.78rem; color: #aaa; margin-bottom: 6px; }
+        .noticia-titulo { font-size: 1.15rem; font-weight: bold; color: #ffe135; margin-bottom: 10px; }
+        .noticia-cuerpo { font-size: 0.92rem; color: #ccc; line-height: 1.6; }
+        .noticia-tag { display: inline-block; font-size: 0.7rem; padding: 2px 10px; border-radius: 20px; font-weight: bold; margin-top: 10px; }
+        .tag-update { background: #001a33; color: #00aaff; }
+        .tag-evento { background: #2a1a00; color: #ff9900; }
+        .tag-lore { background: #1a001a; color: #cc44ff; }
+
+        /* --- PLATANO DEL DIA (en sección home) --- */
+        .platano-dia { background: linear-gradient(135deg, #1e1a00, #2a2200); border: 2px solid #ffe135; border-radius: 16px; padding: 20px 24px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; }
+        .platano-dia-emoji { font-size: 3.5rem; animation: pulse-glow 2s ease-in-out infinite; }
+        .platano-dia-info { flex: 1; }
+        .platano-dia-titulo { font-size: 0.75rem; color: #ff9900; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .platano-dia-nombre { font-size: 1.2rem; font-weight: bold; color: #fff; margin-bottom: 4px; }
+        .platano-dia-precio { color: #ffe135; font-weight: bold; }
+        .platano-dia-descuento { font-size: 0.8rem; color: #4CAF50; margin-left: 8px; }
+        .platano-dia-btn { background: #ffe135; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: filter 0.2s; }
+        .platano-dia-btn:hover { filter: brightness(1.15); }
+
+        /* --- XP / NIVEL --- */
+        .xp-bar-wrap { background:#222; border-radius:20px; height:12px; overflow:hidden; margin:6px 0 2px; }
+        .xp-bar { height:100%; background:linear-gradient(90deg,#ffe135,#ff9900); border-radius:20px; transition:width 0.6s; }
+        .nivel-badge { display:inline-block; background:#ffe135; color:#000; font-weight:bold; font-size:0.75rem; padding:2px 10px; border-radius:20px; margin-left:8px; }
+
+        /* --- FAVORITOS --- */
+        .fav-btn { position:absolute; top:10px; left:10px; background:none; border:none; font-size:1.4rem; cursor:pointer; z-index:5; filter:drop-shadow(0 0 3px #000); }
+        .fav-vacio { text-align:center; color:#777; padding:60px 0; font-size:1.1rem; }
+
+        /* --- COMPARADOR --- */
+        .comparador-bar { display:flex; gap:12px; align-items:center; margin-bottom:24px; flex-wrap:wrap; }
+        .comparador-bar select { flex:1; min-width:200px; padding:10px; border-radius:8px; background:#2a2a2a; color:#fff; border:1px solid #ffe135; }
+        .comparador-bar button { padding:10px 20px; background:#ffe135; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+        .comparador-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        .comparador-card { background:#1e1e1e; border-radius:14px; padding:20px; border:1px solid #333; text-align:center; }
+        .comparador-card h3 { color:#ffe135; margin-bottom:12px; font-size:1rem; }
+        .comp-stat { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #2a2a2a; font-size:0.9rem; }
+        .comp-stat:last-child { border:none; }
+        .comp-mejor { color:#4CAF50; font-weight:bold; }
+
+        /* --- RESEÑAS --- */
+        .resena-form { margin-top:10px; }
+        .resena-form textarea { width:100%; padding:8px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:6px; font-size:0.85rem; resize:vertical; min-height:60px; box-sizing:border-box; }
+        .resena-form button { margin-top:6px; padding:6px 16px; background:#ffe135; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.82rem; }
+        .resenas-lista { margin-top:8px; max-height:140px; overflow-y:auto; }
+        .resena-item { background:#1a1a1a; border-radius:6px; padding:7px 10px; margin-bottom:5px; font-size:0.8rem; color:#ccc; }
+        .resena-autor { color:#ffe135; font-weight:bold; margin-right:6px; }
+
+        /* --- CHAT --- */
+        #chat-mensajes { background:#1a1a1a; border-radius:12px; padding:16px; height:380px; overflow-y:auto; margin-bottom:12px; display:flex; flex-direction:column; gap:8px; }
+        .chat-msg { background:#252525; border-radius:8px; padding:8px 12px; font-size:0.9rem; }
+        .chat-msg-yo { background:#1e1a00; border-left:3px solid #ffe135; }
+        .chat-msg-autor { color:#ffe135; font-weight:bold; margin-right:6px; }
+        .chat-msg-hora { color:#555; font-size:0.72rem; float:right; }
+        #chat-input-row { display:flex; gap:10px; }
+        #chat-input { flex:1; padding:12px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:8px; font-size:0.95rem; }
+        #chat-input-row button { padding:12px 20px; background:#ffe135; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+
+        /* --- WORDLE --- */
+        #wordle-tablero { display:flex; flex-direction:column; gap:6px; margin-bottom:20px; }
+        .wordle-fila { display:flex; gap:6px; justify-content:center; }
+        .wordle-celda { width:52px; height:52px; border:2px solid #444; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:bold; text-transform:uppercase; transition:background 0.3s, border-color 0.3s; }
+        .wordle-celda.correcta { background:#538d4e; border-color:#538d4e; color:#fff; }
+        .wordle-celda.presente { background:#b59f3b; border-color:#b59f3b; color:#fff; }
+        .wordle-celda.ausente  { background:#3a3a3c; border-color:#3a3a3c; color:#fff; }
+        .wordle-celda.activa   { border-color:#ffe135; }
+        #wordle-teclado { display:flex; flex-direction:column; gap:6px; align-items:center; margin-bottom:16px; }
+        .wordle-fila-teclas { display:flex; gap:5px; }
+        .wordle-tecla { padding:14px 10px; min-width:36px; background:#818384; color:#fff; border:none; border-radius:4px; font-size:0.85rem; font-weight:bold; cursor:pointer; text-transform:uppercase; transition:background 0.2s; }
+        .wordle-tecla.correcta { background:#538d4e; }
+        .wordle-tecla.presente { background:#b59f3b; }
+        .wordle-tecla.ausente  { background:#3a3a3c; }
+        .wordle-tecla.ancha { min-width:56px; font-size:0.75rem; }
+        #wordle-msg { text-align:center; font-weight:bold; font-size:1.1rem; min-height:28px; margin-bottom:10px; }
+        .wordle-premio { text-align:center; margin-top:12px; padding:12px; background:#1e1a00; border-radius:10px; border:1px solid #ffe135; }
+
+        /* --- ESTADÍSTICAS --- */
+        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
+        .stats-card { background:#1e1e1e; border-radius:12px; padding:20px; border:1px solid #333; text-align:center; }
+        .stats-val { font-size:2rem; font-weight:bold; color:#ffe135; display:block; }
+        .stats-label { font-size:0.82rem; color:#aaa; }
+        .stats-section { background:#1e1e1e; border-radius:12px; padding:20px; border:1px solid #333; margin-bottom:20px; }
+        .stats-section h3 { color:#ffe135; margin:0 0 14px; }
+        .stats-cat-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+        .stats-cat-nombre { min-width:150px; font-size:0.88rem; color:#ccc; }
+        .stats-cat-bar-bg { flex:1; background:#333; border-radius:10px; height:10px; overflow:hidden; }
+        .stats-cat-bar { height:100%; background:linear-gradient(90deg,#ffe135,#ff9900); border-radius:10px; }
+        .stats-cat-num { font-size:0.8rem; color:#aaa; min-width:30px; text-align:right; }
+
+        /* --- AMIGOS --- */
+        .amigos-tabs { display:flex; gap:10px; margin-bottom:20px; }
+        .amigo-tab { padding:8px 20px; border-radius:20px; border:1px solid #444; background:none; color:#aaa; cursor:pointer; font-size:0.9rem; }
+        .amigo-tab.activo { background:#ffe135; color:#000; border-color:#ffe135; font-weight:bold; }
+        .amigo-card { background:#1e1e1e; border-radius:12px; padding:14px 18px; display:flex; align-items:center; gap:14px; margin-bottom:10px; border:1px solid #333; }
+        .amigo-avatar { font-size:2rem; }
+        .amigo-nombre { font-weight:bold; color:#fff; font-size:1rem; }
+        .amigo-pts { font-size:0.82rem; color:#aaa; }
+        .amigo-acciones { margin-left:auto; display:flex; gap:8px; }
+        .btn-regalo { background:#ff9900; color:#000; border:none; padding:6px 14px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:0.82rem; }
+        .btn-quitar { background:#333; color:#aaa; border:none; padding:6px 14px; border-radius:20px; cursor:pointer; font-size:0.82rem; }
+        .amigos-buscar { display:flex; gap:10px; margin-bottom:16px; }
+        .amigos-buscar input { flex:1; padding:10px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:8px; }
+        .amigos-buscar button { padding:10px 20px; background:#ffe135; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+
+        /* --- ADMIN --- */
+        .admin-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:28px; }
+        .admin-stat { background:#1e1e1e; border-radius:12px; padding:20px; border:1px solid #333; text-align:center; }
+        .admin-stat-val { font-size:2.2rem; font-weight:bold; color:#ffe135; display:block; }
+        .admin-stat-label { font-size:0.82rem; color:#aaa; }
+        .admin-section { background:#1e1e1e; border-radius:12px; padding:20px; border:1px solid #333; margin-bottom:20px; }
+        .admin-section h3 { color:#ffe135; margin:0 0 14px; }
+        .admin-user-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #2a2a2a; }
+        .admin-user-row:last-child { border:none; }
+        .admin-codigo-form { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+        .admin-codigo-form input { padding:9px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:6px; flex:1; min-width:120px; }
+        .admin-codigo-form button { padding:9px 18px; background:#ffe135; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer; }
+        #admin-codigos-lista { font-size:0.85rem; color:#aaa; }
+
+        /* --- ASISTENTE IA --- */
+        #ia-btn {
+            position: fixed; bottom: 24px; right: 24px; z-index: 5000;
+            width: 58px; height: 58px; border-radius: 50%;
+            background: linear-gradient(135deg, #ffe135, #ff9900);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255,225,53,0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            user-select: none;
+        }
+        #ia-btn:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(255,225,53,0.7); }
+        #ia-panel {
+            position: fixed; bottom: 94px; right: 24px; z-index: 4999;
+            width: 360px; max-height: 520px;
+            background: #1a1a1a; border-radius: 16px;
+            border: 1px solid #333;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            display: none; flex-direction: column;
+            overflow: hidden;
+            animation: iaSlideIn 0.25s ease;
+        }
+        #ia-panel.abierto { display: flex; }
+        @keyframes iaSlideIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        #ia-header {
+            background: linear-gradient(135deg, #ffe135, #ff9900);
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            color: #000; font-weight: bold; font-size: 1rem;
+            flex-shrink: 0;
+        }
+        #ia-close {
+            background: none; border: none; font-size: 1.1rem; cursor: pointer;
+            color: #000; padding: 0 4px; line-height: 1;
+        }
+        #ia-mensajes {
+            flex: 1; overflow-y: auto; padding: 14px; display: flex;
+            flex-direction: column; gap: 10px;
+            scrollbar-width: thin; scrollbar-color: #333 #1a1a1a;
+        }
+        #ia-mensajes::-webkit-scrollbar { width: 4px; }
+        #ia-mensajes::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        .ia-msg { max-width: 88%; padding: 10px 13px; border-radius: 12px; font-size: 0.88rem; line-height: 1.5; }
+        .ia-bot { background: #252525; color: #eee; align-self: flex-start; border-bottom-left-radius: 3px; }
+        .ia-user { background: #ffe135; color: #000; align-self: flex-end; border-bottom-right-radius: 3px; font-weight: 500; }
+        .ia-loading { color: #aaa; font-style: italic; font-size: 0.82rem; }
+        #ia-input-row {
+            display: flex; gap: 8px; padding: 10px 12px;
+            border-top: 1px solid #2a2a2a; flex-shrink: 0;
+            background: #111;
+        }
+        #ia-input {
+            flex: 1; padding: 9px 12px; background: #2a2a2a;
+            border: 1px solid #333; color: #fff; border-radius: 20px; font-size: 0.88rem;
+            outline: none;
+        }
+        #ia-input:focus { border-color: #ffe135; }
+        #ia-send {
+            background: #ffe135; color: #000; border: none;
+            padding: 9px 14px; border-radius: 20px; font-weight: bold;
+            cursor: pointer; font-size: 1rem; transition: filter 0.2s;
+        }
+        #ia-send:hover { filter: brightness(1.1); }
+        #ia-send:disabled { background: #444; color: #777; cursor: not-allowed; }
+
     </style>
 </head>
-<body onload="checkAuth(); generateBananaDetails(); initProducts(); grantDailyPoints(); updatePlatapointsDisplay(); createSnowflakes(); updateGameSection();">
-
-    <div class="snow" id="snow-container"></div>
+<body onload="checkAuth(); generateBananaDetails(); initProducts(); grantDailyPoints(); updatePlatapointsDisplay(); updateGameSection(); initNuevasFunciones();">
 
     <button class="menu-btn" id="menu-toggle-btn" onclick="toggleMenu()" style="display: none;">
         <div></div><div></div><div></div>
     </button>
 
     <nav id="sidebar">
-        <div class="sidebar-points">
-            🏆 Platapoints: <span id="current-points">0</span>
+        <div id="sidebar-scroll">
+            <div class="sidebar-points">
+                🏆 Platapoints: <span id="current-points">0</span>
+            </div>
+            <button onclick="showSection('home')">🏠 Tienda (100)</button>
+            <button onclick="showSection('details')">🍌 Info Plátanos</button>
+            <button onclick="showSection('cart')">🛒 Cesta (<span id="cart-count">0</span>)</button>
+            <button onclick="showSection('games')">🎮 Juegos</button>
+            <button onclick="showSection('wordle')">🟩 BananaWordle</button>
+            <button onclick="showSection('codes')">🔑 Códigos</button>
+            <button onclick="showSection('vip')">👑 Planes VIP</button>
+            <button onclick="showSection('categorias')">🗂️ Categorías</button>
+            <button onclick="showSection('perfil')">👤 Mi Perfil</button>
+            <button onclick="showSection('historial')">📜 Historial</button>
+            <button onclick="showSection('ranking')">🏅 Ranking</button>
+            <button onclick="showSection('misiones')">🎯 Misiones</button>
+            <button onclick="showSection('noticias')">📰 Noticias</button>
+            <button onclick="showSection('favoritos')">❤️ Favoritos</button>
+            <button onclick="showSection('estadisticas')">📊 Mis Stats</button>
+            <button onclick="showSection('amigos')">👥 Amigos</button>
+            <button onclick="showSection('chat')">💬 Chat</button>
+            <button onclick="showSection('admin')" id="btn-admin" style="display:none;">⚙️ Panel Admin</button>
         </div>
-        <button onclick="showSection('home')">🏠 Tienda (100)</button>
-        <button onclick="showSection('details')">🍌 Info Plátanos (100)</button>
-        <button onclick="showSection('cart')">🛒 Cesta (<span id="cart-count">0</span>)</button>
-        <button onclick="showSection('games')">🎮 Juegos</button>
-        
-        <button onclick="showSection('codes')">🔑 Códigos</button>
-        <button onclick="showSection('vip')">👑 Planes VIP</button>
-        
-        <button onclick="logout()" style="margin-top: auto; background-color: #4a4a4a; color: #f0f0f0;">🚪 Cerrar Sesión</button>
+        <div id="sidebar-logout">
+            <button onclick="logout()">🚪 Cerrar Sesión</button>
+        </div>
     </nav>
 
     <span id="hidden-link" onclick="showSection('secta')">A.S. IV</span>
@@ -338,7 +668,7 @@
     </header>
 
     <section id="intro" class="app-section active">
-        <h2>La Fruta del Poder Festivo</h2>
+        <h2>La Fruta del Poder</h2>
         <p>Has entrado al mercado más exclusivo de la web. Regístrate para desbloquear el catálogo de **100 variedades** y ganar **Platapoints** diarios.</p>
         <button id="start-btn" onclick="showSection('auth')">Empezar Compra</button>
     </section>
@@ -362,7 +692,18 @@
     </section>
 
     <section id="home" class="app-section">
-        <h2 style="text-align: center; margin-bottom: 30px; color: #ffe135;">Catálogo Completo (100 Plátanos)</h2>
+        <h2 style="text-align: center; margin-bottom: 20px; color: #ffe135;">Catálogo Completo (100 Plátanos)</h2>
+        
+        <!-- PLÁTANO DEL DÍA -->
+        <div class="platano-dia" id="platano-dia-widget">
+            <div class="platano-dia-emoji" id="pdd-emoji">🍌</div>
+            <div class="platano-dia-info">
+                <div class="platano-dia-titulo">⭐ Plátano del Día</div>
+                <div class="platano-dia-nombre" id="pdd-nombre">Cargando...</div>
+                <div><span class="platano-dia-precio" id="pdd-precio"></span><span class="platano-dia-descuento">▼ 20% DESCUENTO HOY</span></div>
+            </div>
+            <button class="platano-dia-btn" id="pdd-btn" onclick="comprarPlatanoDia()">Añadir a cesta</button>
+        </div>
         
         <div id="controls-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
             <input type="text" id="search-input" oninput="updateProductView()" placeholder="Buscar plátano por nombre..."
@@ -577,6 +918,122 @@
         </div>
     </section>
     
+    <section id="categorias" class="app-section">
+        <h2 style="text-align:center; color:#ffe135; margin-bottom:10px;">🗂️ Categorías</h2>
+        <p style="text-align:center; color:#aaa; margin-bottom:30px;">Los 100 plátanos organizados por su naturaleza.</p>
+        <div id="categorias-container"></div>
+    </section>
+
+    <!-- PERFIL -->
+    <section id="perfil" class="app-section">
+        <div class="perfil-container">
+            <div class="perfil-header">
+                <div class="perfil-avatar" id="perfil-avatar">🍌</div>
+                <div class="perfil-info">
+                    <h2 id="perfil-nombre">Usuario</h2>
+                    <div id="perfil-vip-badge" class="perfil-vip-badge"></div>
+                    <p id="perfil-titulo" class="perfil-titulo">🌱 Aprendiz Bananero</p>
+                </div>
+            </div>
+            <div class="perfil-stats-grid">
+                <div class="perfil-stat"><span class="perfil-stat-val" id="ps-puntos">0</span><span class="perfil-stat-label">Platapoints</span></div>
+                <div class="perfil-stat"><span class="perfil-stat-val" id="ps-compras">0</span><span class="perfil-stat-label">Compras</span></div>
+                <div class="perfil-stat"><span class="perfil-stat-val" id="ps-racha">0</span><span class="perfil-stat-label">Racha días</span></div>
+                <div class="perfil-stat"><span class="perfil-stat-val" id="ps-logros">0</span><span class="perfil-stat-label">Logros</span></div>
+                <div class="perfil-stat" style="grid-column:span 2"><span class="perfil-stat-val" id="ps-nivel" style="font-size:1.4rem">Nv.1</span><span class="perfil-stat-label">Nivel / XP</span></div>
+            </div>
+            <div class="perfil-avatares">
+                <h3>🎨 Elige tu avatar</h3>
+                <div class="avatar-grid" id="avatar-grid"></div>
+            </div>
+            <div class="perfil-temas">
+                <h3>🎨 Tema de interfaz</h3>
+                <div class="temas-grid" id="temas-grid"></div>
+            </div>
+            <div class="perfil-logros">
+                <h3>🏆 Logros</h3>
+                <div class="logros-grid" id="logros-grid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HISTORIAL -->
+    <section id="historial" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">📜 Historial de Compras</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Todas tus adquisiciones bananeras registradas.</p>
+        <div id="historial-container" style="max-width:800px;margin:0 auto;"></div>
+    </section>
+
+    <!-- RANKING -->
+    <section id="ranking" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">🏅 Ranking de Usuarios</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Los mejores compradores del Banana Shop.</p>
+        <div id="ranking-container" style="max-width:700px;margin:0 auto;"></div>
+    </section>
+
+    <!-- MISIONES -->
+    <section id="misiones" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">🎯 Misiones Semanales</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Completa misiones para ganar Platapoints extra.</p>
+        <div id="misiones-container" style="max-width:800px;margin:0 auto;"></div>
+    </section>
+
+    <!-- NOTICIAS -->
+    <section id="noticias" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">📰 Noticias del Banana Shop</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Últimas novedades del universo bananero.</p>
+        <div id="noticias-container" style="max-width:800px;margin:0 auto;"></div>
+    </section>
+
+    <!-- FAVORITOS -->
+    <section id="favoritos" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">❤️ Mis Favoritos</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Tus plátanos guardados para comprar después.</p>
+        <div id="favoritos-grid" class="products-grid"></div>
+    </section>
+
+    <!-- ESTADISTICAS -->
+    <section id="estadisticas" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">📊 Mis Estadísticas</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Tu historial bananero en números.</p>
+        <div id="estadisticas-container" style="max-width:900px;margin:0 auto;"></div>
+    </section>
+
+    <!-- AMIGOS -->
+    <section id="amigos" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">👥 Amigos</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Conecta con otros compradores y envía regalos.</p>
+        <div id="amigos-container" style="max-width:700px;margin:0 auto;"></div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">💬 Chat Global</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:16px;">El muro del Banana Shop. Todos pueden leer y escribir.</p>
+        <div id="chat-container" style="max-width:700px;margin:0 auto;">
+            <div id="chat-mensajes"></div>
+            <div id="chat-input-row">
+                <input id="chat-input" type="text" placeholder="Escribe un mensaje..." maxlength="200" onkeydown="if(event.key==='Enter')enviarChat()">
+                <button onclick="enviarChat()">Enviar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORDLE BANANERO -->
+    <section id="wordle" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:4px;">🟩 BananaWordle</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:6px;">Adivina la abreviación del plátano del día. Nueva palabra cada 24h.</p>
+        <p style="text-align:center;color:#ff9900;font-size:0.85rem;margin-bottom:20px;">💡 Pista: la abreviación aparece junto al nombre en la tienda</p>
+        <div id="wordle-container" style="max-width:500px;margin:0 auto;"></div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="admin" class="app-section">
+        <h2 style="text-align:center;color:#ffe135;margin-bottom:10px;">⚙️ Panel de Administración</h2>
+        <p style="text-align:center;color:#aaa;margin-bottom:30px;">Solo visible para administradores.</p>
+        <div id="admin-container" style="max-width:1000px;margin:0 auto;"></div>
+    </section>
+
     <div class="footer-info app-section active"> 
         <small>
             <p><strong>Nota legal sobre el IVA y el Comercio Justo Bananero:</strong></p>
@@ -591,6 +1048,20 @@
 
 
     <script>
+        // --- ABREVIACIONES DE PLÁTANOS ---
+        const BANANA_ABREVS = [
+            'CAN','SUM','CUR','FAN','ARK','EST','UNA','ABU','NEP','TER',
+            'AMZ','IND','INV','DES','CHE','APO','COS','GIG','TOS','ESP',
+            'VOL','DAD','PIX','DIM','MUN','ILU','FOS','ACI','CAM','REY',
+            'SOM','POT','AST','SOL','PIE','MIC','PIR','SER','INV','ZEN',
+            'ANG','DEF','MUS','NEO','JUP','TUN','TOR','ELX','AGU','FUE',
+            'DOR','PAR','BIO','COB','ROS','DRA','ECO','OCU','VIA','PRO',
+            'SON','HUR','VER','HAD','ZEU','BIN','HOL','NEB','LOT','CRI',
+            'MAR','CON','POE','INR','SUM','CAP','SOL','SOA','REA','CUA',
+            'BIF','MON','NAR','CEN','SCH','CHI','JAR','SOD','ESP','LLA',
+            'STE','ZEL','TUT','BER','DES','HIM','EDE','ATL','PRF','FIN'
+        ];
+
         // --- VARIABLES GLOBALES Y UTILIDADES ---
         let cart = [];
         const body = document.body;
@@ -715,11 +1186,13 @@
             if (user) {
                 localStorage.setItem('sessionUser', username);
                 grantDailyPoints();
+                aplicarTema(getUserTema(username));
                 alert(`¡Bienvenido de vuelta, ${username}!`);
                 updateUIForSession(username);
                 updatePlatapointsDisplay();
-                updateGameSection(); // Llamar también al login
+                updateGameSection();
                 applyVipEffects(getVipTier());
+                renderPlatanoDia();
                 showSection('home');
             } else {
                 alert("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
@@ -780,29 +1253,25 @@
 
         function showSection(sectionId) {
             const user = localStorage.getItem('sessionUser');
-            // 'codes' añadido a las secciones que requieren autenticación
-            const requiresAuth = ['home', 'details', 'cart', 'games', 'codes', 'vip', 'secta'].includes(sectionId); 
-
-            if (requiresAuth && !user) {
-                alert("Debes iniciar sesión para acceder a esta sección.");
-                sectionId = 'auth';
-            }
-            
-            document.querySelectorAll('.app-section').forEach(sec => {
-                sec.classList.remove('active');
-            });
-            
+            const requiresAuth = ['home','details','cart','games','codes','vip','secta','categorias','perfil','historial','ranking','misiones','noticias','favoritos','estadisticas','amigos','chat','wordle','admin'].includes(sectionId);
+            if (requiresAuth && !user) { alert("Debes iniciar sesión para acceder a esta sección."); sectionId = 'auth'; }
+            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             sidebar.classList.remove('open');
-            
-            // Si vamos a la sección de juegos, actualizamos su estado
-            if (sectionId === 'games') {
-                updateGameSection();
-            }
-            // Si vamos a VIP, renderizamos las tarjetas
-            if (sectionId === 'vip') {
-                renderVipSection();
-            }
+            if (sectionId === 'games')        updateGameSection();
+            if (sectionId === 'vip')          renderVipSection();
+            if (sectionId === 'categorias')   renderCategorias();
+            if (sectionId === 'perfil')       renderPerfil();
+            if (sectionId === 'historial')    renderHistorial();
+            if (sectionId === 'ranking')      renderRanking();
+            if (sectionId === 'misiones')     renderMisiones();
+            if (sectionId === 'noticias')     renderNoticias();
+            if (sectionId === 'favoritos')    renderFavoritos();
+            if (sectionId === 'estadisticas') renderEstadisticas();
+            if (sectionId === 'amigos')       renderAmigos();
+            if (sectionId === 'chat')         renderChat();
+            if (sectionId === 'wordle')       initWordle();
+            if (sectionId === 'admin')        renderAdmin();
         }
         
         // --- LÓGICA DE CÓDIGOS (NUEVA) ---
@@ -974,7 +1443,7 @@
         // --- LÓGICA DE PRODUCTOS, FILTROS Y RATING (MANTENIDA) ---
         
         const BANANA_NAMES = [/* ... (Lista de 100 plátanos) ... */
-            "Plátano 001: Canarias/Original", "Plátano 002: El Silencioso de Sumatra", "Plátano 003: Curva de Felicidad Extrema", "Plátano 004: El Fantasma de Medianoche", "Plátano 005: Diamante Verde de Khidir", "Plátano 006: Bocado Estelar (Estrella M-31)", "Plátano 007: La Uña de Dragón", "Plátano 008: El Abuelo Longevo", "Plátano 009: Místico de Nepal", "Plátano 010: Sabor a Terremoto (Grado 5)", "Plátano 011: El Dorado de la Amazonía", "Plátano 012: La Cáscara Indestructible", "Plátano 013: Llorón de Invierno", "Plátano 014: Susurro del Desierto", "Plátano 015: Mutante de Chernobyl", "Plátano 016: La Flecha de Apolo", "Plátano 017: El Despertador Cósmico", "Plátano 018: Lágrima de Gigante", "Plátano 019: El Tostador Automático", "Plátano 020: Espejo del Tiempo", "Plátano 021: Corazón de Volcán", "Plátano 022: El Triturador de Dados", "Plátano 023: El Plátano Píxel", "Plátano 024: Viajero Interdimensional", "Plátano 025: El Grito de Múnich", "Plátano 026: Zumo de la Ilusión", "Plátano 027: El Fósil Viviente", "Plátano 028: Esencia de Lluvia Ácida", "Plátano 029: El Camaleón Dulce", "Plátano 030: El Rey de la Pradera", "Plátano 031: La Sombra Fugaz", "Plátano 032: El Guardián del Potasio", "Plátano 033: Alimento de Astronauta Nivel 3", "Plátano 034: La Llave del Solsticio", "Plátano 035: El Plátano Matemático (π)", "Plátano 036: Generador de Microondas", "Plátano 037: El Tesoro del Pirata", "Plátano 038: Piel de Serpiente Dorada", "Plátano 039: El Amigo Invisible", "Plátano 040: El Maestro Zen", "Plátano 041: La Trompeta del Ángel", "Plátano 042: La Pregunta Definitiva", "Plátano 043: El Suspiro de la Musa", "Plátano 044: Aura de Neón", "Plátano 045: El Resplandor de Júpiter", "Plátano 046: El Plátano Tundra", "Plátano 047: El Heraldo de la Tormenta", "Plátano 048: Elixir de la Juventud", "Plátano 049: La Pesadilla del Aguacate", "Plátano 050: El Anillo de Fuego", "Plátano 051: El Gigante Dormido", "Plátano 052: La Partitura Perdida", "Plátano 053: El Plátano Biónico", "Plátano 054: La Fuente de Cobre", "Plátano 055: El Misterio de Roswell", "Plátano 056: Aliento de Drácula", "Plátano 057: El Eco Infinito", "Plátano 058: El Mensaje Oculto", "Plátano 059: El Viajero Sin Destino", "Plátano 060: La Fruta Prohibida", "Plátano 061: El Plátano Súper Sónico", "Plátano 062: El Ojo del Huracán", "Plátano 063: La Semilla de la Verdad", "Plátano 064: El Escudo de Hades", "Plátano 065: La Espada de Zeus", "Plátano 066: El Secreto del Código Binario", "Plátano 067: El Plátano Holográfico", "Plátano 068: La Nebulosa Amarilla", "Plátano 069: La Danza del Loto", "Plátano 070: El Plátano de Cristal", "Plátano 071: El Corredor de Maratón", "Plátano 072: La Voz de la Conciencia", "Plátano 073: El Poema Olvidado", "Plátano 074: El Plátano Invisible (Recargado)", "Plátano 075: El Tesoro Sumergido", "Plátano 076: La Capa de Invisibilidad", "Plátano 077: El Rescate del Sol", "Plátano 078: La Sopa de la Abuela", "Plátano 079: El Reactor de Fusión Fría", "Plátano 080: El Plátano Cuántico", "Plátano 081: El Puente de Bifrost", "Plátano 082: El Monolito Negro", "Plátano 083: El Portal a Narnia", "Plátano 084: La Última Cena del Plátano", "Plátano 085: El Gato de Schrödinger", "Plátano 086: El Viaje de Chihiro", "Plátano 087: El Jardín Colgante", "Plátano 088: La Fuente de Sodio", "Plátano 089: El Espejismo de Dubai", "Plátano 090: La Llama Eterna", "Plátano 091: El Plátano de la Suerte (777)", "Plátano 092: La Leyenda de Zelda", "Plátano 093: El Sarcófago de Tutankamón", "Plátano 094: El Muro de Berlín", "Plátano 095: El Plátano Desintegrador", "Plátano 096: El Susurro de las Montañas", "Plátano 097: La Cáscara Dorada del Edén", "Plátano 098: El Corazón de Atlantis", "Plátano 099: La Profecía del Potasio", "Plátano 100: El Gran Final Navideño"
+            "Plátano 001: Canarias/Original", "Plátano 002: El Silencioso de Sumatra", "Plátano 003: Curva de Felicidad Extrema", "Plátano 004: El Fantasma de Medianoche", "Plátano 005: Diamante Verde de Khidir", "Plátano 006: Bocado Estelar (Estrella M-31)", "Plátano 007: La Uña de Dragón", "Plátano 008: El Abuelo Longevo", "Plátano 009: Místico de Nepal", "Plátano 010: Sabor a Terremoto (Grado 5)", "Plátano 011: El Dorado de la Amazonía", "Plátano 012: La Cáscara Indestructible", "Plátano 013: Llorón de Invierno", "Plátano 014: Susurro del Desierto", "Plátano 015: Mutante de Chernobyl", "Plátano 016: La Flecha de Apolo", "Plátano 017: El Despertador Cósmico", "Plátano 018: Lágrima de Gigante", "Plátano 019: El Tostador Automático", "Plátano 020: Espejo del Tiempo", "Plátano 021: Corazón de Volcán", "Plátano 022: El Triturador de Dados", "Plátano 023: El Plátano Píxel", "Plátano 024: Viajero Interdimensional", "Plátano 025: El Grito de Múnich", "Plátano 026: Zumo de la Ilusión", "Plátano 027: El Fósil Viviente", "Plátano 028: Esencia de Lluvia Ácida", "Plátano 029: El Camaleón Dulce", "Plátano 030: El Rey de la Pradera", "Plátano 031: La Sombra Fugaz", "Plátano 032: El Guardián del Potasio", "Plátano 033: Alimento de Astronauta Nivel 3", "Plátano 034: La Llave del Solsticio", "Plátano 035: El Plátano Matemático (π)", "Plátano 036: Generador de Microondas", "Plátano 037: El Tesoro del Pirata", "Plátano 038: Piel de Serpiente Dorada", "Plátano 039: El Amigo Invisible", "Plátano 040: El Maestro Zen", "Plátano 041: La Trompeta del Ángel", "Plátano 042: La Pregunta Definitiva", "Plátano 043: El Suspiro de la Musa", "Plátano 044: Aura de Neón", "Plátano 045: El Resplandor de Júpiter", "Plátano 046: El Plátano Tundra", "Plátano 047: El Heraldo de la Tormenta", "Plátano 048: Elixir de la Juventud", "Plátano 049: La Pesadilla del Aguacate", "Plátano 050: El Anillo de Fuego", "Plátano 051: El Gigante Dormido", "Plátano 052: La Partitura Perdida", "Plátano 053: El Plátano Biónico", "Plátano 054: La Fuente de Cobre", "Plátano 055: El Misterio de Roswell", "Plátano 056: Aliento de Drácula", "Plátano 057: El Eco Infinito", "Plátano 058: El Mensaje Oculto", "Plátano 059: El Viajero Sin Destino", "Plátano 060: La Fruta Prohibida", "Plátano 061: El Plátano Súper Sónico", "Plátano 062: El Ojo del Huracán", "Plátano 063: La Semilla de la Verdad", "Plátano 064: El Escudo de Hades", "Plátano 065: La Espada de Zeus", "Plátano 066: El Secreto del Código Binario", "Plátano 067: El Plátano Holográfico", "Plátano 068: La Nebulosa Amarilla", "Plátano 069: La Danza del Loto", "Plátano 070: El Plátano de Cristal", "Plátano 071: El Corredor de Maratón", "Plátano 072: La Voz de la Conciencia", "Plátano 073: El Poema Olvidado", "Plátano 074: El Plátano Invisible (Recargado)", "Plátano 075: El Tesoro Sumergido", "Plátano 076: La Capa de Invisibilidad", "Plátano 077: El Rescate del Sol", "Plátano 078: La Sopa de la Abuela", "Plátano 079: El Reactor de Fusión Fría", "Plátano 080: El Plátano Cuántico", "Plátano 081: El Puente de Bifrost", "Plátano 082: El Monolito Negro", "Plátano 083: El Portal a Narnia", "Plátano 084: La Última Cena del Plátano", "Plátano 085: El Gato de Schrödinger", "Plátano 086: El Viaje de Chihiro", "Plátano 087: El Jardín Colgante", "Plátano 088: La Fuente de Sodio", "Plátano 089: El Espejismo de Dubai", "Plátano 090: La Llama Eterna", "Plátano 091: El Plátano de la Suerte (777)", "Plátano 092: La Leyenda de Zelda", "Plátano 093: El Sarcófago de Tutankamón", "Plátano 094: El Muro de Berlín", "Plátano 095: El Plátano Desintegrador", "Plátano 096: El Susurro de las Montañas", "Plátano 097: La Cáscara Dorada del Edén", "Plátano 098: El Corazón de Atlantis", "Plátano 099: La Profecía del Potasio", "Plátano 100: El Gran Final"
         ];
         const BANANA_LORE = [/* ... (Lores de plátanos) ... */
             /* 001 */ "El clásico. Dulce, con pintitas y lleno de potasio. Ideal para recuperar energía después de programar.",
@@ -1076,7 +1545,7 @@
             /* 097 */ "Recuperado del Jardín del Edén según registros del Vaticano (clasificados). Su piel dorada no envejece. Está técnicamente prohibido consumirlo pero nadie ha hecho cumplir la norma.",
             /* 098 */ "El corazón de la legendaria ciudad sumergida late en este plátano. Al comerlo, puedes respirar bajo el agua durante 90 segundos. No recomendado en piscinas municipales sin avisar.",
             /* 099 */ "Las antiguas escrituras bananeras lo mencionan como el catalizador del fin de los tiempos. Al comerlo, los platapoints se multiplican por 3 durante una hora. O eso dice la profecía.",
-            /* 100 */ "El plátano definitivo. Contiene el sabor de todos los anteriores combinados en proporciones perfectas. Solo se vende en Navidad. Al comerlo suena un villancico en tu cabeza durante horas."
+            /* 100 */ "El plátano definitivo. Contiene el sabor de todos los anteriores combinados en proporciones perfectas. Solo disponible para los más afortunados. Al comerlo una melodía misteriosa resuena en tu cabeza durante horas."
         ];
         // Tema visual único para cada plátano: { emoji, accent, glow, gradient, btnBg, btnColor, badge, anim }
         const BANANA_THEMES = [
@@ -1275,7 +1744,7 @@
                     <div class="product-card-bg"></div>
                     <div class="card-badge">${theme.badge}</div>
                     <span class="product-icon" style="animation: ${theme.anim};">${theme.emoji}</span>
-                    <h3 class="product-title">${product.name}</h3>
+                    <h3 class="product-title">${product.name} <span style="font-size:0.65rem;background:#2a2a00;color:#ffe135;padding:1px 6px;border-radius:10px;vertical-align:middle;font-family:monospace;">${BANANA_ABREVS[product.id-1]}</span></h3>
                     
                     <div class="product-rating" style="margin-bottom: 5px;">
                         <span style="color: ${theme.accent}; font-weight: bold;">${product.rating.average.toFixed(1)} ${ratingVisual}</span>
@@ -1298,6 +1767,15 @@
                     </div>
 
                     <button class="buy-btn" onclick="addToCart('${product.name}', ${product.price}, ${product.pointsCost})">Añadir a la Cesta</button>
+                    <div style="display:flex;gap:6px;margin-top:8px;">
+                        <button class="fav-btn" style="position:static;font-size:1.1rem;padding:5px 10px;background:#222;border:1px solid #444;border-radius:6px;color:#fff;" onclick="toggleFavorito(${product.id})" id="fav-btn-${product.id}">${isFavorito(product.id)?'❤️':'🤍'}</button>
+                        <button style="flex:1;padding:5px 10px;background:#222;border:1px solid #444;border-radius:6px;color:#aaa;cursor:pointer;font-size:0.8rem;" onclick="abrirComparador(${product.id})">⚖️ Comparar</button>
+                    </div>
+                    <div class="resena-form">
+                        <div class="resenas-lista" id="resenas-${product.id}">${renderResenas(product.id)}</div>
+                        <textarea id="resena-txt-${product.id}" placeholder="Escribe una reseña..." style="width:100%;margin-top:6px;padding:6px;background:#1a1a1a;border:1px solid #333;color:#ccc;border-radius:6px;font-size:0.8rem;resize:none;height:50px;box-sizing:border-box;"></textarea>
+                        <button style="margin-top:4px;padding:4px 12px;background:#ffe135;color:#000;border:none;border-radius:6px;font-size:0.78rem;font-weight:bold;cursor:pointer;" onclick="publicarResena(${product.id})">Publicar reseña</button>
+                    </div>
                 `;
                 
                 productList.appendChild(card);
@@ -1783,21 +2261,1200 @@
             alert(`🎉 ¡Bienvenido al ${tier.name}! Todos tus beneficios están activos.\n\n${tier.perks.map(p => '✔ ' + p.label).join('\n')}`);
         }
 
-        // --- BANANA WORLD 2 ---
-        // --- DECORACIÓN NAVIDEÑA (Mantenida) ---
-        function createSnowflakes() {
-            const container = document.getElementById('snow-container');
-            for (let i = 0; i < 50; i++) {
-                const flake = document.createElement('div');
-                flake.classList.add('flake');
-                flake.style.left = Math.random() * 100 + 'vw';
-                flake.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                flake.style.animationDelay = (Math.random() * 5) + 's';
-                flake.style.width = flake.style.height = (Math.random() * 3 + 2) + 'px';
-                container.appendChild(flake);
+        // --- SECCIÓN CATEGORÍAS ---
+        const BANANA_CATEGORIAS = [
+            {
+                nombre: "🍌 Clásicos y Exóticos", icono: "🍌",
+                ids: [1, 2, 3, 8, 11, 14, 18, 19, 27, 30, 37, 38, 78, 84, 93]
+            },
+            {
+                nombre: "🔬 Ciencia y Tecnología", icono: "🔬",
+                ids: [6, 15, 23, 28, 33, 35, 36, 53, 66, 67, 79, 80, 85, 88, 95]
+            },
+            {
+                nombre: "🌌 Espacio y Cosmos", icono: "🌌",
+                ids: [5, 10, 16, 17, 24, 42, 45, 68, 77, 81, 82, 98]
+            },
+            {
+                nombre: "🔮 Magia y Misterio", icono: "🔮",
+                ids: [4, 7, 9, 20, 22, 26, 29, 39, 55, 58, 63, 72, 76, 85, 99]
+            },
+            {
+                nombre: "⚔️ Mitología y Fantasía", icono: "⚔️",
+                ids: [41, 64, 65, 81, 83, 86, 92, 97]
+            },
+            {
+                nombre: "🌿 Naturaleza y Elementos", icono: "🌿",
+                ids: [12, 13, 21, 31, 32, 34, 46, 47, 50, 62, 69, 87, 89, 90, 96]
+            },
+            {
+                nombre: "💀 Extremos y Peligrosos", icono: "💀",
+                ids: [6, 15, 21, 25, 28, 48, 56, 60, 94, 95]
+            },
+            {
+                nombre: "🎭 Arte y Cultura", icono: "🎭",
+                ids: [3, 40, 43, 44, 52, 57, 69, 70, 73, 86, 91, 92]
+            },
+            {
+                nombre: "🏆 Legendarios y Únicos", icono: "🏆",
+                ids: [42, 74, 84, 91, 97, 98, 99, 100]
+            },
+            {
+                nombre: "👻 Raros e Invisibles", icono: "👻",
+                ids: [4, 7, 31, 39, 59, 74, 76, 82]
+            }
+        ];
+
+        // Aseguramos que cada plátano aparezca al menos en una categoría
+        // Categoría "Sin clasificar" para los que no estén en ninguna
+        function renderCategorias() {
+            if (!bananaProducts.length) return;
+
+            const container = document.getElementById('categorias-container');
+            container.innerHTML = '';
+
+            // Averiguamos qué IDs no tienen categoría asignada
+            const asignados = new Set(BANANA_CATEGORIAS.flatMap(c => c.ids));
+            const sinClasificar = bananaProducts.filter(p => !asignados.has(p.id)).map(p => p.id);
+            const todasCategorias = [...BANANA_CATEGORIAS];
+            if (sinClasificar.length > 0) {
+                todasCategorias.push({ nombre: "🍃 Otros", icono: "🍃", ids: sinClasificar });
+            }
+
+            todasCategorias.forEach((cat, catIdx) => {
+                const productos = cat.ids
+                    .map(id => bananaProducts.find(p => p.id === id))
+                    .filter(Boolean);
+                if (!productos.length) return;
+
+                const bloque = document.createElement('div');
+                bloque.className = 'categoria-bloque';
+
+                const header = document.createElement('div');
+                header.className = 'categoria-header';
+                header.innerHTML = `
+                    <div class="categoria-header-left">
+                        <span class="categoria-icono">${cat.icono}</span>
+                        <span class="categoria-nombre">${cat.nombre}</span>
+                        <span class="categoria-count">(${productos.length} plátanos)</span>
+                    </div>
+                    <span class="categoria-flecha" id="flecha-${catIdx}">▼</span>
+                `;
+
+                const lista = document.createElement('div');
+                lista.className = 'categoria-lista';
+                lista.id = `cat-lista-${catIdx}`;
+
+                productos.forEach(p => {
+                    const theme = BANANA_THEMES[p.id - 1] || BANANA_THEMES[0];
+                    const item = document.createElement('div');
+                    item.className = 'categoria-item';
+                    item.title = `Ver en tienda`;
+                    item.innerHTML = `
+                        <span class="categoria-item-emoji">${theme.emoji}</span>
+                        <div class="categoria-item-info">
+                            <div class="categoria-item-nombre">${p.name}</div>
+                            <div class="categoria-item-precio">${p.price.toFixed(2)} €</div>
+                            <div class="categoria-item-badge">${theme.badge}</div>
+                        </div>
+                    `;
+                    item.onclick = () => {
+                        showSection('home');
+                        setTimeout(() => {
+                            document.getElementById('search-input').value = p.name.split(': ')[1] || p.name;
+                            updateProductView();
+                        }, 100);
+                    };
+                    lista.appendChild(item);
+                });
+
+                // Toggle collapse
+                header.addEventListener('click', () => {
+                    const isOpen = lista.style.display !== 'none';
+                    lista.style.display = isOpen ? 'none' : 'grid';
+                    const flecha = document.getElementById(`flecha-${catIdx}`);
+                    flecha.classList.toggle('abierto', !isOpen);
+                });
+
+                bloque.appendChild(header);
+                bloque.appendChild(lista);
+                container.appendChild(bloque);
+            });
+        }
+
+        // =====================================================
+        // NUEVAS FUNCIONALIDADES
+        // =====================================================
+
+        // --- CONSTANTES ---
+        const AVATARES = ['🍌','🐒','🦍','🌴','⚡','🔥','💎','👑','🎯','🚀','🌌','🔮','🐉','🦁','🎭','🤖','👻','🌊','🍀','🏆'];
+        const TEMAS = [
+            { id:'amarillo', nombre:'Banana', color:'#ffe135', bg:'#121212' },
+            { id:'rojo',     nombre:'Volcán',  color:'#ff3300', bg:'#0f0000' },
+            { id:'azul',     nombre:'Cosmos',  color:'#00aaff', bg:'#000d1a' },
+            { id:'verde',    nombre:'Jungla',  color:'#22cc66', bg:'#001208' },
+            { id:'morado',   nombre:'Místico', color:'#aa44ff', bg:'#0d0015' },
+            { id:'rosa',     nombre:'Neón',    color:'#ff44cc', bg:'#15000d' },
+        ];
+        const LOGROS_DEF = [
+            { id:'primer_platano',  icono:'🍌', nombre:'Primer Plátano',    desc:'Realiza tu primera compra',          cond: u => getPurchaseCount(u) >= 1 },
+            { id:'comprador_5',     icono:'🛒', nombre:'Coleccionista',      desc:'Compra 5 plátanos en total',         cond: u => getPurchaseCount(u) >= 5 },
+            { id:'comprador_20',    icono:'🏪', nombre:'Cliente Fiel',       desc:'Compra 20 plátanos en total',        cond: u => getPurchaseCount(u) >= 20 },
+            { id:'racha_3',         icono:'🔥', nombre:'En Racha',           desc:'Entra 3 días seguidos',              cond: u => getStreak(u) >= 3 },
+            { id:'racha_7',         icono:'🌟', nombre:'Semana Perfecta',    desc:'Entra 7 días seguidos',              cond: u => getStreak(u) >= 7 },
+            { id:'puntos_100',      icono:'💰', nombre:'Centenario',         desc:'Acumula 100 Platapoints',            cond: u => getPlatapoints() >= 100 },
+            { id:'puntos_500',      icono:'💎', nombre:'Millonario Banana',  desc:'Acumula 500 Platapoints',            cond: u => getPlatapoints() >= 500 },
+            { id:'vip',             icono:'👑', nombre:'VIP',                desc:'Hazte VIP en cualquier nivel',       cond: u => !!getVipTier() },
+            { id:'mision_1',        icono:'🎯', nombre:'Misionero',          desc:'Completa tu primera misión',         cond: u => getMisionesCompletadas(u) >= 1 },
+            { id:'mision_5',        icono:'🏅', nombre:'Veterano',           desc:'Completa 5 misiones',               cond: u => getMisionesCompletadas(u) >= 5 },
+        ];
+        const MISIONES_DEF = [
+            { id:'mis_compra1',   titulo:'Primera del día',      desc:'Realiza 1 compra esta semana',              meta:1,  tipo:'compras',  reward:15 },
+            { id:'mis_compra3',   titulo:'Comprador en serie',   desc:'Realiza 3 compras esta semana',             meta:3,  tipo:'compras',  reward:35 },
+            { id:'mis_cosmico',   titulo:'A las estrellas',      desc:'Compra 2 plátanos de la categoría Espacio', meta:2,  tipo:'categoria',cat:'cosmic', reward:25 },
+            { id:'mis_peligroso', titulo:'Vivir al límite',      desc:'Compra 2 plátanos Extremos o Peligrosos',   meta:2,  tipo:'categoria',cat:'danger', reward:30 },
+            { id:'mis_puntos50',  titulo:'Gastador',             desc:'Gasta 50 Platapoints esta semana',          meta:50, tipo:'puntos',   reward:20 },
+        ];
+        const NOTICIAS = [
+            { fecha:'15 Mar 2025', titulo:'🍌 Banana Shop alcanza los 1.000 usuarios registrados', tag:'update', cuerpo:'Hoy celebramos un hito histórico: el Banana Shop ha superado el millar de usuarios activos. Para celebrarlo, todos los usuarios recibirán 10 Platapoints extra. El General Khidir Karawita ya prepara su discurso de agradecimiento.' },
+            { fecha:'10 Mar 2025', titulo:'⚠️ El Plátano Mutante de Chernobyl bajo investigación', tag:'lore', cuerpo:'La Asociación Internacional de Fruteros ha abierto un expediente al Plátano nº15. Varios compradores reportan que, al comerlo, crecen flores en sus orejas durante aproximadamente 3 horas. El fabricante asegura que es "un efecto secundario menor".' },
+            { fecha:'5 Mar 2025', titulo:'🎉 Semana de Doble Platapoints', tag:'evento', cuerpo:'Durante esta semana, todos los puntos diarios se duplican. Aprovecha para acumular y desbloquear tu plan VIP soñado. Esta oferta es cortesía del Consejo Supremo del Potasio.' },
+            { fecha:'28 Feb 2025', titulo:'🚀 Nuevo plátano espacial disponible: El Bocado Estelar', tag:'update', cuerpo:'Tras años de desarrollo en la Estación Bananera Internacional, el Plátano nº6 ya está disponible en catálogo. Cultivado en microgravedad y radiado con rayos cósmicos controlados. Precio especial de lanzamiento esta semana.' },
+            { fecha:'20 Feb 2025', titulo:'👑 Planes VIP Diamante vendidos: el exclusivo club crece', tag:'lore', cuerpo:'Solo 7 usuarios en toda la historia del Banana Shop han alcanzado el VIP Diamante. Se rumorea que tienen acceso a un chat secreto donde el propio Ahmed Salah IV comparte recetas de smoothies interdimensionales.' },
+            { fecha:'14 Feb 2025', titulo:'💛 Día del Plátano Enamorado: descuentos especiales', tag:'evento', cuerpo:'Por San Valentín, el Banana Shop ofrece el Plátano nº43 (El Suspiro de la Musa) con un 30% de descuento. Perfecto para regalar a quien más aprecias, aunque se aconseja no regalarlo a aguacates, ya que generaría conflicto diplomático.' },
+        ];
+
+        // --- HELPERS PERSISTENCIA ---
+        function getPurchaseCount(user) {
+            if (!user) return 0;
+            return parseInt(localStorage.getItem(`PurchaseCount_${user}`) || '0');
+        }
+        function incPurchaseCount(user, items) {
+            if (!user) return;
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (adminUsers.includes(user)) return;
+            const prev = getPurchaseCount(user);
+            localStorage.setItem(`PurchaseCount_${user}`, prev + items);
+        }
+        function getPurchaseHistory(user) {
+            if (!user) return [];
+            try { return JSON.parse(localStorage.getItem(`PurchaseHistory_${user}`) || '[]'); } catch(e){ return []; }
+        }
+        function addPurchaseHistory(user, items, method, total) {
+            if (!user) return;
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (adminUsers.includes(user)) return;
+            const hist = getPurchaseHistory(user);
+            hist.unshift({ date: new Date().toLocaleString('es-ES'), items, method, total });
+            if (hist.length > 50) hist.pop();
+            localStorage.setItem(`PurchaseHistory_${user}`, JSON.stringify(hist));
+        }
+        function getStreak(user) {
+            if (!user) return 0;
+            return parseInt(localStorage.getItem(`Streak_${user}`) || '0');
+        }
+        function updateStreak(user) {
+            if (!user) return;
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (adminUsers.includes(user)) return;
+            const today = new Date().toDateString();
+            const lastDay = localStorage.getItem(`StreakLast_${user}`);
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            let streak = getStreak(user);
+            if (lastDay === today) return;
+            if (lastDay === yesterday) streak++;
+            else streak = 1;
+            localStorage.setItem(`Streak_${user}`, streak);
+            localStorage.setItem(`StreakLast_${user}`, today);
+        }
+        function getMisionesCompletadas(user) {
+            if (!user) return 0;
+            return parseInt(localStorage.getItem(`MisionesTotal_${user}`) || '0');
+        }
+        function incMisionesCompletadas(user) {
+            if (!user) return;
+            const prev = getMisionesCompletadas(user);
+            localStorage.setItem(`MisionesTotal_${user}`, prev + 1);
+        }
+        function getMisionProgreso(user, semana) {
+            if (!user) return {};
+            try { return JSON.parse(localStorage.getItem(`Misiones_${user}_${semana}`) || '{}'); } catch(e){ return {}; }
+        }
+        function setMisionProgreso(user, semana, data) {
+            if (!user) return;
+            localStorage.setItem(`Misiones_${user}_${semana}`, JSON.stringify(data));
+        }
+        function getSemana() {
+            const d = new Date();
+            const inicio = new Date(d.getFullYear(), 0, 1);
+            return Math.ceil(((d - inicio) / 86400000 + inicio.getDay() + 1) / 7);
+        }
+        function getUserAvatar(user) {
+            return localStorage.getItem(`Avatar_${user}`) || '🍌';
+        }
+        function setUserAvatar(user, av) {
+            localStorage.setItem(`Avatar_${user}`, av);
+        }
+        function getUserTema(user) {
+            return localStorage.getItem(`Tema_${user}`) || 'amarillo';
+        }
+        function setUserTema(user, tema) {
+            localStorage.setItem(`Tema_${user}`, tema);
+        }
+        function aplicarTema(temaId) {
+            const t = TEMAS.find(x => x.id === temaId) || TEMAS[0];
+            document.documentElement.style.setProperty('--color-accent', t.color);
+            document.documentElement.style.setProperty('--color-bg', t.bg);
+            document.body.style.backgroundColor = t.bg;
+            document.querySelectorAll('h1, #intro h2, .product-price, .categoria-nombre').forEach(el => {
+                el.style.color = t.color;
+            });
+            document.querySelectorAll('header, #sidebar').forEach(el => {
+                el.style.borderColor = t.color;
+            });
+        }
+
+        // --- PLÁTANO DEL DÍA ---
+        function getPlatanoDia() {
+            const seed = Math.floor(Date.now() / 86400000); // cambia cada día
+            const idx = seed % 100;
+            return bananaProducts[idx];
+        }
+        function renderPlatanoDia() {
+            const p = getPlatanoDia();
+            if (!p) return;
+            const theme = BANANA_THEMES[p.id - 1] || BANANA_THEMES[0];
+            const descuento = 0.20;
+            const precioFinal = (p.price * (1 - descuento)).toFixed(2);
+            document.getElementById('pdd-emoji').textContent = theme.emoji;
+            document.getElementById('pdd-nombre').textContent = p.name;
+            document.getElementById('pdd-precio').textContent = `${precioFinal} €`;
+            document.getElementById('pdd-btn').dataset.id = p.id;
+        }
+        function comprarPlatanoDia() {
+            const p = getPlatanoDia();
+            if (!p) return;
+            const precioFinal = parseFloat((p.price * 0.80).toFixed(2));
+            addToCart(p.name, precioFinal, p.pointsCost);
+        }
+
+        // --- HISTORIAL ---
+        function renderHistorial() {
+            const user = localStorage.getItem('sessionUser');
+            const cont = document.getElementById('historial-container');
+            const hist = getPurchaseHistory(user);
+            if (!hist.length) {
+                cont.innerHTML = '<div class="historial-vacio">🍌 Aún no has comprado ningún plátano.<br><small>¡Ve a la tienda y empieza tu colección!</small></div>';
+                return;
+            }
+            cont.innerHTML = hist.map(h => `
+                <div class="historial-item">
+                    <div>
+                        <div class="historial-fecha">📅 ${h.date}</div>
+                        <div class="historial-nombre">${Array.isArray(h.items) ? h.items.join(', ') : h.items}</div>
+                    </div>
+                    <div style="text-align:right;flex-shrink:0">
+                        <div class="historial-precio">${h.method==='points' ? h.total+' Pts' : h.total+' €'}</div>
+                        <span class="historial-metodo ${h.method==='points'?'puntos':'dinero'}">${h.method==='points'?'Platapoints':'Dinero'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- RANKING ---
+        function renderRanking() {
+            const cont = document.getElementById('ranking-container');
+            const yo = localStorage.getItem('sessionUser');
+            // Recopilar todos los usuarios registrados
+            const users = getUsers();
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            // Incluir admins y usuarios registrados
+            const todos = [...adminUsers, ...users.map(u=>u.username).filter(u=>!adminUsers.includes(u))];
+            const data = todos.map(u => ({
+                nombre: u,
+                puntos: adminUsers.includes(u) ? 99999 : parseInt(localStorage.getItem(`Platapoints_${u}`) || '0'),
+                compras: getPurchaseCount(u),
+                avatar: getUserAvatar(u)
+            })).sort((a,b) => b.puntos - a.puntos);
+            const medallas = ['🥇','🥈','🥉'];
+            cont.innerHTML = data.map((u, i) => `
+                <div class="ranking-item ${u.nombre===yo?'yo':''}">
+                    <span class="ranking-pos">${medallas[i] || (i+1)+'º'}</span>
+                    <span class="ranking-avatar">${u.avatar}</span>
+                    <div style="flex:1">
+                        <div class="ranking-nombre">${u.nombre}${u.nombre===yo?' (tú)':''}</div>
+                        <div class="ranking-compras">🛒 ${u.compras} compras</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="ranking-puntos">${u.puntos === 99999 ? '∞' : u.puntos} Pts</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- MISIONES ---
+        function getMisionProgresoParcial(user, misionId) {
+            const semana = getSemana();
+            const prog = getMisionProgreso(user, semana);
+            return prog[misionId] || { progreso: 0, reclamada: false };
+        }
+        function renderMisiones() {
+            const user = localStorage.getItem('sessionUser');
+            const semana = getSemana();
+            const prog = getMisionProgreso(user, semana);
+            const cont = document.getElementById('misiones-container');
+            cont.innerHTML = '';
+            MISIONES_DEF.forEach(m => {
+                const estado = prog[m.id] || { progreso: 0, reclamada: false };
+                const completada = estado.progreso >= m.meta;
+                const reclamada = estado.reclamada;
+                const pct = Math.min(100, Math.round((estado.progreso / m.meta) * 100));
+                cont.innerHTML += `
+                <div class="mision-card ${completada?'completada':''}">
+                    <div class="mision-header">
+                        <div class="mision-titulo">${m.titulo}</div>
+                        <div class="mision-recompensa">+${m.reward} Pts</div>
+                    </div>
+                    <div class="mision-desc">${m.desc}</div>
+                    <div class="mision-barra-bg"><div class="mision-barra" style="width:${pct}%"></div></div>
+                    <div class="mision-progreso-txt">
+                        <span>${estado.progreso} / ${m.meta}</span>
+                        ${reclamada ? '<span class="mision-completada-badge">✔ Reclamada</span>' : (completada ? '<span style="color:#4CAF50">✔ Completada</span>' : '<span></span>')}
+                    </div>
+                    ${completada && !reclamada ? `<button class="btn-reclamar" onclick="reclamarMision('${m.id}')">🎁 Reclamar ${m.reward} Pts</button>` : ''}
+                </div>`;
+            });
+        }
+        function reclamarMision(misionId) {
+            const user = localStorage.getItem('sessionUser');
+            const semana = getSemana();
+            const prog = getMisionProgreso(user, semana);
+            const mision = MISIONES_DEF.find(m => m.id === misionId);
+            if (!mision) return;
+            const estado = prog[misionId] || { progreso: 0, reclamada: false };
+            if (estado.reclamada || estado.progreso < mision.meta) return;
+            prog[misionId] = { ...estado, reclamada: true };
+            setMisionProgreso(user, semana, prog);
+            setPlatapoints(getPlatapoints() + mision.reward);
+            incMisionesCompletadas(user);
+            updatePlatapointsDisplay();
+            renderMisiones();
+            checkLogros();
+            alert(`🎉 ¡Misión completada! +${mision.reward} Platapoints.`);
+        }
+        function avanzarMision(tipo, cantidad, cat) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (adminUsers.includes(user)) return;
+            const semana = getSemana();
+            const prog = getMisionProgreso(user, semana);
+            MISIONES_DEF.forEach(m => {
+                if (m.tipo !== tipo) return;
+                if (tipo === 'categoria' && m.cat !== cat) return;
+                const estado = prog[m.id] || { progreso: 0, reclamada: false };
+                if (!estado.reclamada) {
+                    prog[m.id] = { ...estado, progreso: Math.min(m.meta, estado.progreso + cantidad) };
+                }
+            });
+            setMisionProgreso(user, semana, prog);
+        }
+
+        // --- NOTICIAS ---
+        function renderNoticias() {
+            const cont = document.getElementById('noticias-container');
+            const tagColors = { update:'tag-update', evento:'tag-evento', lore:'tag-lore' };
+            const tagLabels = { update:'🔔 Actualización', evento:'🎉 Evento', lore:'📖 Lore' };
+            cont.innerHTML = NOTICIAS.map(n => `
+                <div class="noticia-card">
+                    <div class="noticia-fecha">${n.fecha}</div>
+                    <div class="noticia-titulo">${n.titulo}</div>
+                    <div class="noticia-cuerpo">${n.cuerpo}</div>
+                    <span class="noticia-tag ${tagColors[n.tag]}">${tagLabels[n.tag]}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- PERFIL ---
+        function renderPerfil() {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            const xp = getXP(user);
+            const nivel = getNivel(xp);
+            const xpEnNivel = getXPEnNivel(xp);
+            const streak = getStreak(user);
+            const compras = getPurchaseCount(user);
+            const puntos = getPlatapoints();
+            const logrosDesbloqueados = LOGROS_DEF.filter(l => l.cond(user)).length;
+            const vipTier = getVipTier();
+            const vipInfo = vipTier ? VIP_TIERS.find(t => t.id === vipTier) : null;
+
+            document.getElementById('perfil-avatar').textContent = getUserAvatar(user);
+            document.getElementById('perfil-nombre').textContent = user;
+            document.getElementById('perfil-vip-badge').textContent = vipInfo ? `${vipInfo.icon} ${vipInfo.name}` : '';
+            document.getElementById('perfil-vip-badge').style.color = '#FFD700';
+
+            // Título dinámico
+            let titulo = '🌱 Aprendiz Bananero';
+            if (compras >= 20) titulo = '🏆 Maestro Bananero';
+            else if (compras >= 10) titulo = '⭐ Experto en Plátanos';
+            else if (compras >= 5)  titulo = '🍌 Comprador Habitual';
+            else if (compras >= 1)  titulo = '🛒 Cliente Novato';
+            document.getElementById('perfil-titulo').textContent = titulo;
+
+            document.getElementById('ps-puntos').textContent  = puntos === 99999 ? '∞' : puntos;
+            document.getElementById('ps-compras').textContent = compras;
+            document.getElementById('ps-racha').textContent   = streak;
+            document.getElementById('ps-logros').textContent  = logrosDesbloqueados;
+
+            // Nivel XP
+            const psNivel = document.getElementById('ps-nivel');
+            if (psNivel) { psNivel.innerHTML = `Nv.${nivel} <div class="xp-bar-wrap" style="margin-top:4px"><div class="xp-bar" style="width:${xpEnNivel}%"></div></div><small style="color:#aaa;font-size:0.7rem">${xpEnNivel}/100 XP</small>`; }
+
+            // Avatares
+            const ag = document.getElementById('avatar-grid');
+            ag.innerHTML = AVATARES.map(av => `
+                <div class="avatar-opt ${getUserAvatar(user)===av?'selected':''}" onclick="elegirAvatar('${av}')">${av}</div>
+            `).join('');
+
+            // Temas
+            const tg = document.getElementById('temas-grid');
+            const temaActual = getUserTema(user);
+            tg.innerHTML = TEMAS.map(t => `
+                <div class="tema-opt ${temaActual===t.id?'selected':''}"
+                     style="background:${t.bg};color:${t.color};border-color:${temaActual===t.id?t.color:'transparent'}"
+                     onclick="elegirTema('${t.id}')">${t.nombre}</div>
+            `).join('');
+
+            // Logros
+            renderLogros(user);
+        }
+        function renderLogros(user) {
+            const lg = document.getElementById('logros-grid');
+            lg.innerHTML = LOGROS_DEF.map(l => {
+                const desbloqueado = l.cond(user);
+                return `<div class="logro-card ${desbloqueado?'desbloqueado':'bloqueado'}">
+                    <span class="logro-icono">${l.icono}</span>
+                    <div>
+                        <div class="logro-info-nombre">${l.nombre}</div>
+                        <div class="logro-info-desc">${l.desc}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        function checkLogros() {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            // Solo actualizar el contador en sidebar si está visible
+            renderLogros(user);
+        }
+        function elegirAvatar(av) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            setUserAvatar(user, av);
+            renderPerfil();
+        }
+        function elegirTema(temaId) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) return;
+            setUserTema(user, temaId);
+            aplicarTema(temaId);
+            renderPerfil();
+        }
+
+        // --- RACHA DIARIA ---
+        // Extender grantDailyPoints para actualizar racha
+        const _origGrantDailyPoints = grantDailyPoints;
+        grantDailyPoints = function() {
+            const user = localStorage.getItem('sessionUser');
+            updateStreak(user);
+            _origGrantDailyPoints();
+        };
+
+        // --- HOOK EN finalizePurchase PARA HISTORIAL Y MISIONES ---
+        const _origFinalizePurchase = finalizePurchase;
+        finalizePurchase = function() {
+            // Recoger datos antes de limpiar carrito
+            const user = localStorage.getItem('sessionUser');
+            const itemNames = cart.map(i => i.name);
+            const method = document.getElementById('checkout-modal').dataset.lastMethod || 'money';
+            const totalEl = document.getElementById('modal-money-total');
+            const totalPtsEl = document.getElementById('cart-points-total');
+            const total = method === 'points' ? totalPtsEl.innerText : parseFloat(totalEl?.innerText || 0).toFixed(2);
+
+            addPurchaseHistory(user, itemNames, method, total);
+            incPurchaseCount(user, itemNames.length);
+            addXP(user, itemNames.length * 10);
+            avanzarMision('compras', itemNames.length);
+            checkLogros();
+            _origFinalizePurchase();
+        };
+
+        // Guardar método en modal para el hook
+        const _origCompleteCheckout = completeCheckout;
+        completeCheckout = function(method) {
+            document.getElementById('checkout-modal').dataset.lastMethod = method;
+            _origCompleteCheckout(method);
+        };
+
+        // --- APLICAR TEMA AL CARGAR ---
+        function initNuevasFunciones() {
+            const user = localStorage.getItem('sessionUser');
+            if (user) {
+                aplicarTema(getUserTema(user));
+                updateStreak(user);
+            }
+            renderPlatanoDia();
+        }
+
+        // =====================================================
+        // XP Y NIVELES
+        // =====================================================
+        function getXP(user) { return parseInt(localStorage.getItem(`XP_${user}`) || '0'); }
+        function addXP(user, cantidad) {
+            if (!user) return;
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (adminUsers.includes(user)) return;
+            const prev = getXP(user);
+            localStorage.setItem(`XP_${user}`, prev + cantidad);
+        }
+        function getNivel(xp) { return Math.floor(xp / 100) + 1; }
+        function getXPEnNivel(xp) { return xp % 100; }
+
+        // =====================================================
+        // FAVORITOS
+        // =====================================================
+        function getFavoritos(user) {
+            if (!user) return [];
+            try { return JSON.parse(localStorage.getItem(`Favs_${user}`) || '[]'); } catch(e) { return []; }
+        }
+        function isFavorito(pid) {
+            const user = localStorage.getItem('sessionUser');
+            return getFavoritos(user).includes(pid);
+        }
+        function toggleFavorito(pid) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) { alert('Inicia sesión primero.'); return; }
+            let favs = getFavoritos(user);
+            if (favs.includes(pid)) favs = favs.filter(f => f !== pid);
+            else favs.push(pid);
+            localStorage.setItem(`Favs_${user}`, JSON.stringify(favs));
+            const btn = document.getElementById(`fav-btn-${pid}`);
+            if (btn) btn.textContent = favs.includes(pid) ? '❤️' : '🤍';
+        }
+        function renderFavoritos() {
+            const user = localStorage.getItem('sessionUser');
+            const favs = getFavoritos(user);
+            const grid = document.getElementById('favoritos-grid');
+            if (!favs.length) { grid.innerHTML = '<div class="fav-vacio">🤍 No tienes ningún plátano favorito.<br><small>Pulsa el corazón en cualquier carta de la tienda.</small></div>'; return; }
+            grid.innerHTML = '';
+            favs.forEach(pid => {
+                const p = bananaProducts.find(x => x.id === pid);
+                if (!p) return;
+                const theme = BANANA_THEMES[p.id-1] || BANANA_THEMES[0];
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.style.setProperty('--card-accent', theme.accent);
+                card.style.setProperty('--card-glow', theme.glow);
+                card.style.setProperty('--card-bg-gradient', theme.gradient);
+                card.style.setProperty('--card-btn-bg', theme.btnBg);
+                card.style.setProperty('--card-btn-color', theme.btnColor);
+                card.innerHTML = `
+                    <div class="product-card-bg"></div>
+                    <span class="product-icon" style="animation:${theme.anim}">${theme.emoji}</span>
+                    <h3 class="product-title">${p.name}</h3>
+                    <span class="product-price">${p.price.toFixed(2)} €</span>
+                    <div style="display:flex;gap:6px;margin-top:10px;">
+                        <button class="buy-btn" style="flex:1" onclick="addToCart('${p.name}',${p.price},${p.pointsCost})">Añadir</button>
+                        <button style="padding:8px 12px;background:#333;border:1px solid #444;border-radius:20px;color:#ff4444;cursor:pointer;" onclick="toggleFavorito(${p.id});renderFavoritos()">🗑️</button>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        // =====================================================
+        // RESEÑAS
+        // =====================================================
+        function getResenas(pid) {
+            try { return JSON.parse(localStorage.getItem(`Resenas_${pid}`) || '[]'); } catch(e) { return []; }
+        }
+        function renderResenas(pid) {
+            const lista = getResenas(pid);
+            if (!lista.length) return '<small style="color:#555">Sin reseñas aún.</small>';
+            return lista.slice(-3).map(r =>
+                `<div class="resena-item"><span class="resena-autor">${r.autor}</span>${r.texto}</div>`
+            ).join('');
+        }
+        function publicarResena(pid) {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) { alert('Inicia sesión primero.'); return; }
+            const txt = document.getElementById(`resena-txt-${pid}`).value.trim();
+            if (!txt) return;
+            const lista = getResenas(pid);
+            lista.push({ autor: user, texto: txt });
+            localStorage.setItem(`Resenas_${pid}`, JSON.stringify(lista));
+            document.getElementById(`resenas-${pid}`).innerHTML = renderResenas(pid);
+            document.getElementById(`resena-txt-${pid}`).value = '';
+        }
+
+        // =====================================================
+        // COMPARADOR
+        // =====================================================
+        let comparadorIds = [null, null];
+        function abrirComparador(pid) {
+            comparadorIds[0] = pid;
+            showSection('estadisticas');
+            setTimeout(() => {
+                const sel = document.getElementById('comp-sel-a');
+                if (sel) { sel.value = pid; actualizarComparador(); }
+            }, 200);
+        }
+        function actualizarComparador() {
+            const a = bananaProducts.find(p => p.id == document.getElementById('comp-sel-a').value);
+            const b = bananaProducts.find(p => p.id == document.getElementById('comp-sel-b').value);
+            const cont = document.getElementById('comparador-resultado');
+            if (!a || !b) { cont.innerHTML = ''; return; }
+            const stats = [
+                { label:'Precio (€)', va: a.price, vb: b.price, menor_mejor: true },
+                { label:'Coste Pts', va: a.pointsCost, vb: b.pointsCost, menor_mejor: true },
+                { label:'Valoración', va: a.rating.average, vb: b.rating.average, menor_mejor: false },
+                { label:'Ventas',    va: a.salesCount,     vb: b.salesCount,     menor_mejor: false },
+            ];
+            const thA = BANANA_THEMES[a.id-1], thB = BANANA_THEMES[b.id-1];
+            cont.innerHTML = `<div class="comparador-grid">
+                <div class="comparador-card"><h3>${thA.emoji} ${a.name}</h3>${stats.map(s=>`<div class="comp-stat"><span>${s.label}</span><span class="${(s.menor_mejor?s.va<s.vb:s.va>s.vb)?'comp-mejor':''}">${s.va}</span></div>`).join('')}</div>
+                <div class="comparador-card"><h3>${thB.emoji} ${b.name}</h3>${stats.map(s=>`<div class="comp-stat"><span>${s.label}</span><span class="${(s.menor_mejor?s.vb<s.va:s.vb>s.va)?'comp-mejor':''}">${s.vb}</span></div>`).join('')}</div>
+            </div>`;
+        }
+
+        // =====================================================
+        // ESTADÍSTICAS
+        // =====================================================
+        function renderEstadisticas() {
+            const user = localStorage.getItem('sessionUser');
+            const hist = getPurchaseHistory(user);
+            const compras = getPurchaseCount(user);
+            const puntos = getPlatapoints();
+            const xp = getXP(user);
+            const nivel = getNivel(xp);
+            const xpEnNivel = getXPEnNivel(xp);
+            const streak = getStreak(user);
+
+            // Calcular gasto total y plátano favorito
+            let gastoTotal = 0;
+            const contadorPlatanos = {};
+            hist.forEach(h => {
+                if (h.method === 'money') gastoTotal += parseFloat(h.total) || 0;
+                (Array.isArray(h.items) ? h.items : [h.items]).forEach(n => {
+                    contadorPlatanos[n] = (contadorPlatanos[n] || 0) + 1;
+                });
+            });
+            const favoritoPlatano = Object.entries(contadorPlatanos).sort((a,b)=>b[1]-a[1])[0];
+
+            // Por categorías
+            const catCounts = {};
+            Object.entries(contadorPlatanos).forEach(([nombre, cnt]) => {
+                const p = bananaProducts.find(x => x.name === nombre);
+                if (!p) return;
+                BANANA_CATEGORIAS.forEach(cat => {
+                    if (cat.ids.includes(p.id)) catCounts[cat.nombre] = (catCounts[cat.nombre] || 0) + cnt;
+                });
+            });
+            const maxCat = Math.max(1, ...Object.values(catCounts));
+
+            const cont = document.getElementById('estadisticas-container');
+
+            // Selector comparador
+            const optsA = bananaProducts.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+            const optsB = bananaProducts.map(p=>`<option value="${p.id}" ${p.id===2?'selected':''}>${p.name}</option>`).join('');
+
+            cont.innerHTML = `
+            <div class="stats-grid">
+                <div class="stats-card"><span class="stats-val">${nivel}</span><span class="stats-label">Nivel</span>
+                    <div class="xp-bar-wrap"><div class="xp-bar" style="width:${xpEnNivel}%"></div></div>
+                    <small style="color:#aaa">${xpEnNivel}/100 XP</small>
+                </div>
+                <div class="stats-card"><span class="stats-val">${compras}</span><span class="stats-label">Compras totales</span></div>
+                <div class="stats-card"><span class="stats-val">${gastoTotal.toFixed(2)}€</span><span class="stats-label">Gasto total</span></div>
+                <div class="stats-card"><span class="stats-val">${streak}</span><span class="stats-label">Racha actual</span></div>
+            </div>
+            ${favoritoPlatano ? `<div class="stats-section"><h3>🍌 Plátano más comprado</h3><p style="color:#ffe135">${favoritoPlatano[0]} <span style="color:#aaa">(${favoritoPlatano[1]}x)</span></p></div>` : ''}
+            <div class="stats-section"><h3>📦 Compras por categoría</h3>
+                ${Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([cat,n])=>`
+                <div class="stats-cat-row">
+                    <span class="stats-cat-nombre">${cat}</span>
+                    <div class="stats-cat-bar-bg"><div class="stats-cat-bar" style="width:${Math.round(n/maxCat*100)}%"></div></div>
+                    <span class="stats-cat-num">${n}</span>
+                </div>`).join('') || '<p style="color:#555">Sin datos aún.</p>'}
+            </div>
+            <div class="stats-section"><h3>⚖️ Comparador de plátanos</h3>
+                <div class="comparador-bar">
+                    <select id="comp-sel-a" onchange="actualizarComparador()">${optsA}</select>
+                    <span style="color:#aaa">vs</span>
+                    <select id="comp-sel-b" onchange="actualizarComparador()">${optsB}</select>
+                    <button onclick="actualizarComparador()">Comparar</button>
+                </div>
+                <div id="comparador-resultado"></div>
+            </div>`;
+            actualizarComparador();
+        }
+
+        // =====================================================
+        // CHAT GLOBAL
+        // =====================================================
+        function getChatMsgs() {
+            try { return JSON.parse(localStorage.getItem('BananaChat') || '[]'); } catch(e) { return []; }
+        }
+        function saveChatMsgs(msgs) { localStorage.setItem('BananaChat', JSON.stringify(msgs.slice(-100))); }
+        function enviarChat() {
+            const user = localStorage.getItem('sessionUser');
+            if (!user) { alert('Inicia sesión.'); return; }
+            const input = document.getElementById('chat-input');
+            const txt = input.value.trim();
+            if (!txt) return;
+            const msgs = getChatMsgs();
+            msgs.push({ autor: user, avatar: getUserAvatar(user), texto: txt, hora: new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) });
+            saveChatMsgs(msgs);
+            input.value = '';
+            renderChat();
+        }
+        function renderChat() {
+            const user = localStorage.getItem('sessionUser');
+            const msgs = getChatMsgs();
+            const cont = document.getElementById('chat-mensajes');
+            cont.innerHTML = msgs.map(m => `
+                <div class="chat-msg ${m.autor===user?'chat-msg-yo':''}">
+                    <span class="chat-msg-autor">${m.avatar} ${m.autor}</span>
+                    <span class="chat-msg-hora">${m.hora}</span>
+                    <div style="margin-top:3px">${m.texto}</div>
+                </div>`).join('');
+            cont.scrollTop = cont.scrollHeight;
+        }
+
+        // =====================================================
+        // AMIGOS Y REGALOS
+        // =====================================================
+        function getAmigos(user) {
+            if (!user) return [];
+            try { return JSON.parse(localStorage.getItem(`Amigos_${user}`) || '[]'); } catch(e) { return []; }
+        }
+        function addAmigo(user, amigo) {
+            const lista = getAmigos(user);
+            if (!lista.includes(amigo)) { lista.push(amigo); localStorage.setItem(`Amigos_${user}`, JSON.stringify(lista)); }
+        }
+        function removeAmigo(user, amigo) {
+            const lista = getAmigos(user).filter(a=>a!==amigo);
+            localStorage.setItem(`Amigos_${user}`, JSON.stringify(lista));
+        }
+        let amigoTab = 'amigos';
+        function renderAmigos() {
+            const user = localStorage.getItem('sessionUser');
+            const cont = document.getElementById('amigos-container');
+            const amigos = getAmigos(user);
+            const allUsers = getUsers().map(u=>u.username);
+            cont.innerHTML = `
+            <div class="amigos-tabs">
+                <button class="amigo-tab ${amigoTab==='amigos'?'activo':''}" onclick="amigoTab='amigos';renderAmigos()">👥 Mis amigos (${amigos.length})</button>
+                <button class="amigo-tab ${amigoTab==='buscar'?'activo':''}" onclick="amigoTab='buscar';renderAmigos()">🔍 Buscar usuarios</button>
+            </div>
+            ${amigoTab==='amigos' ? renderListaAmigos(user, amigos) : renderBuscarAmigos(user, allUsers, amigos)}`;
+        }
+        function renderListaAmigos(user, amigos) {
+            if (!amigos.length) return '<p style="color:#777;text-align:center;padding:40px 0">No tienes amigos añadidos aún.<br><small>Ve a "Buscar usuarios" para añadir.</small></p>';
+            return amigos.map(a => `
+            <div class="amigo-card">
+                <span class="amigo-avatar">${getUserAvatar(a)}</span>
+                <div><div class="amigo-nombre">${a}</div><div class="amigo-pts">${parseInt(localStorage.getItem(`Platapoints_${a}`)||'0')} Pts</div></div>
+                <div class="amigo-acciones">
+                    <button class="btn-regalo" onclick="enviarRegalo('${a}')">🎁 Regalar 10 Pts</button>
+                    <button class="btn-quitar" onclick="removeAmigo('${user}','${a}');renderAmigos()">✕</button>
+                </div>
+            </div>`).join('');
+        }
+        function renderBuscarAmigos(user, allUsers, amigos) {
+            const otros = allUsers.filter(u=>u!==user);
+            if (!otros.length) return '<p style="color:#777;text-align:center;padding:40px 0">No hay otros usuarios registrados aún.</p>';
+            return otros.map(a => `
+            <div class="amigo-card">
+                <span class="amigo-avatar">${getUserAvatar(a)}</span>
+                <div><div class="amigo-nombre">${a}</div><div class="amigo-pts">${parseInt(localStorage.getItem(`Platapoints_${a}`)||'0')} Pts</div></div>
+                <div class="amigo-acciones">
+                    ${amigos.includes(a)
+                        ? `<span style="color:#4CAF50;font-size:0.85rem">✔ Amigo</span><button class="btn-quitar" onclick="removeAmigo('${user}','${a}');renderAmigos()">✕</button>`
+                        : `<button class="btn-regalo" onclick="addAmigo('${user}','${a}');renderAmigos()" style="background:#4CAF50">+ Añadir</button>`}
+                </div>
+            </div>`).join('');
+        }
+        function enviarRegalo(destinatario) {
+            const user = localStorage.getItem('sessionUser');
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (adminUsers.includes(user)) { alert('Los admins no pueden enviar regalos.'); return; }
+            const mis_pts = getPlatapoints();
+            if (mis_pts < 10) { alert('Necesitas al menos 10 Platapoints para regalar.'); return; }
+            if (!confirm(`¿Enviar 10 Platapoints a ${destinatario}?`)) return;
+            setPlatapoints(mis_pts - 10);
+            const pts_dest = parseInt(localStorage.getItem(`Platapoints_${destinatario}`) || '0');
+            localStorage.setItem(`Platapoints_${destinatario}`, pts_dest + 10);
+            alert(`🎁 ¡10 Platapoints enviados a ${destinatario}!`);
+            renderAmigos();
+        }
+
+        // =====================================================
+        // PANEL DE ADMIN
+        // =====================================================
+        function renderAdmin() {
+            const user = localStorage.getItem('sessionUser');
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            if (!adminUsers.includes(user)) { document.getElementById('admin-container').innerHTML = '<p style="color:#ff4444;text-align:center">⛔ Acceso denegado.</p>'; return; }
+            const allUsers = getUsers();
+            const totalVentas = allUsers.reduce((acc,u) => acc + getPurchaseCount(u.username), 0);
+            const totalChat = getChatMsgs().length;
+            const cont = document.getElementById('admin-container');
+            cont.innerHTML = `
+            <div class="admin-grid">
+                <div class="admin-stat"><span class="admin-stat-val">${allUsers.length}</span><span class="admin-stat-label">Usuarios registrados</span></div>
+                <div class="admin-stat"><span class="admin-stat-val">${totalVentas}</span><span class="admin-stat-label">Ventas totales</span></div>
+                <div class="admin-stat"><span class="admin-stat-val">${totalChat}</span><span class="admin-stat-label">Mensajes en chat</span></div>
+                <div class="admin-stat"><span class="admin-stat-val">${bananaProducts.length}</span><span class="admin-stat-label">Productos activos</span></div>
+            </div>
+            <div class="admin-section"><h3>👥 Usuarios</h3>
+                ${allUsers.map(u=>`
+                <div class="admin-user-row">
+                    <span style="font-size:1.5rem">${getUserAvatar(u.username)}</span>
+                    <span style="flex:1;font-weight:bold">${u.username}</span>
+                    <span style="color:#aaa;font-size:0.85rem">${getPurchaseCount(u.username)} compras</span>
+                    <span style="color:#ffe135;font-size:0.85rem;margin-left:12px">${parseInt(localStorage.getItem(`Platapoints_${u.username}`)||'0')} Pts</span>
+                    <button style="margin-left:12px;padding:4px 12px;background:#ff4444;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;" onclick="if(confirm('¿Resetear puntos de ${u.username}?')){localStorage.setItem('Platapoints_${u.username}',0);renderAdmin();}">Reset Pts</button>
+                </div>`).join('') || '<p style="color:#555">No hay usuarios registrados.</p>'}
+            </div>
+            <div class="admin-section"><h3>🏆 Plátanos más vendidos (top 5)</h3>
+                ${bananaProducts.sort((a,b)=>b.salesCount-a.salesCount).slice(0,5).map((p,i)=>`
+                <div class="admin-user-row">
+                    <span style="font-weight:bold;color:#ffe135;width:24px">${i+1}.</span>
+                    <span style="font-size:1.3rem">${BANANA_THEMES[p.id-1].emoji}</span>
+                    <span style="flex:1">${p.name}</span>
+                    <span style="color:#aaa">${p.salesCount} ventas</span>
+                </div>`).join('')}
+            </div>
+            <div class="admin-section"><h3>💬 Moderar chat</h3>
+                <button style="padding:8px 18px;background:#ff4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:bold;" onclick="if(confirm('¿Borrar todo el chat?')){localStorage.removeItem('BananaChat');renderAdmin();}">🗑️ Borrar todo el chat</button>
+            </div>`;
+        }
+
+        // =====================================================
+        // WORDLE BANANERO
+        // =====================================================
+        let wordleEstado = null;
+        function getWordleDelDia() {
+            const seed = Math.floor(Date.now() / 86400000);
+            return BANANA_ABREVS[seed % BANANA_ABREVS.length].toUpperCase();
+        }
+        function getWordleProgress(user) {
+            const hoy = new Date().toDateString();
+            const key = `Wordle_${user}_${hoy}`;
+            try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e) { return null; }
+        }
+        function saveWordleProgress(user, estado) {
+            const hoy = new Date().toDateString();
+            localStorage.setItem(`Wordle_${user}_${hoy}`, JSON.stringify(estado));
+        }
+        function initWordle() {
+            const user = localStorage.getItem('sessionUser');
+            const palabra = getWordleDelDia();
+            const largo = palabra.length;
+            const MAX_INTENTOS = 6;
+            const savedProgress = getWordleProgress(user);
+            wordleEstado = savedProgress || {
+                intentos: [],
+                intentoActual: '',
+                terminado: false,
+                ganado: false,
+                palabra: palabra
+            };
+            // Si la palabra cambió (nuevo día), resetear
+            if (wordleEstado.palabra !== palabra) {
+                wordleEstado = { intentos: [], intentoActual: '', terminado: false, ganado: false, palabra };
+            }
+            renderWordle();
+        }
+        function renderWordle() {
+            const cont = document.getElementById('wordle-container');
+            const estado = wordleEstado;
+            if (!estado) return;
+            const palabra = estado.palabra;
+            const largo = palabra.length;
+            const MAX_INTENTOS = 6;
+
+            // Pista: buscar el plátano cuya abreviación es la palabra
+            const idxAbrev = BANANA_ABREVS.findIndex(a => a.toUpperCase() === palabra);
+            const platanoPista = idxAbrev >= 0 ? BANANA_NAMES[idxAbrev] : '';
+            const pistaShort = platanoPista ? platanoPista.split(': ')[1] || platanoPista : '';
+
+            let tableroHTML = '<div id="wordle-tablero">';
+            for (let i = 0; i < MAX_INTENTOS; i++) {
+                tableroHTML += '<div class="wordle-fila">';
+                const intento = estado.intentos[i] || null;
+                for (let j = 0; j < largo; j++) {
+                    let letra = '';
+                    let clase = '';
+                    if (intento) {
+                        letra = intento.letras[j] || '';
+                        clase = intento.clases[j] || '';
+                    } else if (i === estado.intentos.length && !estado.terminado) {
+                        letra = estado.intentoActual[j] || '';
+                        clase = letra ? 'activa' : '';
+                    }
+                    tableroHTML += `<div class="wordle-celda ${clase}">${letra}</div>`;
+                }
+                tableroHTML += '</div>';
+            }
+            tableroHTML += '</div>';
+
+            // Teclado
+            const filasTeclas = [
+                ['Q','W','E','R','T','Y','U','I','O','P'],
+                ['A','S','D','F','G','H','J','K','L'],
+                ['ENTER','Z','X','C','V','B','N','M','⌫']
+            ];
+            const estadoTeclas = {};
+            estado.intentos.forEach(int => {
+                int.letras.forEach((l,i) => {
+                    const cl = int.clases[i];
+                    const prev = estadoTeclas[l];
+                    if (!prev || cl === 'correcta' || (cl === 'presente' && prev === 'ausente')) estadoTeclas[l] = cl;
+                });
+            });
+            let teclado = '<div id="wordle-teclado">';
+            filasTeclas.forEach(fila => {
+                teclado += '<div class="wordle-fila-teclas">';
+                fila.forEach(t => {
+                    const ancha = t==='ENTER'||t==='⌫' ? 'ancha' : '';
+                    const cl = estadoTeclas[t] || '';
+                    teclado += `<button class="wordle-tecla ${ancha} ${cl}" onclick="wordleTecla('${t}')">${t}</button>`;
+                });
+                teclado += '</div>';
+            });
+            teclado += '</div>';
+
+            let mensaje = '';
+            let premio = '';
+            if (estado.terminado) {
+                if (estado.ganado) {
+                    mensaje = `<span style="color:#4CAF50">🎉 ¡Correcto! Era <strong>${palabra}</strong></span>`;
+                    if (!estado.premiado) {
+                        const user = localStorage.getItem('sessionUser');
+                        const pts = Math.max(5, 25 - estado.intentos.length * 3);
+                        setPlatapoints(getPlatapoints() + pts);
+                        estado.premiado = true;
+                        saveWordleProgress(user, estado);
+                        updatePlatapointsDisplay();
+                        premio = `<div class="wordle-premio">+${pts} Platapoints ganados 🍌</div>`;
+                    }
+                } else {
+                    mensaje = `<span style="color:#ff4444">❌ Era <strong>${palabra}</strong> — ${pistaShort}</span>`;
+                }
+            }
+            cont.innerHTML = `
+                <div id="wordle-msg">${mensaje}</div>
+                <p style="text-align:center;color:#555;font-size:0.8rem;margin-bottom:12px">
+                    Pista: corresponde al plátano <em style="color:#ff9900">${pistaShort}</em> — búscalo en la tienda con código <strong style="color:#ffe135">${palabra}</strong>
+                </p>
+                ${tableroHTML}${teclado}${premio}
+                ${estado.terminado ? `<p style="text-align:center;color:#555;margin-top:16px;font-size:0.85rem">Vuelve mañana para una nueva palabra 🍌</p>` : ''}
+            `;
+            if (!estado.terminado) {
+                document.addEventListener('keydown', wordleKeyboard, { once: false });
             }
         }
+        let wordleKeyboardAttached = false;
+        function wordleKeyboard(e) {
+            if (document.getElementById('wordle') && document.getElementById('wordle').classList.contains('active')) {
+                if (e.key === 'Enter') wordleTecla('ENTER');
+                else if (e.key === 'Backspace') wordleTecla('⌫');
+                else if (/^[a-zA-Z]$/.test(e.key)) wordleTecla(e.key.toUpperCase());
+            }
+        }
+        function wordleTecla(tecla) {
+            const estado = wordleEstado;
+            if (!estado || estado.terminado) return;
+            const palabra = estado.palabra;
+            const largo = palabra.length;
+            if (tecla === '⌫') {
+                estado.intentoActual = estado.intentoActual.slice(0,-1);
+            } else if (tecla === 'ENTER') {
+                if (estado.intentoActual.length < largo) { return; }
+                const intento = estado.intentoActual.toUpperCase();
+                const letras = intento.split('');
+                const clases = Array(largo).fill('ausente');
+                const palabraArr = palabra.split('');
+                // Primero correctas
+                letras.forEach((l,i) => { if (l === palabraArr[i]) { clases[i] = 'correcta'; palabraArr[i] = null; } });
+                // Luego presentes
+                letras.forEach((l,i) => { if (clases[i]==='correcta') return; const idx=palabraArr.indexOf(l); if(idx>=0){clases[i]='presente';palabraArr[idx]=null;} });
+                estado.intentos.push({ letras, clases });
+                estado.intentoActual = '';
+                if (intento === palabra) { estado.terminado = true; estado.ganado = true; }
+                else if (estado.intentos.length >= 6) { estado.terminado = true; estado.ganado = false; }
+            } else {
+                if (estado.intentoActual.length < largo) estado.intentoActual += tecla;
+            }
+            const user = localStorage.getItem('sessionUser');
+            saveWordleProgress(user, estado);
+            renderWordle();
+        }
+        document.addEventListener('keydown', wordleKeyboard);
+
+        // =====================================================
+        // ACTUALIZAR showSection Y updateUIForSession
+        // =====================================================
+        const _origUpdateUIForSession = updateUIForSession;
+        updateUIForSession = function(username) {
+            _origUpdateUIForSession(username);
+            const adminUsers = ["Dani","Aitor","Iker","Aless"];
+            const adminBtn = document.getElementById('btn-admin');
+            if (adminBtn) adminBtn.style.display = username && adminUsers.includes(username) ? 'block' : 'none';
+        };
+
+        // =====================================================
+        // ASISTENTE IA
+        // =====================================================
+        let iaHistorial = [];
+
+        const IA_SYSTEM = `Eres el Asistente Banana 🍌, el experto oficial del Banana Shop. Respondes siempre en español, de forma amigable, breve y con humor bananero.
+
+Conoces TODA la información de esta tienda:
+
+PLÁTANOS (100 en total, ejemplos):
+- 001 CAN: Canarias/Original — el clásico, dulce con pintitas, lleno de potasio
+- 002 SUM: Silencioso de Sumatra — duro como piedra, para patacones o lanzar
+- 003 CUR: Curva de Felicidad — cultivado con música clásica, sabe refinado
+- 004 FAN: Fantasma de Medianoche — etéreo, 0 calorías, no existe del todo
+- 005 ARK: Diamante Verde (Ártico) — recolectado en glaciar, congela levemente
+- 006 EST: Bocado Estelar — expuesto a radiación, brilla en la oscuridad
+- 007 UNA: Uña de Dragón — invisible si te concentras
+- 008 ABU: Abuelo Longevo — muy picante, ideal para días fríos
+- 100 FIN: El Gran Final — el plátano definitivo, sabor de todos los anteriores
+(Hay 100 plátanos en total, cada uno con su abreviación de 3 letras mostrada en la tienda)
+
+SISTEMA DE PUNTOS:
+- Platapoints: moneda del shop, se ganan comprando, con códigos, misiones diarias
+- 3 puntos por login diario
+- Comprar da Platapoints y XP (10 XP por ítem)
+- XP sube niveles (100 XP = 1 nivel)
+
+CÓDIGOS SECRETOS: hay varios canjeables en la sección Códigos (no revelar los códigos exactos)
+
+PLANES VIP: Bronce, Plata, Oro, Diamante — descuentos permanentes y beneficios exclusivos
+
+JUEGOS DISPONIBLES:
+- 🟩 BananaWordle: adivina la abreviación del plátano del día en 6 intentos (las abreviaciones aparecen en las cartas de la tienda como pista)
+- Hay más minijuegos en la sección Juegos
+
+SECCIONES: Tienda, Info Plátanos, Cesta, Juegos, Códigos, VIP, Categorías, Perfil, Historial, Ranking, Misiones Semanales, Noticias, Favoritos, Mis Stats (con comparador), Amigos (con regalos), Chat Global, BananaWordle, Panel Admin (solo admins)
+
+MISIONES: semanales, recompensas en Platapoints al completarlas
+LOGROS: 10 desbloqueables por hitos (compras, rachas, puntos, VIP...)
+AMIGOS: puedes añadir usuarios y regalarles 10 Platapoints
+CHAT: muro global visible para todos
+FAVORITOS: guarda plátanos con el corazón ❤️ en las cartas
+COMPARADOR: en Mis Stats puedes comparar 2 plátanos lado a lado
+PANEL ADMIN: solo Dani, Aitor, Iker, Aless — ven estadísticas, gestionan usuarios, moderan chat
+
+Sé conciso (máximo 3-4 frases), usa emojis con moderación y siempre invita a explorar la tienda.`;
+
+        function toggleIA() {
+            const panel = document.getElementById('ia-panel');
+            panel.classList.toggle('abierto');
+            if (panel.classList.contains('abierto')) {
+                document.getElementById('ia-input').focus();
+            }
+        }
+
+        async function enviarIA() {
+            const input = document.getElementById('ia-input');
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            const sendBtn = document.getElementById('ia-send');
+            input.value = '';
+            sendBtn.disabled = true;
+
+            // Añadir mensaje usuario
+            agregarMensajeIA(texto, 'user');
+            iaHistorial.push({ role: 'user', content: texto });
+
+            // Loader
+            const loaderId = 'ia-loader-' + Date.now();
+            const loaderDiv = document.createElement('div');
+            loaderDiv.className = 'ia-msg ia-bot ia-loading';
+            loaderDiv.id = loaderId;
+            loaderDiv.textContent = '🍌 Pensando...';
+            document.getElementById('ia-mensajes').appendChild(loaderDiv);
+            scrollIAAbajo();
+
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 400,
+                        system: IA_SYSTEM,
+                        messages: iaHistorial.slice(-10) // últimos 10 mensajes
+                    })
+                });
+
+                const data = await response.json();
+                const respuesta = data.content?.[0]?.text || 'Lo siento, no pude procesar esa pregunta 🍌';
+
+                // Eliminar loader y añadir respuesta
+                document.getElementById(loaderId)?.remove();
+                agregarMensajeIA(respuesta, 'bot');
+                iaHistorial.push({ role: 'assistant', content: respuesta });
+
+                // Limitar historial a 20 mensajes
+                if (iaHistorial.length > 20) iaHistorial = iaHistorial.slice(-20);
+
+            } catch (err) {
+                document.getElementById(loaderId)?.remove();
+                agregarMensajeIA('Error de conexión 😅 Inténtalo de nuevo.', 'bot');
+            }
+
+            sendBtn.disabled = false;
+            input.focus();
+        }
+
+        function agregarMensajeIA(texto, tipo) {
+            const cont = document.getElementById('ia-mensajes');
+            const div = document.createElement('div');
+            div.className = `ia-msg ia-${tipo}`;
+            div.textContent = texto;
+            cont.appendChild(div);
+            scrollIAAbajo();
+        }
+
+        function scrollIAAbajo() {
+            const cont = document.getElementById('ia-mensajes');
+            cont.scrollTop = cont.scrollHeight;
+        }
+
     </script>
+    <!-- ASISTENTE IA -->
+    <div id="ia-btn" onclick="toggleIA()" title="Asistente Banana IA">🍌</div>
+    <div id="ia-panel">
+        <div id="ia-header">
+            <span>🍌 Asistente Banana</span>
+            <button onclick="toggleIA()" id="ia-close">✕</button>
+        </div>
+        <div id="ia-mensajes">
+            <div class="ia-msg ia-bot">¡Hola! Soy el Asistente Banana 🍌<br>Puedo ayudarte con todo: los 100 plátanos y sus poderes, los juegos, el Wordle, los Platapoints, el sistema VIP, misiones, logros... ¡Pregúntame lo que quieras!</div>
+        </div>
+        <div id="ia-input-row">
+            <input id="ia-input" type="text" placeholder="Pregunta algo..." maxlength="300" onkeydown="if(event.key==='Enter')enviarIA()">
+            <button onclick="enviarIA()" id="ia-send">➤</button>
+        </div>
+    </div>
+
 </body>
 </html>
 
